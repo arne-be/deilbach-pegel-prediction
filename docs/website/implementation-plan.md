@@ -32,7 +32,7 @@ Fixtures: save one real `/api/forecast` and `/api/history` response in `web/src/
 - **Verdict:** the forecast line sets the expected category. When the 90 % upper bound reaches a higher one within 24 h, add "Möglich: …" with the dashed chip.
 - **Times** for "erwartet gegen" and "möglich ab": the hour of the last forecast point *before* the line (or the 90 % top) crosses the threshold. Hour only ("gegen 21 Uhr"), with "morgen" or the weekday after midnight.
 - **Stale:** `newest_observation_at` or `issued_at` older than `freshness.*_max_age_minutes`. **Fallback:** `model == "persistence"` or no point has bands. Either way: no verdict, no forecast in the chart or the scene, a badge "Veraltet · 16:22 Uhr" or "Keine Prognose · 16:22 Uhr" and the Hochwasserportal NRW link. The scene water turns grey and still only when stale. Check freshness every minute and on `visibilitychange`; refetch every 5 minutes.
-- **API failure** (network error, 404, 5xx): show the same badge with "Keine Daten", never an old number as current.
+- **API failure** (network error, 404, 5xx): show the same badge with "Keine Daten", never an old number as current. A failed refetch after a good load keeps the shown data; the timestamps turn it to "Veraltet" after 90 minutes anyway. The newest history reading counts too: if it's older than the observation limit, the page is stale even when the forecast is fresh (CloudFront can serve an old history file for a day).
 - **Categories section:** current category outlined, "erwartet gegen …" / "möglich ab …" tags, grey cards for categories neither current nor reached within 24 h (all but the current one when stale or in fallback).
 
 ## Mobile first
