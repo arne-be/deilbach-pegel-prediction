@@ -1,0 +1,554 @@
+<!doctype html>
+<!--
+  Mockup A: "Lagebild" (status first).
+  What the visitor sees first: one plain-German verdict for the next 24 h, coloured like a
+  traffic light, before any number. A resident at night asks "do I have to do something?",
+  not "what is the level?". 145 cm means nothing to most people; "Erwartet: Kat. 3 heute
+  gegen 22 Uhr · Möglich: Kat. 4 ab etwa 22 Uhr" answers it directly. Right below, still on
+  the first phone screen: the measured level with the distance to "kritisch", a 24-hour strip
+  and the 3/12/24 h tiles. Timeline with actions, chart and explanations follow.
+  Full argument: the "Designbegründung" section at the end of the page.
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deilbach Pegelprognose</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --background: oklch(99% .003 90);
+    --foreground: oklch(20% .025 215);
+    --brand: oklch(36% .04 215);
+    --brand-deep: oklch(28% .035 215);
+    --brand-foreground: oklch(97% .005 90);
+    --accent: oklch(72% .18 50);
+    --muted: oklch(96% .008 210);
+    --muted-foreground: oklch(48% .02 215);
+    --border: oklch(90% .008 210);
+    --card: #fff;
+    --radius: .5rem;
+    --radius-lg: 1rem;
+    /* Severity scale green -> yellow -> red -> dark red. Kat. 3 sits at hue 32 and L 56,
+       clearly away from the brand orange (72% .18 50), which only the logo dot uses.
+       --inkN is the text colour on a full-colour cell (contrast >= 4.5:1). */
+    --c1: oklch(62% .13 155); --ink1: oklch(20% .025 215); --c1-bg: oklch(95% .04 155);
+    --c2: oklch(86% .15 92);  --ink2: oklch(20% .025 215); --c2-bg: oklch(96% .06 95);
+    --c3: oklch(56% .19 32);  --ink3: #fff;                --c3-bg: oklch(94% .045 35);
+    --c4: oklch(48% .19 25);  --ink4: #fff;                --c4-bg: oklch(92% .05 25);
+    --c5: oklch(34% .12 20);  --ink5: #fff;                --c5-bg: oklch(90% .05 20);
+    --stale: oklch(55% .01 215); --stale-bg: oklch(95% .004 215);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --background: oklch(18% .025 215); --foreground: oklch(97% .005 90);
+      --card: oklch(22% .025 215); --muted: oklch(25% .02 215);
+      --muted-foreground: oklch(75% .015 215); --border: oklch(34% .02 215);
+      --c1-bg: oklch(30% .05 155); --c2-bg: oklch(32% .06 95); --c3-bg: oklch(30% .07 35);
+      --c4-bg: oklch(28% .08 25); --c5-bg: oklch(26% .07 20); --stale-bg: oklch(26% .01 215);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  body { margin: 0; background: var(--background); color: var(--foreground);
+    font: 16px/1.5 "Manrope", system-ui, sans-serif; }
+  h1, h2, h3, .num { font-family: "Space Grotesk", system-ui, sans-serif; }
+  a { color: inherit; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+  .mock { background: repeating-linear-gradient(45deg, #fff6d6, #fff6d6 8px, #fff 8px, #fff 16px);
+    border-bottom: 2px dashed #b38f00; color: #3d3100; font-size: 12px; }
+  .mock .wrap { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; padding-block: 5px; }
+  .mock a { text-decoration: none; border: 1px solid #b38f00; background: #fff; border-radius: 99px; padding: 0 6px; }
+  .mock a[aria-current="true"] { background: #3d3100; color: #fff; }
+
+  header.site { background: var(--brand-deep); color: var(--brand-foreground); }
+  header.site .wrap { display: flex; justify-content: space-between; align-items: center; padding-block: 10px; gap: 12px; }
+  .logo { font-family: "Space Grotesk"; font-weight: 700; text-decoration: none; }
+  .logo span { color: var(--accent); }
+  header nav { display: flex; gap: 18px; font-size: 14px; }
+  header nav a { text-decoration: none; }
+  @media (max-width: 560px) { header nav a:not(:last-child) { display: none; } }
+
+  .label { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 600; color: var(--muted-foreground); margin: 0 0 6px; }
+  main { padding-block: 12px 48px; }
+  .pagehead h1 { font-size: 18px; margin: 0; }
+  .stamp { font-size: 13px; color: var(--muted-foreground); margin: 0 0 10px; }
+
+  .t1 { --tone: var(--c1); --tone-bg: var(--c1-bg); --ink: var(--ink1); }
+  .t2 { --tone: var(--c2); --tone-bg: var(--c2-bg); --ink: var(--ink2); }
+  .t3 { --tone: var(--c3); --tone-bg: var(--c3-bg); --ink: var(--ink3); }
+  .t4 { --tone: var(--c4); --tone-bg: var(--c4-bg); --ink: var(--ink4); }
+  .t5 { --tone: var(--c5); --tone-bg: var(--c5-bg); --ink: var(--ink5); }
+  .tstale { --tone: var(--stale); --tone-bg: var(--stale-bg); --ink: #fff; }
+
+  /* Verdict */
+  .verdict { border-radius: var(--radius-lg); padding: 12px 14px; border: 2px solid var(--tone); background: var(--tone-bg); }
+  .verdict .head { display: flex; align-items: center; gap: 8px; }
+  .verdict .icon { width: 26px; height: 26px; flex: none; }
+  .verdict h2 { font-size: clamp(21px, 5.6vw, 30px); line-height: 1.18; margin: 4px 0 0; letter-spacing: -.01em; }
+  .verdict h2 + h2 { margin-top: 6px; }
+  .verdict h2 small { font: inherit; color: var(--muted-foreground); }
+  .verdict p { margin: 6px 0 0; font-size: 15px; }
+  .verdict .src { font-weight: 600; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; }
+  .now { margin-top: 10px; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: end; }
+  .now .num { font-size: 32px; font-weight: 700; line-height: 1; }
+  .now .meta { font-size: 13px; color: var(--muted-foreground); }
+  .now .dist { text-align: right; }
+  .now .dist .num { font-size: 26px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 1px 9px 1px 3px;
+    border-radius: 99px; background: var(--tone-bg); border: 1px solid var(--tone); white-space: nowrap; vertical-align: middle; }
+  .pill b { background: var(--tone); color: var(--ink); border-radius: 99px; min-width: 20px; text-align: center; padding: 0 5px; }
+  .pill.maybe { border-style: dashed; border-width: 2px; background: transparent; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .08em; padding: 1px 8px; border-radius: 4px; background: var(--foreground); color: var(--background); }
+
+  /* 24 h strip */
+  .strip { margin-top: 12px; }
+  .strip .marks { position: relative; height: 18px; font-size: 12px; font-weight: 600; }
+  .strip .marks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+  .strip .cells { display: grid; grid-template-columns: repeat(25, 1fr); gap: 1px; }
+  .strip .cell { height: 26px; background: var(--tone); color: var(--ink); font-size: 12px; font-weight: 700; display: grid; place-items: center; min-width: 0; }
+  .strip .cell.maybe { background: repeating-linear-gradient(135deg, var(--tone) 0 4px, var(--maybe) 4px 7px); }
+  .strip .cell.mark { outline: 2px solid var(--foreground); outline-offset: -1px; z-index: 1; }
+  .strip .cell:first-child { border-radius: 6px 0 0 6px; margin-right: 3px; }
+  .strip .cell:last-child { border-radius: 0 6px 6px 0; }
+  .strip .legend { margin-top: 4px; }
+
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+  .tile { background: var(--card); border: 1px solid var(--border); border-top: 6px solid var(--tone); border-radius: var(--radius); padding: 8px 10px; min-width: 0; }
+  .tile .lead { font-size: 13px; font-weight: 700; }
+  .tile .num { font-size: 26px; font-weight: 700; line-height: 1.1; margin-top: 2px; }
+  .tile .when { font-size: 15px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+  .tile .pill { margin: 2px 0; white-space: normal; }
+  .tile .small { font-size: 12px; color: var(--muted-foreground); line-height: 1.35; margin-top: 3px; }
+  @media (max-width: 420px) { .tiles { gap: 6px; } .tile { padding: 6px 7px; } .tile .num { font-size: 22px; } .tile .pill { font-size: 12px; } }
+
+  .isstale .grey { filter: grayscale(1); }
+  .isstale .now .num { color: var(--muted-foreground); }
+
+  section.more { margin-top: 28px; }
+  .plan { display: grid; gap: 10px; }
+  .plan .row { border-left: 6px solid var(--tone); padding: 8px 12px; background: var(--card); border-radius: 0 var(--radius) var(--radius) 0; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .plan .row.maybe { border-left-style: dashed; }
+  .plan h3 { font-size: 16px; margin: 0; }
+  .plan .times { font-size: 14px; margin: 2px 0 4px; }
+  .plan ul { margin: 0; padding-left: 18px; font-size: 15px; }
+  .chartbox svg { display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 12px; color: var(--muted-foreground); margin-top: 8px; }
+  .legend i { display: inline-block; width: 16px; height: 10px; vertical-align: -1px; margin-right: 5px; border-radius: 2px; }
+  .note { font-size: 14px; color: var(--muted-foreground); }
+  .cats { display: grid; gap: 8px; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .cats { grid-template-columns: repeat(5, 1fr); } }
+  .cats > div { border-top: 6px solid var(--tone); padding: 8px 10px; font-size: 14px; }
+  .cats ul { margin: 4px 0 0; padding-left: 16px; }
+  .grid2 { display: grid; gap: 14px; grid-template-columns: 1fr; margin-top: 14px; }
+  @media (min-width: 760px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+  .disclaimer { margin-top: 12px; font-size: 14px; padding: 10px 14px; border-left: 4px solid var(--brand); background: var(--muted); border-radius: 0 var(--radius) var(--radius) 0; }
+  details { margin-top: 24px; }
+  summary { cursor: pointer; font-weight: 600; }
+  footer { background: var(--brand-deep); color: var(--brand-foreground); font-size: 14px; }
+  footer .wrap { padding-block: 24px; display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: space-between; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<nav class="mock" aria-label="Nur für das Mockup">
+  <div class="wrap"><strong>Mockup:</strong>
+    <a href="#normal">Normal</a><a href="#flood">Hochwasser</a><a href="#stale">Veraltet</a><a href="#fallback">Ersatzmodell</a>
+    <span id="mocknow"></span>
+  </div>
+</nav>
+
+<header class="site"><div class="wrap">
+  <a class="logo" href="#">energiekonzepte<span>·</span>ruhr</a>
+  <nav><a href="#">Leistungen</a><a href="#">Projekte</a><a href="#">Kontakt</a><a href="#erklaerung">So funktioniert’s</a></nav>
+</div></header>
+
+<main class="wrap" id="app">
+  <div class="pagehead"><h1>Pegel Deilbach · Essen-Kupferdreh</h1></div>
+  <p class="stamp" id="stamp"></p>
+  <div id="verdict"></div>
+  <div id="now"></div>
+  <div id="forecast">
+    <div class="strip grey" id="strip"></div>
+    <p class="label" style="margin:12px 0 0" id="tileslabel"></p>
+    <div class="tiles grey" id="tiles"></div>
+  </div>
+  <div class="disclaimer">Die Prognose ist eine Schätzung und keine amtliche Hochwasserwarnung. Amtliche Informationen:
+    <a href="https://www.hochwasserportal.nrw.de" rel="noopener">Hochwasserportal NRW</a>.</div>
+
+  <!-- Open question for the client: do the mobile barriers go up at 165 cm (start of Kat. 3) or only
+       shortly before 185 cm? The config text says "Kat. 3 … Ab 185 cm geht das Wasser über die Mauer". -->
+  <section class="more" id="plansection">
+    <p class="label">Zeitplan · laut Maßnahmenplan</p>
+    <div class="plan grey" id="plan"></div>
+    <p class="note" style="margin:6px 0 0">„Erwartet“ folgt der Prognoselinie, „möglich ab etwa“ der oberen Grenze des möglichen Bereichs (9 von 10). Keine amtliche Warnung.</p>
+  </section>
+
+  <section class="more">
+    <p class="label">Verlauf · letzte 48 Stunden und nächste 24 Stunden</p>
+    <div class="card chartbox grey"><div id="chart"></div>
+      <div class="legend" id="chartlegend">
+        <span><i style="background:var(--brand);height:3px"></i>gemessen</span>
+        <span><i style="border-top:3px dashed var(--brand);height:0"></i>Prognose</span>
+        <span><i style="background:color-mix(in oklch, var(--brand) 30%, transparent)"></i>wahrscheinlich (8 von 10)</span>
+        <span><i style="background:color-mix(in oklch, var(--brand) 13%, transparent)"></i>möglich (9 von 10)</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="more" id="erklaerung">
+    <p class="label">Kategorien</p>
+    <div class="cats" id="cats"></div>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">So lesen Sie die Prognose</h3>
+        <p><strong>Höchststand:</strong> Die Kacheln zeigen den höchsten Pegel, der bis dahin erwartet wird, und wann er eintritt. Klein darunter: der Stand am Ende des Zeitraums.</p>
+        <p><strong>Wahrscheinlich:</strong> In 8 von 10 Stunden lag der echte Pegel in diesem Bereich.<br>
+           <strong>Möglich:</strong> In 9 von 10 Stunden lag er in diesem Bereich. Reicht er in eine höhere Kategorie, steht das in der Überschrift.</p>
+        <p>Die Bereiche beruhen vor allem auf normalen Wasserständen; bei Hochwasser kann der Pegel auch darüber liegen.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Messstelle</h3>
+        <p><strong>Nullpunkt:</strong> 45 cm unter der Betonkante des Kanalauslasses. Höchster gemessener Stand bisher: 168 cm am 19.11.2024. Über Kategorie 3 hat das Modell keine Erfahrung.</p>
+        <p class="note" style="margin:0">Neue Messung etwa um :22, neue Prognose um :30 jeder Stunde. Die Seite prüft jede Minute, ob die Daten noch aktuell sind.</p>
+      </div>
+    </div>
+
+    <details>
+      <summary>Designbegründung (Mockup A „Lagebild“)</summary>
+      <div class="card" style="margin-top:10px">
+        <p><strong>Zuerst das Urteil, dann die Zahl.</strong> Wer nachts aufs Handy schaut, will wissen: „Muss ich etwas tun?“ Die Zahl „128 cm“ beantwortet das nicht – man muss die Kategorien kennen und selbst rechnen. „Erwartet: Kat. 3 heute gegen 22 Uhr“ beantwortet es sofort, mit Uhrzeit. Darunter, noch auf dem ersten Bildschirm: der gemessene Stand mit „Abstand bis kritisch“, ein 24-Stunden-Streifen und die Kacheln für 3, 12 und 24 Stunden.</p>
+        <p><strong>Erwartet und möglich, gleich groß.</strong> Farbe und Kategorie folgen der Prognoselinie, damit nicht bei jedem Regen Alarm ist. Erreicht die obere Grenze des möglichen Bereichs (90 %) eine höhere Kategorie, steht „Möglich: Kat. 4 ab etwa 22 Uhr“ in derselben Schriftgröße darunter, mit der frühesten Zeit. Das 80-%-Band erscheint nur in der Grafik; eine dritte Stufe brächte keine zusätzliche Sicherheit.</p>
+        <p><strong>Höchststand statt Stand zum Zeitpunkt.</strong> Für die Entscheidung zählt, ob der Pegel <em>bis</em> morgen früh die Mauer erreicht. Jede Kachel nennt deshalb groß den Höchststand und wann er eintritt, klein den Stand am Ende.</p>
+        <p><strong>Maßnahmen mit ihrer echten Schwelle.</strong> Eine Zeile je Maßnahme, mit „erwartet gegen“ und „möglich ab etwa“; nur Mögliches heißt „vorbereiten“.</p>
+        <p><strong>Veraltet und Ersatzmodell: kein Urteil.</strong> Grau statt Grün, der letzte Messwert mit Uhrzeit und Trend, und der Verweis auf das Hochwasserportal NRW.</p>
+        <p><strong>Farben.</strong> Grün → Gelb → Rot → Dunkelrot, immer mit Nummer und Name. Das Orange der Marke bleibt dem Logo vorbehalten.</p>
+      </div>
+    </details>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <div><strong>Energiekonzepte Ruhr</strong><br>Essen-Kupferdreh</div>
+  <div><a href="#">Impressum</a> · <a href="#">Datenschutz</a></div>
+</div></footer>
+
+<script>
+const SAMPLES = {"normal":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-10-16T09:30:00Z","newest_observation_at":"2026-10-16T09:22:03Z","situation":"strong","points":[{"valid_at":"2026-10-16T10:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T11:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T12:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T13:22:00Z","level_cm":18.9,"bands":[{"coverage_percent":80,"lower_cm":17.4,"upper_cm":20.4},{"coverage_percent":90,"lower_cm":17.4,"upper_cm":20.4}]},{"valid_at":"2026-10-16T14:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T15:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.7}]},{"valid_at":"2026-10-16T16:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.8}]},{"valid_at":"2026-10-16T17:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21}]},{"valid_at":"2026-10-16T18:22:00Z","level_cm":19.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":20.8},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.2}]},{"valid_at":"2026-10-16T19:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":20.9},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.4}]},{"valid_at":"2026-10-16T20:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":21},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.6}]},{"valid_at":"2026-10-16T21:22:00Z","level_cm":19.5,"bands":[{"coverage_percent":80,"lower_cm":18,"upper_cm":21.1},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":21.7}]},{"valid_at":"2026-10-16T22:22:00Z","level_cm":21,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":24.8},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":26.2}]},{"valid_at":"2026-10-16T23:22:00Z","level_cm":22.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":27.7},{"coverage_percent":90,"lower_cm":16.3,"upper_cm":29.6}]},{"valid_at":"2026-10-17T00:22:00Z","level_cm":25.4,"bands":[{"coverage_percent":80,"lower_cm":18.2,"upper_cm":34.2},{"coverage_percent":90,"lower_cm":15.7,"upper_cm":37.5}]},{"valid_at":"2026-10-17T01:22:00Z","level_cm":29.2,"bands":[{"coverage_percent":80,"lower_cm":19.2,"upper_cm":41.5},{"coverage_percent":90,"lower_cm":15.8,"upper_cm":45.7}]},{"valid_at":"2026-10-17T02:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":19.9,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.2,"upper_cm":49.3}]},{"valid_at":"2026-10-17T03:22:00Z","level_cm":31.3,"bands":[{"coverage_percent":80,"lower_cm":20.1,"upper_cm":45.2},{"coverage_percent":90,"lower_cm":16.4,"upper_cm":50}]},{"valid_at":"2026-10-17T04:22:00Z","level_cm":31.1,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":49.4}]},{"valid_at":"2026-10-17T05:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44},{"coverage_percent":90,"lower_cm":17.1,"upper_cm":49.1}]},{"valid_at":"2026-10-17T06:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":44},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.9}]},{"valid_at":"2026-10-17T07:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.9},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.8}]},{"valid_at":"2026-10-17T08:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":48.5}]},{"valid_at":"2026-10-17T09:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":48}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-10-14T10:22:03Z","level_cm":20.8},{"observed_at":"2026-10-14T11:22:03Z","level_cm":20.3},{"observed_at":"2026-10-14T12:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T13:22:03Z","level_cm":19.7},{"observed_at":"2026-10-14T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-14T15:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T16:22:03Z","level_cm":20.7},{"observed_at":"2026-10-14T17:22:03Z","level_cm":21},{"observed_at":"2026-10-14T18:22:03Z","level_cm":21.1},{"observed_at":"2026-10-14T19:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T20:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T21:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T22:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T23:22:03Z","level_cm":20.4},{"observed_at":"2026-10-15T00:22:03Z","level_cm":20.3},{"observed_at":"2026-10-15T01:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T02:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T03:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T04:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T05:22:03Z","level_cm":20},{"observed_at":"2026-10-15T06:22:03Z","level_cm":19.6},{"observed_at":"2026-10-15T07:22:03Z","level_cm":20},{"observed_at":"2026-10-15T08:22:03Z","level_cm":20.1},{"observed_at":"2026-10-15T09:22:03Z","level_cm":18.9},{"observed_at":"2026-10-15T10:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T11:22:03Z","level_cm":17.7},{"observed_at":"2026-10-15T12:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T13:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-15T16:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T17:22:03Z","level_cm":19},{"observed_at":"2026-10-15T18:22:03Z","level_cm":19},{"observed_at":"2026-10-15T19:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T20:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T21:22:03Z","level_cm":18.6},{"observed_at":"2026-10-15T22:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T23:22:03Z","level_cm":18.5},{"observed_at":"2026-10-16T00:22:03Z","level_cm":18},{"observed_at":"2026-10-16T01:22:03Z","level_cm":18.3},{"observed_at":"2026-10-16T02:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T03:22:03Z","level_cm":18.8},{"observed_at":"2026-10-16T04:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T05:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T06:22:03Z","level_cm":19.7},{"observed_at":"2026-10-16T07:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T08:22:03Z","level_cm":19},{"observed_at":"2026-10-16T09:22:03Z","level_cm":18.9}]}},"flood_made_up":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-11-19T15:30:00Z","newest_observation_at":"2026-11-19T15:22:02Z","situation":"strong","points":[{"valid_at":"2026-11-19T16:22:00Z","level_cm":133.7,"bands":[{"coverage_percent":80,"lower_cm":127.5,"upper_cm":139.9},{"coverage_percent":90,"lower_cm":125.6,"upper_cm":141.8}]},{"valid_at":"2026-11-19T17:22:00Z","level_cm":138.7,"bands":[{"coverage_percent":80,"lower_cm":130.3,"upper_cm":147.1},{"coverage_percent":90,"lower_cm":127.8,"upper_cm":149.6}]},{"valid_at":"2026-11-19T18:22:00Z","level_cm":145.8,"bands":[{"coverage_percent":80,"lower_cm":135.2,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":132,"upper_cm":159.6}]},{"valid_at":"2026-11-19T19:22:00Z","level_cm":154.4,"bands":[{"coverage_percent":80,"lower_cm":141.6,"upper_cm":167.2},{"coverage_percent":90,"lower_cm":137.8,"upper_cm":171}]},{"valid_at":"2026-11-19T20:22:00Z","level_cm":163.1,"bands":[{"coverage_percent":80,"lower_cm":148.1,"upper_cm":178.1},{"coverage_percent":90,"lower_cm":143.6,"upper_cm":182.6}]},{"valid_at":"2026-11-19T21:22:00Z","level_cm":169.6,"bands":[{"coverage_percent":80,"lower_cm":152.4,"upper_cm":186.8},{"coverage_percent":90,"lower_cm":147.2,"upper_cm":192}]},{"valid_at":"2026-11-19T22:22:00Z","level_cm":172,"bands":[{"coverage_percent":80,"lower_cm":152.6,"upper_cm":191.4},{"coverage_percent":90,"lower_cm":146.8,"upper_cm":197.2}]},{"valid_at":"2026-11-19T23:22:00Z","level_cm":168,"bands":[{"coverage_percent":80,"lower_cm":146.4,"upper_cm":189.6},{"coverage_percent":90,"lower_cm":139.9,"upper_cm":196.1}]},{"valid_at":"2026-11-20T00:22:00Z","level_cm":159.9,"bands":[{"coverage_percent":80,"lower_cm":136.1,"upper_cm":183.7},{"coverage_percent":90,"lower_cm":129,"upper_cm":190.8}]},{"valid_at":"2026-11-20T01:22:00Z","level_cm":149.6,"bands":[{"coverage_percent":80,"lower_cm":123.6,"upper_cm":175.6},{"coverage_percent":90,"lower_cm":115.8,"upper_cm":183.4}]},{"valid_at":"2026-11-20T02:22:00Z","level_cm":139.4,"bands":[{"coverage_percent":80,"lower_cm":111.2,"upper_cm":167.6},{"coverage_percent":90,"lower_cm":102.7,"upper_cm":176.1}]},{"valid_at":"2026-11-20T03:22:00Z","level_cm":130.7,"bands":[{"coverage_percent":80,"lower_cm":100.3,"upper_cm":161.1},{"coverage_percent":90,"lower_cm":91.2,"upper_cm":170.2}]},{"valid_at":"2026-11-20T04:22:00Z","level_cm":124.1,"bands":[{"coverage_percent":80,"lower_cm":91.5,"upper_cm":156.7},{"coverage_percent":90,"lower_cm":81.7,"upper_cm":166.5}]},{"valid_at":"2026-11-20T05:22:00Z","level_cm":119.5,"bands":[{"coverage_percent":80,"lower_cm":84.7,"upper_cm":154.3},{"coverage_percent":90,"lower_cm":74.3,"upper_cm":164.7}]},{"valid_at":"2026-11-20T06:22:00Z","level_cm":116.4,"bands":[{"coverage_percent":80,"lower_cm":79.4,"upper_cm":153.4},{"coverage_percent":90,"lower_cm":68.3,"upper_cm":164.5}]},{"valid_at":"2026-11-20T07:22:00Z","level_cm":114,"bands":[{"coverage_percent":80,"lower_cm":74.8,"upper_cm":153.2},{"coverage_percent":90,"lower_cm":63,"upper_cm":165}]},{"valid_at":"2026-11-20T08:22:00Z","level_cm":112.2,"bands":[{"coverage_percent":80,"lower_cm":70.8,"upper_cm":153.6},{"coverage_percent":90,"lower_cm":58.4,"upper_cm":166}]},{"valid_at":"2026-11-20T09:22:00Z","level_cm":110.4,"bands":[{"coverage_percent":80,"lower_cm":66.8,"upper_cm":154},{"coverage_percent":90,"lower_cm":53.7,"upper_cm":167.1}]},{"valid_at":"2026-11-20T10:22:00Z","level_cm":108.8,"bands":[{"coverage_percent":80,"lower_cm":63,"upper_cm":154.6},{"coverage_percent":90,"lower_cm":49.3,"upper_cm":168.3}]},{"valid_at":"2026-11-20T11:22:00Z","level_cm":107.2,"bands":[{"coverage_percent":80,"lower_cm":59.2,"upper_cm":155.2},{"coverage_percent":90,"lower_cm":44.8,"upper_cm":169.6}]},{"valid_at":"2026-11-20T12:22:00Z","level_cm":105.6,"bands":[{"coverage_percent":80,"lower_cm":55.4,"upper_cm":155.8},{"coverage_percent":90,"lower_cm":40.3,"upper_cm":170.9}]},{"valid_at":"2026-11-20T13:22:00Z","level_cm":104,"bands":[{"coverage_percent":80,"lower_cm":51.6,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":35.9,"upper_cm":172.1}]},{"valid_at":"2026-11-20T14:22:00Z","level_cm":102.4,"bands":[{"coverage_percent":80,"lower_cm":47.8,"upper_cm":157},{"coverage_percent":90,"lower_cm":31.4,"upper_cm":173.4}]},{"valid_at":"2026-11-20T15:22:00Z","level_cm":100.8,"bands":[{"coverage_percent":80,"lower_cm":44,"upper_cm":157.6},{"coverage_percent":90,"lower_cm":27,"upper_cm":174.6}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-11-17T16:22:02Z","level_cm":35},{"observed_at":"2026-11-17T17:22:02Z","level_cm":35},{"observed_at":"2026-11-17T18:22:02Z","level_cm":35},{"observed_at":"2026-11-17T19:22:02Z","level_cm":35},{"observed_at":"2026-11-17T20:22:02Z","level_cm":35},{"observed_at":"2026-11-17T21:22:02Z","level_cm":35},{"observed_at":"2026-11-17T22:22:02Z","level_cm":35},{"observed_at":"2026-11-17T23:22:02Z","level_cm":35},{"observed_at":"2026-11-18T00:22:02Z","level_cm":35},{"observed_at":"2026-11-18T01:22:02Z","level_cm":35},{"observed_at":"2026-11-18T02:22:02Z","level_cm":35},{"observed_at":"2026-11-18T03:22:02Z","level_cm":35},{"observed_at":"2026-11-18T04:22:02Z","level_cm":35},{"observed_at":"2026-11-18T05:22:02Z","level_cm":35},{"observed_at":"2026-11-18T06:22:02Z","level_cm":35},{"observed_at":"2026-11-18T07:22:02Z","level_cm":35},{"observed_at":"2026-11-18T08:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T09:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T10:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T11:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T12:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T13:22:02Z","level_cm":35.3},{"observed_at":"2026-11-18T14:22:02Z","level_cm":35.4},{"observed_at":"2026-11-18T15:22:02Z","level_cm":35.6},{"observed_at":"2026-11-18T16:22:02Z","level_cm":35.9},{"observed_at":"2026-11-18T17:22:02Z","level_cm":36.2},{"observed_at":"2026-11-18T18:22:02Z","level_cm":36.7},{"observed_at":"2026-11-18T19:22:02Z","level_cm":37.3},{"observed_at":"2026-11-18T20:22:02Z","level_cm":38.2},{"observed_at":"2026-11-18T21:22:02Z","level_cm":39.4},{"observed_at":"2026-11-18T22:22:02Z","level_cm":41},{"observed_at":"2026-11-18T23:22:02Z","level_cm":43.2},{"observed_at":"2026-11-19T00:22:02Z","level_cm":46.1},{"observed_at":"2026-11-19T01:22:02Z","level_cm":49.8},{"observed_at":"2026-11-19T02:22:02Z","level_cm":54.4},{"observed_at":"2026-11-19T03:22:02Z","level_cm":60},{"observed_at":"2026-11-19T04:22:02Z","level_cm":66.5},{"observed_at":"2026-11-19T05:22:02Z","level_cm":73.8},{"observed_at":"2026-11-19T06:22:02Z","level_cm":81.5},{"observed_at":"2026-11-19T07:22:02Z","level_cm":89.2},{"observed_at":"2026-11-19T08:22:02Z","level_cm":96.5},{"observed_at":"2026-11-19T09:22:02Z","level_cm":103},{"observed_at":"2026-11-19T10:22:02Z","level_cm":108.6},{"observed_at":"2026-11-19T11:22:02Z","level_cm":113.2},{"observed_at":"2026-11-19T12:22:02Z","level_cm":116.9},{"observed_at":"2026-11-19T13:22:02Z","level_cm":119.8},{"observed_at":"2026-11-19T14:22:02Z","level_cm":122},{"observed_at":"2026-11-19T15:22:02Z","level_cm":128}]}}};
+
+// Mirrors config/pegel.json; one place for thresholds, actions and leads.
+const MODEL = "ridge:change:v2";
+const CATEGORIES = [
+  { n: 1, name: "unkritisch", from: -Infinity },
+  { n: 2, name: "kritisch", from: 145 },
+  { n: 3, name: "sehr kritisch", from: 165 },
+  { n: 4, name: "extrem kritisch", from: 185 },
+  { n: 5, name: "Chaos", from: 225 },
+];
+// One line per action with its real trigger level; info lines describe what happens.
+const ACTIONS = [
+  { at: 145, info: true, text: "Der Deilbach tritt am Parkplatz Kupferdreh über das Ufer." },
+  { at: 165, text: "Rückstauventil schließen und Pumpe anschließen." },
+  { at: 165, text: "Mobile Hochwasserbarrieren aufbauen (vor 185 cm)." },
+  { at: 185, info: true, text: "Ohne Barrieren ginge das Wasser über die Mauer." },
+  { at: 185, text: "Sandsäcke im Hof auslegen." },
+  { at: 225, text: "EG-Wohnung räumen, Strom abschalten." },
+];
+const LEADS = [3, 12, 24];
+const STALE_MS = 90 * 60e3;
+const TREND_CM = 2;
+const HOUR = 3600e3;
+const PORTAL = `<a href="https://www.hochwasserportal.nrw.de" rel="noopener">Hochwasserportal NRW</a>`;
+
+// Strictly above the threshold, as in core/categories.py: 145,0 cm is still Kat. 1.
+const category = cm => CATEGORIES.filter(c => cm > c.from).pop();
+const t = s => Date.parse(s);
+const cm = (v, digits = 0) => v.toLocaleString("de-DE", { maximumFractionDigits: digits, minimumFractionDigits: digits }) + " cm";
+const fmt = (ms, opts) => new Intl.DateTimeFormat("de-DE", { timeZone: "Europe/Berlin", ...opts }).format(ms);
+const hm = ms => fmt(ms, { hour: "2-digit", minute: "2-digit" }) + " Uhr";
+const hourOf = ms => Number(new Intl.DateTimeFormat("de-DE", { timeZone: "Europe/Berlin", hour: "numeric", hourCycle: "h23" })
+  .formatToParts(ms).find(p => p.type === "hour").value);
+const berlinDay = ms => t(fmt(ms, { year: "numeric", month: "2-digit", day: "2-digit" }).split(".").reverse().join("-"));
+function dayWord(ms, nowMs) {
+  const d = Math.round((berlinDay(ms) - berlinDay(nowMs)) / (24 * HOUR));
+  return d === 0 ? "heute" : d === 1 ? "morgen" : d === -1 ? "gestern" : fmt(ms, { weekday: "short" });
+}
+const at = (ms, nowMs) => `${dayWord(ms, nowMs)} ${hourOf(ms)} Uhr`;            // "morgen 3 Uhr"
+const around = (ms, nowMs) => `${dayWord(ms, nowMs)} gegen ${hourOf(ms)} Uhr`;  // "heute gegen 22 Uhr"
+const fromAbout = (ms, nowMs) => `${dayWord(ms, nowMs)} ab etwa ${hourOf(ms)} Uhr`; // "heute ab etwa 22 Uhr"
+const stampOf =(ms, nowMs) => `${dayWord(ms, nowMs)} ${hm(ms)}`;
+const band = (p, pct) => p.bands.find(b => b.coverage_percent === pct) || null;
+const top90 = p => band(p, 90).upper_cm;
+const firstAbove = (points, level, value) => points.find(p => value(p) > level) || null;
+
+function windowStats(points, obsMs, hours) {
+  const inWindow = points.filter(p => t(p.valid_at) - obsMs <= hours * HOUR + 60e3);
+  if (!inWindow.length) return { hours, empty: true };
+  const peak = inWindow.reduce((a, b) => (b.level_cm > a.level_cm ? b : a));
+  const levels = inWindow.map(p => p.level_cm);
+  const upper = Math.max(...inWindow.map(top90));
+  return { hours, peak, end: inWindow[inWindow.length - 1], upper, flat: Math.max(...levels) - Math.min(...levels) < TREND_CM,
+    cat: category(peak.level_cm), cat90: category(upper) };
+}
+
+function trend(observations) {
+  const last = observations[observations.length - 1];
+  const before = observations.find(o => t(o.observed_at) >= t(last.observed_at) - 3 * HOUR - 60e3);
+  if (!before || t(last.observed_at) - t(before.observed_at) < 2 * HOUR) return { word: "Trend unbekannt", arrow: "", delta: null };
+  const delta = last.level_cm - before.level_cm;
+  const word = delta >= TREND_CM ? "steigend" : delta <= -TREND_CM ? "fallend" : "gleichbleibend";
+  return { delta, word, arrow: delta >= TREND_CM ? "↗" : delta <= -TREND_CM ? "↘" : "→" };
+}
+const trendText = tr => tr.delta === null ? tr.word : `${tr.word} (${tr.delta >= 0 ? "+" : "−"}${cm(Math.abs(Math.round(tr.delta)))} in 3 Std.)`;
+
+function computeView(sample, nowMs) {
+  const f = sample.forecast, obsList = sample.history.observations;
+  const current = obsList[obsList.length - 1];
+  const currentMs = t(current.observed_at), issuedMs = t(f.issued_at);
+  const nowCat = category(current.level_cm);
+  const next = CATEGORIES[nowCat.n] || null;
+  const v = { current, currentMs, issuedMs, nowMs, nowCat, next, toNext: next ? next.from - current.level_cm : null,
+    trend: trend(obsList), situation: f.situation };
+  v.stale = nowMs - t(f.newest_observation_at) > STALE_MS || nowMs - issuedMs > STALE_MS || nowMs - currentMs > STALE_MS;
+  v.fallback = f.model !== MODEL || !f.points.length || f.points.some(p => !band(p, 90));
+  const last = `Zuletzt gemessen: <strong>${cm(current.level_cm)}</strong> ${stampOf(currentMs, nowMs)}, ${trendText(v.trend)}.`;
+  if (v.fallback) {
+    Object.assign(v, { tone: "stale", lines: ["Keine Modellprognose verfügbar"],
+      text: `Gerade läuft nur das Ersatzverfahren; es schreibt den letzten Messwert fort und sagt nichts über einen Anstieg. ${last} Amtliche Werte: ${PORTAL}.` });
+  }
+  if (v.fallback) return v;
+
+  const points = f.points, obsMs = t(f.newest_observation_at);
+  v.windows = LEADS.map(h => windowStats(points, obsMs, h));
+  v.points = points;
+  v.obsMs = obsMs;
+  if (v.stale) {
+    const ageH = Math.floor((nowMs - Math.min(obsMs, currentMs)) / HOUR);
+    Object.assign(v, { tone: "stale", lines: ["Keine aktuelle Prognose"],
+      text: `Die Daten sind über ${ageH} Stunden alt und zeigen nicht die Lage jetzt. ${last} Aktuelle amtliche Werte: ${PORTAL}.` });
+    return v;
+  }
+
+  const day = v.windows[v.windows.length - 1];
+  const lineCat = category(Math.max(day.peak.level_cm, current.level_cm));
+  const maybeCat = category(day.upper);
+  v.tone = String(Math.max(lineCat.n, maybeCat.n > 1 ? 2 : 1));
+  v.lineCat = lineCat;
+  v.maybeCat = maybeCat;
+  const peakMs = t(day.peak.valid_at);
+  const rise = day.peak.level_cm - current.level_cm;
+  v.lines = [];
+  if (lineCat.n === 1 && maybeCat.n === 1) v.lines.push("Kein Hochwasser erwartet");
+  else if (lineCat.n === nowCat.n && lineCat.n > 1) v.lines.push(`Hochwasser: jetzt Kat. ${nowCat.n} · ${nowCat.name}`);
+  else if (lineCat.n === 1) v.lines.push(`Erwartet: Kat. 1 · ${lineCat.name}`);
+  else v.lines.push(`Erwartet: Kat. ${lineCat.n} · ${lineCat.name}, ${around(t(firstAbove(points, lineCat.from, p => p.level_cm).valid_at), nowMs)}`);
+  if (maybeCat.n > lineCat.n) {
+    v.lines.push(`Möglich: Kat. ${maybeCat.n} · ${maybeCat.name} ${fromAbout(t(firstAbove(points, maybeCat.from, top90).valid_at), nowMs)}`);
+  }
+  // In a flood the tiles carry the numbers; the verdict keeps to times so the tiles stay above the fold.
+  const parts = lineCat.n > 1 ? [] : [`Erwartet höchstens ${cm(day.peak.level_cm)} · möglich bis etwa ${cm(day.upper)}.`];
+  if (lineCat.n > 1 && lineCat.n > nowCat.n) {
+    const early = firstAbove(points, lineCat.from, top90);
+    parts.push(`Kat. ${lineCat.n} frühestens ${around(t(early.valid_at), nowMs)}.`);
+  }
+  if (lineCat.n > 1 && rise >= TREND_CM) parts.push(`Höchststand etwa ${cm(day.peak.level_cm)} ${around(peakMs, nowMs)}${day.end.level_cm < day.peak.level_cm - TREND_CM ? ", danach fallend" : ""}.`);
+  else if (rise >= TREND_CM) parts.push(`Der Pegel steigt bis ${around(peakMs, nowMs)} um etwa ${cm(rise)}${day.end.level_cm < day.peak.level_cm - TREND_CM ? ", danach fällt er" : ""}.`);
+  else if (day.end.level_cm <= current.level_cm - TREND_CM) parts.push("Der Pegel fällt.");
+  else parts.push("Der Pegel bleibt etwa gleich.");
+  if (f.situation === "degraded") parts.push("<strong>Eingeschränkt:</strong> Eine Eingangsgröße fehlte, diese Prognose ist weniger verlässlich.");
+  v.text = parts.join(" ");
+  v.plan = planRows(points, nowMs, maybeCat);
+  return v;
+}
+
+function planRows(points, nowMs, maybeCat) {
+  return CATEGORIES.slice(1, maybeCat.n).map(c => {
+    const expected = firstAbove(points, c.from, p => p.level_cm);
+    const possible = firstAbove(points, c.from, top90);
+    return { cat: c, expected: expected && t(expected.valid_at), possible: possible && t(possible.valid_at),
+      actions: ACTIONS.filter(a => a.at === c.from) };
+  });
+}
+
+function events(points, nowMs) {
+  const peak = points.reduce((a, b) => (b.level_cm > a.level_cm ? b : a));
+  const lines = [`Höchststand etwa ${cm(peak.level_cm)} ${around(t(peak.valid_at), nowMs)}`];
+  const above = peak.level_cm > CATEGORIES[1].from;
+  const back = above && points.slice(points.indexOf(peak)).find(p => p.level_cm <= CATEGORIES[1].from);
+  if (back) lines.push(`wieder unter ${CATEGORIES[1].from} cm ${around(t(back.valid_at), nowMs)}`);
+  return lines.join(" · ");
+}
+
+// ---------- rendering ----------
+const MOCK_NOW = { normal: "2026-10-16T09:41:00Z", flood: "2026-11-19T15:41:00Z", stale: "2026-11-19T17:40:00Z", fallback: "2026-11-19T15:41:00Z" };
+function sampleFor(state) {
+  if (state === "normal") return SAMPLES.normal;
+  if (state !== "fallback") return SAMPLES.flood_made_up;
+  const s = JSON.parse(JSON.stringify(SAMPLES.flood_made_up));
+  const lastLevel = s.history.observations[s.history.observations.length - 1].level_cm;
+  s.forecast.model = "persistence";
+  s.forecast.points.forEach(p => { p.level_cm = lastLevel; p.bands = []; });
+  return s;
+}
+
+const pill = (c, maybe) => `<span class="pill t${c.n}${maybe ? " maybe" : ""}"><b>${c.n}</b>${maybe ? "möglich" : c.name}</span>`;
+const ICONS = {
+  stale: `<circle cx="13" cy="13" r="12" fill="var(--tone)"/><path d="M13 6v8l4 3" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+  ok: `<circle cx="13" cy="13" r="12" fill="var(--tone)"/><path d="M7.5 13.5l3.5 3.5 7.5-8" stroke="var(--ink)" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+  warn: `<path d="M13 1.5l12 22H1z" fill="var(--tone)"/><path d="M13 9v7" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/><circle cx="13" cy="20" r="1.6" fill="var(--ink)"/>`,
+};
+
+function renderVerdict(v) {
+  const icon = v.tone === "stale" ? ICONS.stale : v.tone === "1" ? ICONS.ok : ICONS.warn;
+  const label = v.tone === "stale" ? "Lage · keine Bewertung" : "Lage · nächste 24 Stunden";
+  return `<div class="verdict t${v.tone}" role="status">
+    <div class="head"><svg class="icon" viewBox="0 0 26 26" aria-hidden="true">${icon}</svg><span class="label" style="margin:0">${label}</span></div>
+    ${v.lines.map(l => `<h2>${l}</h2>`).join("")}<p>${v.text}</p></div>`;
+}
+
+function renderNow(v) {
+  const dist = v.next ? `<div class="dist"><div class="meta">Abstand bis ${v.next.name}</div><div class="num">noch ${cm(Math.max(0, Math.round(v.toNext)))}</div></div>` : "<div></div>";
+  return `<div class="card now ${v.stale ? "grey" : ""}">
+    <div class="meta" style="grid-column:1/-1">${v.stale ? `<span class="badge">VERALTET</span> Zuletzt gemessen` : "Jetzt gemessen"} · ${stampOf(v.currentMs, v.nowMs)}</div>
+    <span class="num">${cm(v.current.level_cm)}</span>
+    ${dist}
+    <div class="meta" style="grid-column:1/-1">${pill(v.nowCat)} <span aria-hidden="true">${v.trend.arrow}</span> ${trendText(v.trend)}</div></div>`;
+}
+
+function renderStrip(v) {
+  const markAt = new Map(v.windows.filter(w => !w.empty).map(w => [w.end, `+${w.hours} h`]));
+  let anyMaybe = false;
+  const cells = [`<div class="cell t${v.nowCat.n} mark" title="jetzt">${v.nowCat.n}</div>`].concat(v.points.map(p => {
+    const c = category(p.level_cm), m = category(top90(p)), mark = markAt.has(p);
+    if (m.n > c.n) anyMaybe = true;
+    return `<div class="cell t${c.n}${m.n > c.n ? " maybe" : ""}${mark ? " mark" : ""}" style="--maybe:var(--c${m.n})">${mark ? c.n : ""}</div>`;
+  }));
+  const pos = i => `left:${((i + 0.5) / 25 * 100).toFixed(2)}%`;
+  const marks = [`<span style="left:0;transform:none">jetzt</span>`].concat(v.points.map((p, i) => markAt.has(p)
+    ? `<span style="${i === v.points.length - 1 ? "right:0;transform:none" : pos(i + 1)}">${markAt.get(p)}</span>` : ""));
+  return `<div class="marks">${marks.join("")}</div><div class="cells" role="img" aria-label="Kategorie je Stunde für die nächsten 24 Stunden">${cells.join("")}</div>
+    <div class="legend"><span>Kategorie je Stunde${anyMaybe ? " · schraffiert: höhere möglich" : ""}</span></div>`;
+}
+
+function renderTile(w, v) {
+  if (w.empty) return `<div class="tile tstale"><div class="lead">nächste ${w.hours} Std.</div><div class="small">Keine Prognosewerte für diesen Zeitraum.</div></div>`;
+  const endMs = t(w.end.valid_at);
+  return `<div class="tile t${w.cat.n}">
+    <div class="lead">${w.hours} Stunden</div>
+    <div class="num">${cm(w.peak.level_cm)}</div>
+    <div class="when">${w.flat ? "gleich&shy;bleibend" : at(t(w.peak.valid_at), v.nowMs)}</div>
+    ${pill(w.cat)}${w.cat90.n > w.cat.n ? " " + pill(w.cat90, true) : ""}
+    <div class="small">möglich bis etwa ${cm(w.upper)}</div>
+    <div class="small">${at(endMs, v.nowMs)}: ${cm(w.end.level_cm)}</div>
+  </div>`;
+}
+
+function renderPlan(v) {
+  if (!v.plan.length) return `<div class="row t1"><h3>Keine Maßnahmen nötig</h3><div class="times">Der Pegel bleibt auch im möglichen Bereich unter ${CATEGORIES[1].from} cm.</div></div>`;
+  return v.plan.map(r => {
+    const maybe = !r.expected;
+    const times = (r.expected ? `erwartet ${around(r.expected, v.nowMs)} · ` : "nicht erwartet · ") + `möglich ${fromAbout(r.possible, v.nowMs)}`;
+    return `<div class="row t${r.cat.n}${maybe ? " maybe" : ""}"><h3>Über ${r.cat.from} cm · Kat. ${r.cat.n} ${r.cat.name}</h3>
+      <div class="times">${times}</div>
+      <ul>${r.actions.map(a => `<li>${a.info ? a.text : (maybe ? "Vorbereiten: " : "") + a.text}</li>`).join("")}</ul></div>`;
+  }).join("") + `<p class="note" style="margin:0">${events(v.points, v.nowMs)}</p>`;
+}
+
+function renderChart(sample, v, width) {
+  const f = sample.forecast, obs = sample.history.observations;
+  const showForecast = !v.fallback;
+  const W = Math.max(300, Math.round(width || 680)), H = W < 500 ? 240 : 280, L = 36, R = 8, T = 10, B = 24, FS = 13;
+  const x0 = t(obs[0].observed_at), x1 = showForecast ? t(f.points[f.points.length - 1].valid_at) : t(obs[obs.length - 1].observed_at);
+  const top = Math.max(...obs.map(o => o.level_cm), ...(showForecast ? f.points.map(top90) : []));
+  const step = [5, 10, 20, 25, 50, 100].find(s => top * 1.1 / s <= 5);
+  const yMax = Math.ceil(top * 1.1 / step) * step;
+  const X = ms => L + (ms - x0) / (x1 - x0) * (W - L - R);
+  const Y = c => T + (1 - c / yMax) * (H - T - B);
+  const line = pts => pts.map(([a, b], i) => `${i ? "L" : "M"}${X(a).toFixed(1)},${Y(b).toFixed(1)}`).join("");
+  const lastObs = obs[obs.length - 1];
+  const start = [t(lastObs.observed_at), lastObs.level_cm];
+  const area = pct => line([start, ...f.points.map(p => [t(p.valid_at), band(p, pct).upper_cm]),
+    ...f.points.map(p => [t(p.valid_at), band(p, pct).lower_cm]).reverse(), start]) + "Z";
+  let g = "";
+  for (let c = 0; c <= yMax; c += step) g += `<line x1="${L}" x2="${W - R}" y1="${Y(c)}" y2="${Y(c)}" stroke="var(--border)"/><text x="${L - 5}" y="${Y(c) + 4}" text-anchor="end">${c}</text>`;
+  const every = W < 500 ? 24 : 12;
+  for (let ms = Math.ceil(x0 / (every * HOUR)) * every * HOUR; ms <= x1; ms += every * HOUR) {
+    g += `<line x1="${X(ms)}" x2="${X(ms)}" y1="${T}" y2="${H - B}" stroke="var(--border)"/><text x="${X(ms)}" y="${H - 6}" text-anchor="middle">${fmt(ms, { weekday: "short" })} ${hourOf(ms)} Uhr</text>`;
+  }
+  let lastLabelY = Infinity;  // thresholds are 20-40 cm apart; skip a label that would overlap the one below
+  const thresholds = CATEGORIES.slice(1).filter(c => c.from <= yMax).map(c => {
+    const y = Y(c.from), room = lastLabelY - y >= FS + 3;
+    if (room) lastLabelY = y;
+    return `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="var(--c${c.n})" stroke-width="2" stroke-dasharray="6 4"/>` +
+      (room ? `<text x="${L + 4}" y="${y - 3}" fill="var(--foreground)" font-weight="600">Kat. ${c.n} über ${c.from} cm</text>` : "");
+  }).join("");
+  const hidden = CATEGORIES[1].from > yMax ? `<text x="${W - R}" y="${T + FS}" text-anchor="end">kritisch erst über ${CATEGORIES[1].from} cm</text>` : "";
+  const fc = showForecast ? `<path d="${area(90)}" fill="var(--brand)" fill-opacity=".13"/><path d="${area(80)}" fill="var(--brand)" fill-opacity=".3"/>
+    <path d="${line([start, ...f.points.map(p => [t(p.valid_at), p.level_cm])])}" stroke="var(--brand)" stroke-width="2.5" stroke-dasharray="6 4" fill="none"/>` : "";
+  const xNow = X(t(lastObs.observed_at));
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Pegelverlauf in cm, gemessen und prognostiziert" font-size="${FS}" fill="var(--muted-foreground)" font-family="Manrope">
+    ${g}${thresholds}${hidden}${fc}
+    <path d="${line(obs.map(o => [t(o.observed_at), o.level_cm]))}" stroke="var(--brand)" stroke-width="2.5" fill="none"/>
+    <line x1="${xNow}" x2="${xNow}" y1="${T}" y2="${H - B}" stroke="var(--foreground)"/>
+    <text x="${xNow - 4}" y="${H - B - 5}" text-anchor="end" fill="var(--foreground)">letzte Messung</text>
+  </svg>`;
+}
+
+function renderCategories() {
+  return CATEGORIES.map((c, i) => {
+    const upto = CATEGORIES[i + 1];
+    const range = c.n === 1 ? `bis ${CATEGORIES[1].from} cm` : upto ? `über ${c.from} bis ${upto.from} cm` : `über ${c.from} cm`;
+    const acts = ACTIONS.filter(a => a.at === c.from).map(a => `<li>${a.text}</li>`).join("") || "<li>Keine Maßnahmen nötig.</li>";
+    return `<div class="card t${c.n}">${pill(c)}<div style="margin-top:4px;font-weight:600">${range}</div><ul>${acts}</ul></div>`;
+  }).join("");
+}
+
+let state = "normal";
+const nowMs = () => (MOCK_NOW[state] ? t(MOCK_NOW[state]) : Date.now());
+
+function render() {
+  const $ = id => document.getElementById(id);
+  const sample = sampleFor(state), now = nowMs();
+  const v = computeView(sample, now);
+  $("app").classList.toggle("isstale", v.stale);
+  $("mocknow").textContent = `Uhr: ${fmt(now, { day: "2-digit", month: "2-digit" })}, ${hm(now)}`;
+  $("stamp").innerHTML = `Prognose von ${stampOf(v.issuedMs, now)} · Messung ${stampOf(v.currentMs, now)}${v.stale ? " · <strong>veraltet</strong>" : ""}`;
+  $("verdict").innerHTML = renderVerdict(v);
+  $("now").innerHTML = renderNow(v);
+  $("forecast").hidden = v.fallback;
+  $("plansection").hidden = v.fallback;
+  $("chartlegend").hidden = v.fallback;
+  if (!v.fallback) {
+    $("strip").innerHTML = renderStrip(v);
+    $("tileslabel").textContent = v.stale ? `Veraltete Prognose von ${stampOf(v.issuedMs, now)} · nicht mehr gültig` : "Höchster Stand in den nächsten …";
+    $("tiles").innerHTML = v.windows.map(w => renderTile(w, v)).join("");
+    $("plan").innerHTML = v.stale ? `<div class="row tstale"><h3>Veraltet</h3><div class="times">Kein Zeitplan auf alten Daten. Bitte das ${PORTAL} prüfen.</div></div>` : renderPlan(v);
+  }
+  $("chart").innerHTML = renderChart(sample, v, $("chart").clientWidth);
+  $("cats").innerHTML = renderCategories();
+  document.querySelectorAll(".mock a").forEach(a => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + state)));
+}
+
+function fromHash() {
+  const h = location.hash.slice(1);
+  state = h in MOCK_NOW ? h : "normal";
+  render();
+}
+
+if (typeof document !== "undefined") {
+  window.addEventListener("hashchange", fromHash);
+  window.addEventListener("resize", render);
+  // Freshness must be re-checked: the real page stays open overnight.
+  setInterval(render, 60e3);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) render(); });
+  fromHash();
+}
+if (typeof module !== "undefined") module.exports = { computeView, windowStats, category, sampleFor, MOCK_NOW, SAMPLES, renderChart, renderTile, renderVerdict, renderNow, renderStrip, renderPlan, renderCategories };
+</script>
+</body>
+</html>
