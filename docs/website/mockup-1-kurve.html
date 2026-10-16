@@ -1,0 +1,354 @@
+<!doctype html>
+<!-- Mockup 1 "Nur die Kurve": the coloured-steps chart is the page.
+     Open question for the client: barriers at Kat. 3 (above 165 cm) or only before 185 cm? -->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pegel Deilbach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --background: oklch(99% .003 90); --foreground: oklch(20% .025 215);
+  --brand: oklch(36% .04 215); --brand-deep: oklch(28% .035 215); --brand-foreground: oklch(97% .005 90);
+  --accent: oklch(72% .18 50); --accent-foreground: oklch(18% .025 215);
+  --muted-foreground: oklch(48% .02 215); --border: oklch(90% .008 210); --card: #fff;
+  --c1: oklch(70% .13 155); --c2: oklch(86% .15 92); --c3: oklch(55% .19 30);
+  --c4: oklch(50% .2 25); --c5: oklch(33% .12 15);
+  --c1-ink: oklch(22% .04 155); --c2-ink: oklch(25% .05 80); --c3-ink: #fff; --c4-ink: #fff; --c5-ink: #fff;
+  --band80: oklch(36% .04 215 / .34); --band90: oklch(36% .04 215 / .15);
+  --zone-a: .16; --zone-b: .30;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: oklch(18% .025 215); --foreground: oklch(97% .005 90); --card: oklch(22% .025 215);
+    --muted-foreground: oklch(75% .02 215); --border: oklch(34% .02 215); --brand-deep: oklch(14% .02 215);
+    --band80: oklch(90% .03 215 / .34); --band90: oklch(90% .03 215 / .15); --zone-a: .22; --zone-b: .34;
+  }
+}
+:root[data-theme="dark"] {
+  --background: oklch(18% .025 215); --foreground: oklch(97% .005 90); --card: oklch(22% .025 215);
+  --muted-foreground: oklch(75% .02 215); --border: oklch(34% .02 215); --brand-deep: oklch(14% .02 215);
+  --band80: oklch(90% .03 215 / .34); --band90: oklch(90% .03 215 / .15); --zone-a: .22; --zone-b: .34;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--background); color: var(--foreground); font: 16px/1.5 "Manrope", system-ui, sans-serif; overflow-x: hidden; }
+.num, h1, h2, summary, .wordmark { font-family: "Space Grotesk", system-ui, sans-serif; }
+a { color: inherit; }
+.wrap { max-width: 1152px; margin: 0 auto; padding: 0 16px; }
+
+header.site { background: var(--background); border-bottom: 1px solid var(--border); }
+header.site .wrap { display: flex; align-items: center; height: 64px; gap: 24px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand img { width: 40px; height: 40px; border-radius: 8px; display: block; }
+.wordmark { font-size: 13px; font-weight: 700; letter-spacing: .2em; }
+header nav { flex: 1; display: flex; justify-content: center; gap: 28px; font-size: 14px; color: var(--muted-foreground); }
+header nav a { text-decoration: none; }
+.cta { background: var(--accent); color: var(--accent-foreground); border-radius: 999px; padding: 8px 18px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; text-decoration: none; }
+.burger { display: none; margin-left: auto; background: none; border: 0; color: inherit; padding: 8px; }
+@media (max-width: 860px) { header nav, .cta { display: none; } .burger { display: block; } }
+
+.top { text-align: center; padding: 20px 0 8px; }
+h1 { margin: 0; font-size: clamp(1.75rem, 5vw, 3rem); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; line-height: 1.1; }
+#status { margin-top: 10px; min-height: 34px; display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; font: 600 20px/1.2 "Space Grotesk", sans-serif; }
+.cat { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 6px; font: 700 15px/1 "Space Grotesk", sans-serif; }
+.cat.maybe { background: transparent !important; color: var(--foreground) !important; border: 2px dashed var(--foreground); }
+.badge { border: 2px solid var(--muted-foreground); color: var(--muted-foreground); border-radius: 999px; padding: 3px 14px; font-size: 16px; }
+.link { color: oklch(52% .16 50); font: 600 14px "Manrope", sans-serif; text-decoration: none; }
+
+.card { background: var(--card); border-radius: 1rem; box-shadow: 0 4px 24px oklch(20% .025 215 / .08); padding: 16px; margin: 0 auto 40px; }
+@media (max-width: 640px) { .card { padding: 12px 10px; } }
+#chart { position: relative; }
+#chart svg { display: block; font: 12px "Manrope", sans-serif; fill: var(--muted-foreground); overflow: visible; }
+.mk { position: absolute; top: 0; text-align: right; line-height: 1.1; }
+.mk-h { font-size: 13px; color: var(--muted-foreground); }
+.mk-v, .now-v { font: 700 26px/1.1 "Space Grotesk", sans-serif; white-space: nowrap; }
+.mk-v small, .now-v small { font-size: 13px; font-weight: 500; }
+.mk-c { display: flex; gap: 4px; justify-content: flex-end; margin-top: 2px; }
+.mk-c .cat { min-width: 22px; height: 22px; font-size: 13px; }
+.now { position: absolute; text-align: right; line-height: 1.1; }
+.now-l, .now-t { font-size: 13px; color: var(--muted-foreground); }
+.now-v { font-size: 26px; }
+.now { text-shadow: 0 0 3px var(--card), 0 0 8px var(--card); }
+.stale .now-v { color: var(--muted-foreground); }
+.grey .zones { filter: grayscale(1); }
+.grey polygon { opacity: .55; }
+.arrow { font-size: 18px; color: var(--foreground); }
+
+details { max-width: 640px; margin: 0 auto 40px; background: var(--card); border-radius: 1rem; box-shadow: 0 4px 24px oklch(20% .025 215 / .08); padding: 4px 24px; }
+summary { cursor: pointer; padding: 14px 0; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+details ul { list-style: none; margin: 0 0 16px; padding: 0; }
+details li { display: grid; grid-template-columns: 64px 1fr; gap: 4px 12px; padding: 8px 0; border-top: 1px solid var(--border); }
+details li b { font-family: "Space Grotesk", sans-serif; }
+details li span.when { grid-column: 2; font-size: 13px; color: var(--muted-foreground); }
+.disclaimer { text-align: center; font-size: 14px; color: var(--muted-foreground); margin: 0 0 48px; }
+.disclaimer a { color: oklch(52% .16 50); font-weight: 600; text-decoration: none; }
+footer { background: oklch(28% .035 215); color: oklch(92% .01 215); font-size: 14px; padding: 28px 0; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+/* Mockup-only state switch */
+.mock { display: flex; gap: 2px; opacity: .6; font-size: 11px; }
+.mock:hover { opacity: 1; }
+.mock button { font: inherit; border: 1px solid oklch(50% .03 215); background: transparent; color: inherit; border-radius: 4px; padding: 1px 5px; cursor: pointer; }
+.mock button[aria-pressed="true"] { background: oklch(92% .01 215); color: oklch(28% .035 215); }
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="https://energiekonzepte-ruhr.de/"><img src="https://energiekonzepte-ruhr.de/__l5e/assets-v1/8f36ba36-7bb6-4a8a-bb76-56bc6768ce21/energiekonzepte-ruhr-logo.jpg" alt=""><span class="wordmark">ENERGIEKONZEPTE RUHR</span></a>
+  <nav><a href="#">Energieberatung</a><a href="#">Mieterstrom</a><a href="#">Team</a><a href="#">Wissen</a><a href="#">Kontakt</a></nav>
+  <a class="cta" href="#">Kontakt aufnehmen</a>
+  <button class="burger" aria-label="Menü"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2"/></svg></button>
+</div></header>
+
+<main>
+  <div class="wrap top">
+    <h1>Pegel Deilbach</h1>
+    <div id="status" aria-live="polite"></div>
+  </div>
+  <div class="wrap"><div class="card"><div id="chart" role="img"></div></div></div>
+  <div class="wrap">
+    <details>
+      <summary>Was tun?</summary>
+      <ul id="actions"></ul>
+    </details>
+    <p class="disclaimer">Keine amtliche Warnung · <a href="https://www.hochwasserportal.nrw.de" rel="noopener">Hochwasserportal NRW →</a></p>
+  </div>
+</main>
+<footer><div class="wrap"><span>Energiekonzepte Ruhr · Essen-Kupferdreh</span><span><a href="#">Impressum</a> · <a href="#">Datenschutz</a></span>
+  <span class="mock" aria-label="Mockup"><button data-state="normal">normal</button><button data-state="flood">flood</button><button data-state="stale">stale</button><button data-state="fallback">fallback</button></span>
+</div></footer>
+
+<script id="data" type="application/json">{"normal":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-10-16T09:30:00Z","newest_observation_at":"2026-10-16T09:22:03Z","situation":"strong","points":[{"valid_at":"2026-10-16T10:22:00Z","level_cm":19.0,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T11:22:00Z","level_cm":19.0,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T12:22:00Z","level_cm":19.0,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T13:22:00Z","level_cm":18.9,"bands":[{"coverage_percent":80,"lower_cm":17.4,"upper_cm":20.4},{"coverage_percent":90,"lower_cm":17.4,"upper_cm":20.4}]},{"valid_at":"2026-10-16T14:22:00Z","level_cm":19.0,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T15:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.7}]},{"valid_at":"2026-10-16T16:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.8}]},{"valid_at":"2026-10-16T17:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.0}]},{"valid_at":"2026-10-16T18:22:00Z","level_cm":19.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":20.8},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.2}]},{"valid_at":"2026-10-16T19:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":20.9},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.4}]},{"valid_at":"2026-10-16T20:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":21.0},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.6}]},{"valid_at":"2026-10-16T21:22:00Z","level_cm":19.5,"bands":[{"coverage_percent":80,"lower_cm":18.0,"upper_cm":21.1},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":21.7}]},{"valid_at":"2026-10-16T22:22:00Z","level_cm":21.0,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":24.8},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":26.2}]},{"valid_at":"2026-10-16T23:22:00Z","level_cm":22.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":27.7},{"coverage_percent":90,"lower_cm":16.3,"upper_cm":29.6}]},{"valid_at":"2026-10-17T00:22:00Z","level_cm":25.4,"bands":[{"coverage_percent":80,"lower_cm":18.2,"upper_cm":34.2},{"coverage_percent":90,"lower_cm":15.7,"upper_cm":37.5}]},{"valid_at":"2026-10-17T01:22:00Z","level_cm":29.2,"bands":[{"coverage_percent":80,"lower_cm":19.2,"upper_cm":41.5},{"coverage_percent":90,"lower_cm":15.8,"upper_cm":45.7}]},{"valid_at":"2026-10-17T02:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":19.9,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.2,"upper_cm":49.3}]},{"valid_at":"2026-10-17T03:22:00Z","level_cm":31.3,"bands":[{"coverage_percent":80,"lower_cm":20.1,"upper_cm":45.2},{"coverage_percent":90,"lower_cm":16.4,"upper_cm":50.0}]},{"valid_at":"2026-10-17T04:22:00Z","level_cm":31.1,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":49.4}]},{"valid_at":"2026-10-17T05:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44.0},{"coverage_percent":90,"lower_cm":17.1,"upper_cm":49.1}]},{"valid_at":"2026-10-17T06:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":44.0},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.9}]},{"valid_at":"2026-10-17T07:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.9},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.8}]},{"valid_at":"2026-10-17T08:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":48.5}]},{"valid_at":"2026-10-17T09:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":48.0}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-10-14T10:22:03Z","level_cm":20.8},{"observed_at":"2026-10-14T11:22:03Z","level_cm":20.3},{"observed_at":"2026-10-14T12:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T13:22:03Z","level_cm":19.7},{"observed_at":"2026-10-14T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-14T15:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T16:22:03Z","level_cm":20.7},{"observed_at":"2026-10-14T17:22:03Z","level_cm":21.0},{"observed_at":"2026-10-14T18:22:03Z","level_cm":21.1},{"observed_at":"2026-10-14T19:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T20:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T21:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T22:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T23:22:03Z","level_cm":20.4},{"observed_at":"2026-10-15T00:22:03Z","level_cm":20.3},{"observed_at":"2026-10-15T01:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T02:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T03:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T04:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T05:22:03Z","level_cm":20.0},{"observed_at":"2026-10-15T06:22:03Z","level_cm":19.6},{"observed_at":"2026-10-15T07:22:03Z","level_cm":20.0},{"observed_at":"2026-10-15T08:22:03Z","level_cm":20.1},{"observed_at":"2026-10-15T09:22:03Z","level_cm":18.9},{"observed_at":"2026-10-15T10:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T11:22:03Z","level_cm":17.7},{"observed_at":"2026-10-15T12:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T13:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-15T16:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T17:22:03Z","level_cm":19.0},{"observed_at":"2026-10-15T18:22:03Z","level_cm":19.0},{"observed_at":"2026-10-15T19:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T20:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T21:22:03Z","level_cm":18.6},{"observed_at":"2026-10-15T22:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T23:22:03Z","level_cm":18.5},{"observed_at":"2026-10-16T00:22:03Z","level_cm":18.0},{"observed_at":"2026-10-16T01:22:03Z","level_cm":18.3},{"observed_at":"2026-10-16T02:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T03:22:03Z","level_cm":18.8},{"observed_at":"2026-10-16T04:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T05:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T06:22:03Z","level_cm":19.7},{"observed_at":"2026-10-16T07:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T08:22:03Z","level_cm":19.0},{"observed_at":"2026-10-16T09:22:03Z","level_cm":18.9}]}},"flood_made_up":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-11-19T15:30:00Z","newest_observation_at":"2026-11-19T15:22:02Z","situation":"strong","points":[{"valid_at":"2026-11-19T16:22:00Z","level_cm":133.7,"bands":[{"coverage_percent":80,"lower_cm":127.5,"upper_cm":139.9},{"coverage_percent":90,"lower_cm":125.6,"upper_cm":141.8}]},{"valid_at":"2026-11-19T17:22:00Z","level_cm":138.7,"bands":[{"coverage_percent":80,"lower_cm":130.3,"upper_cm":147.1},{"coverage_percent":90,"lower_cm":127.8,"upper_cm":149.6}]},{"valid_at":"2026-11-19T18:22:00Z","level_cm":145.8,"bands":[{"coverage_percent":80,"lower_cm":135.2,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":132.0,"upper_cm":159.6}]},{"valid_at":"2026-11-19T19:22:00Z","level_cm":154.4,"bands":[{"coverage_percent":80,"lower_cm":141.6,"upper_cm":167.2},{"coverage_percent":90,"lower_cm":137.8,"upper_cm":171.0}]},{"valid_at":"2026-11-19T20:22:00Z","level_cm":163.1,"bands":[{"coverage_percent":80,"lower_cm":148.1,"upper_cm":178.1},{"coverage_percent":90,"lower_cm":143.6,"upper_cm":182.6}]},{"valid_at":"2026-11-19T21:22:00Z","level_cm":169.6,"bands":[{"coverage_percent":80,"lower_cm":152.4,"upper_cm":186.8},{"coverage_percent":90,"lower_cm":147.2,"upper_cm":192.0}]},{"valid_at":"2026-11-19T22:22:00Z","level_cm":172.0,"bands":[{"coverage_percent":80,"lower_cm":152.6,"upper_cm":191.4},{"coverage_percent":90,"lower_cm":146.8,"upper_cm":197.2}]},{"valid_at":"2026-11-19T23:22:00Z","level_cm":168.0,"bands":[{"coverage_percent":80,"lower_cm":146.4,"upper_cm":189.6},{"coverage_percent":90,"lower_cm":139.9,"upper_cm":196.1}]},{"valid_at":"2026-11-20T00:22:00Z","level_cm":159.9,"bands":[{"coverage_percent":80,"lower_cm":136.1,"upper_cm":183.7},{"coverage_percent":90,"lower_cm":129.0,"upper_cm":190.8}]},{"valid_at":"2026-11-20T01:22:00Z","level_cm":149.6,"bands":[{"coverage_percent":80,"lower_cm":123.6,"upper_cm":175.6},{"coverage_percent":90,"lower_cm":115.8,"upper_cm":183.4}]},{"valid_at":"2026-11-20T02:22:00Z","level_cm":139.4,"bands":[{"coverage_percent":80,"lower_cm":111.2,"upper_cm":167.6},{"coverage_percent":90,"lower_cm":102.7,"upper_cm":176.1}]},{"valid_at":"2026-11-20T03:22:00Z","level_cm":130.7,"bands":[{"coverage_percent":80,"lower_cm":100.3,"upper_cm":161.1},{"coverage_percent":90,"lower_cm":91.2,"upper_cm":170.2}]},{"valid_at":"2026-11-20T04:22:00Z","level_cm":124.1,"bands":[{"coverage_percent":80,"lower_cm":91.5,"upper_cm":156.7},{"coverage_percent":90,"lower_cm":81.7,"upper_cm":166.5}]},{"valid_at":"2026-11-20T05:22:00Z","level_cm":119.5,"bands":[{"coverage_percent":80,"lower_cm":84.7,"upper_cm":154.3},{"coverage_percent":90,"lower_cm":74.3,"upper_cm":164.7}]},{"valid_at":"2026-11-20T06:22:00Z","level_cm":116.4,"bands":[{"coverage_percent":80,"lower_cm":79.4,"upper_cm":153.4},{"coverage_percent":90,"lower_cm":68.3,"upper_cm":164.5}]},{"valid_at":"2026-11-20T07:22:00Z","level_cm":114.0,"bands":[{"coverage_percent":80,"lower_cm":74.8,"upper_cm":153.2},{"coverage_percent":90,"lower_cm":63.0,"upper_cm":165.0}]},{"valid_at":"2026-11-20T08:22:00Z","level_cm":112.2,"bands":[{"coverage_percent":80,"lower_cm":70.8,"upper_cm":153.6},{"coverage_percent":90,"lower_cm":58.4,"upper_cm":166.0}]},{"valid_at":"2026-11-20T09:22:00Z","level_cm":110.4,"bands":[{"coverage_percent":80,"lower_cm":66.8,"upper_cm":154.0},{"coverage_percent":90,"lower_cm":53.7,"upper_cm":167.1}]},{"valid_at":"2026-11-20T10:22:00Z","level_cm":108.8,"bands":[{"coverage_percent":80,"lower_cm":63.0,"upper_cm":154.6},{"coverage_percent":90,"lower_cm":49.3,"upper_cm":168.3}]},{"valid_at":"2026-11-20T11:22:00Z","level_cm":107.2,"bands":[{"coverage_percent":80,"lower_cm":59.2,"upper_cm":155.2},{"coverage_percent":90,"lower_cm":44.8,"upper_cm":169.6}]},{"valid_at":"2026-11-20T12:22:00Z","level_cm":105.6,"bands":[{"coverage_percent":80,"lower_cm":55.4,"upper_cm":155.8},{"coverage_percent":90,"lower_cm":40.3,"upper_cm":170.9}]},{"valid_at":"2026-11-20T13:22:00Z","level_cm":104.0,"bands":[{"coverage_percent":80,"lower_cm":51.6,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":35.9,"upper_cm":172.1}]},{"valid_at":"2026-11-20T14:22:00Z","level_cm":102.4,"bands":[{"coverage_percent":80,"lower_cm":47.8,"upper_cm":157.0},{"coverage_percent":90,"lower_cm":31.4,"upper_cm":173.4}]},{"valid_at":"2026-11-20T15:22:00Z","level_cm":100.8,"bands":[{"coverage_percent":80,"lower_cm":44.0,"upper_cm":157.6},{"coverage_percent":90,"lower_cm":27.0,"upper_cm":174.6}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-11-17T16:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T17:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T18:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T19:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T20:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T21:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T22:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T23:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T00:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T01:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T02:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T03:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T04:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T05:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T06:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T07:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T08:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T09:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T10:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T11:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T12:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T13:22:02Z","level_cm":35.3},{"observed_at":"2026-11-18T14:22:02Z","level_cm":35.4},{"observed_at":"2026-11-18T15:22:02Z","level_cm":35.6},{"observed_at":"2026-11-18T16:22:02Z","level_cm":35.9},{"observed_at":"2026-11-18T17:22:02Z","level_cm":36.2},{"observed_at":"2026-11-18T18:22:02Z","level_cm":36.7},{"observed_at":"2026-11-18T19:22:02Z","level_cm":37.3},{"observed_at":"2026-11-18T20:22:02Z","level_cm":38.2},{"observed_at":"2026-11-18T21:22:02Z","level_cm":39.4},{"observed_at":"2026-11-18T22:22:02Z","level_cm":41.0},{"observed_at":"2026-11-18T23:22:02Z","level_cm":43.2},{"observed_at":"2026-11-19T00:22:02Z","level_cm":46.1},{"observed_at":"2026-11-19T01:22:02Z","level_cm":49.8},{"observed_at":"2026-11-19T02:22:02Z","level_cm":54.4},{"observed_at":"2026-11-19T03:22:02Z","level_cm":60.0},{"observed_at":"2026-11-19T04:22:02Z","level_cm":66.5},{"observed_at":"2026-11-19T05:22:02Z","level_cm":73.8},{"observed_at":"2026-11-19T06:22:02Z","level_cm":81.5},{"observed_at":"2026-11-19T07:22:02Z","level_cm":89.2},{"observed_at":"2026-11-19T08:22:02Z","level_cm":96.5},{"observed_at":"2026-11-19T09:22:02Z","level_cm":103.0},{"observed_at":"2026-11-19T10:22:02Z","level_cm":108.6},{"observed_at":"2026-11-19T11:22:02Z","level_cm":113.2},{"observed_at":"2026-11-19T12:22:02Z","level_cm":116.9},{"observed_at":"2026-11-19T13:22:02Z","level_cm":119.8},{"observed_at":"2026-11-19T14:22:02Z","level_cm":122.0},{"observed_at":"2026-11-19T15:22:02Z","level_cm":128.0}]}}}</script>
+
+<script id="logic">
+// Pure logic, no DOM. In the real page CATS, ACTIONS, MODEL and the stale limit come from config/pegel.json.
+const HOUR = 3600e3, STALE_MS = 90 * 60e3, MARKS = [3, 12, 24], MODEL = "ridge:change:v2";
+const CATS = [
+  { n: 1, name: "unkritisch", from: -Infinity },
+  { n: 2, name: "kritisch", from: 145 },
+  { n: 3, name: "sehr kritisch", from: 165 },
+  { n: 4, name: "extrem kritisch", from: 185 },
+  { n: 5, name: "Chaos", from: 225 },
+];
+// Barriers: README says Kat. 3 (above 165 cm); open question whether before 185 cm is enough.
+const ACTIONS = [
+  { level: 165, label: "165 cm", text: "Rückstauventil zu, Pumpe anschließen" },
+  { level: 165, label: "Kat. 3", text: "Mobile Barrieren aufbauen" },
+  { level: 185, label: "185 cm", text: "Sandsäcke im Hof auslegen" },
+  { level: 225, label: "225 cm", text: "EG räumen, Strom abschalten" },
+];
+
+// Strictly above the threshold, as in core/categories.py: 145,0 cm is category 1.
+function category(level) { let c = CATS[0]; for (const k of CATS) if (level > k.from) c = k; return c; }
+function band(point, coverage) { return point.bands.find((b) => b.coverage_percent === coverage) || null; }
+function upper90(point) { const b = band(point, 90); return b ? b.upper_cm : null; }
+// Whole cm in big numbers.
+function fmtInt(v) { return Math.round(v).toLocaleString("de-DE"); }
+
+const berlin = (opts) => new Intl.DateTimeFormat("de-DE", { timeZone: "Europe/Berlin", ...opts });
+const fTime = berlin({ hour: "2-digit", minute: "2-digit" });
+const fDate = berlin({ year: "numeric", month: "2-digit", day: "2-digit" });
+const fWeekday = berlin({ weekday: "short" });
+const fHour = berlin({ hour: "numeric", hourCycle: "h23" });
+function berlinHour(ms) { return Number(fHour.formatToParts(new Date(ms)).find((p) => p.type === "hour").value); }
+function berlinDayIndex(ms) { const [d, m, y] = fDate.format(new Date(ms)).split("."); return Date.UTC(+y, +m - 1, +d) / 864e5; }
+function fmtClock(iso) { return fTime.format(new Date(iso)) + " Uhr"; }
+// Forecast times to the hour; after midnight with the weekday ("Fr. 3 Uhr").
+function hourLabel(iso, refMs) {
+  const ms = Date.parse(iso), sameDay = berlinDayIndex(ms) === berlinDayIndex(refMs);
+  return `${sameDay ? "" : fWeekday.format(new Date(ms)) + " "}${berlinHour(ms)} Uhr`;
+}
+
+function isFallback(forecast) {
+  return forecast.model !== MODEL || forecast.points.length === 0 || forecast.points.every((p) => p.bands.length === 0);
+}
+// Windows by time since the newest observation, not by array index.
+function pointsWithin(points, obsMs, hours) {
+  return points.filter((p) => (Date.parse(p.valid_at) - obsMs) / HOUR <= hours + 0.1);
+}
+function windowSummary(points, obsMs, hours) {
+  const w = pointsWithin(points, obsMs, hours);
+  if (!w.length) return { hours, empty: true };
+  let peak = w[0], upper = null;
+  for (const p of w) {
+    if (p.level_cm > peak.level_cm) peak = p;
+    const u = upper90(p);
+    if (u !== null && (upper === null || u > upper)) upper = u;
+  }
+  const cat = category(peak.level_cm), possibleCat = upper === null ? null : category(upper);
+  return { hours, empty: false, peak, upper, cat, possible: possibleCat && possibleCat.n > cat.n ? possibleCat : null };
+}
+function firstAbove(points, threshold, value) { return points.find((p) => value(p) !== null && value(p) > threshold) || null; }
+// Change over the last 3 hours, from the reading closest to 3 h before (within 10 min).
+function trend3h(observations) {
+  const last = observations[observations.length - 1], target = Date.parse(last.observed_at) - 3 * HOUR;
+  const before = observations.find((o) => Math.abs(Date.parse(o.observed_at) - target) <= 10 * 60e3);
+  return before ? last.level_cm - before.level_cm : null;
+}
+function trendArrow(t) {
+  if (t === null) return "";
+  if (Math.abs(t) < 2) return "→";
+  if (Math.abs(t) < 8) return t > 0 ? "↗" : "↘";
+  return t > 0 ? "↑" : "↓";
+}
+function freshness(forecast, newestObsIso, nowMs) {
+  return { stale: nowMs - Date.parse(newestObsIso) > STALE_MS || nowMs - Date.parse(forecast.issued_at) > STALE_MS };
+}
+// mode: "fresh" gives a verdict; "stale" and "fallback" never do (no category, no green).
+function summarize(forecast, history, nowMs) {
+  const obs = history.observations, now = obs[obs.length - 1];
+  const obsMs = Date.parse(forecast.newest_observation_at);
+  const mode = freshness(forecast, now.observed_at, nowMs).stale ? "stale" : isFallback(forecast) ? "fallback" : "fresh";
+  const pts = forecast.points;
+  return {
+    f: forecast, history: obs, now, nowMs, mode, trend: trend3h(obs),
+    marks: MARKS.map((h) => windowSummary(pts, obsMs, h)), all: windowSummary(pts, obsMs, 24),
+  };
+}
+// Expected (line) and possible (90 % top) times: the last point before the crossing,
+// or the newest observation, because the crossing lies in between.
+function actionPlan(s) {
+  const pts = s.f.points;
+  const before = (hit) => hit && (pts.indexOf(hit) > 0 ? pts[pts.indexOf(hit) - 1].valid_at : s.f.newest_observation_at);
+  return ACTIONS.map((a) => ({ ...a, expectedFrom: before(firstAbove(pts, a.level, (p) => p.level_cm)), possibleFrom: before(firstAbove(pts, a.level, upper90)) }));
+}
+
+if (typeof module !== "undefined") module.exports = { CATS, category, windowSummary, summarize, actionPlan, fmtInt, hourLabel, trendArrow, freshness };
+</script>
+
+<script>
+if (typeof document !== "undefined") (() => {
+  const SAMPLES = JSON.parse(document.getElementById("data").textContent);
+  const flood = SAMPLES.flood_made_up;
+  const fallbackForecast = { ...flood.forecast, model: "persistence", situation: null,
+    points: flood.forecast.points.map((p) => ({ valid_at: p.valid_at, level_cm: 128, bands: [] })) };
+  // Mockup clock: "now" is fixed per state. The real page uses Date.now().
+  const STATES = {
+    normal: { forecast: SAMPLES.normal.forecast, history: SAMPLES.normal.history, now: "2026-10-16T09:41:00Z" },
+    flood: { forecast: flood.forecast, history: flood.history, now: "2026-11-19T15:41:00Z" },
+    stale: { forecast: flood.forecast, history: flood.history, now: "2026-11-19T17:40:00Z" },
+    fallback: { forecast: fallbackForecast, history: flood.history, now: "2026-11-19T15:41:00Z" },
+    // Hash only (#shifted): flood sample 30 cm lower, line in Kat. 1, 90 % top in Kat. 2.
+    shifted: { forecast: { ...flood.forecast, points: flood.forecast.points.map((p) => ({ valid_at: p.valid_at, level_cm: p.level_cm - 30,
+      bands: p.bands.map((b) => ({ ...b, lower_cm: b.lower_cm - 30, upper_cm: b.upper_cm - 30 })) })) }, history: flood.history, now: "2026-11-19T15:41:00Z" },
+  };
+  const $ = (id) => document.getElementById(id);
+  const cat = (c, maybe = false) => maybe ? `<span class="cat maybe">${c.n}</span>` : `<span class="cat" style="background:var(--c${c.n});color:var(--c${c.n}-ink)">${c.n}</span>`;
+  let current = "normal", last = null;
+
+  function render(state) {
+    const st = STATES[state];
+    last = summarize(st.forecast, st.history, Date.parse(st.now));
+    renderStatus(last);
+    renderChart(last);
+    renderActions(last);
+  }
+
+  function renderStatus(s) {
+    const portal = `<a class="link" href="https://www.hochwasserportal.nrw.de" rel="noopener">Hochwasserportal NRW →</a>`;
+    if (s.mode === "stale") { $("status").innerHTML = `<span class="badge">Veraltet · ${fmtClock(s.now.observed_at)}</span>${portal}`; return; }
+    if (s.mode === "fallback") { $("status").innerHTML = `<span class="badge">Keine Prognose · ${fmtClock(s.now.observed_at)}</span>${portal}`; return; }
+    const E = s.all.cat, P = s.all.possible;
+    $("status").innerHTML = `${cat(E)}<span>${E.name}</span>` + (P ? cat(P, true) : "");
+  }
+
+  function renderChart(s) {
+    const box = $("chart"), W = Math.max(300, box.clientWidth), phone = W < 640;
+    const boxTop = box.getBoundingClientRect().top + scrollY;
+    const H = Math.round(Math.min(phone ? 680 : 600, Math.max(420, innerHeight - boxTop - 24)));
+    const fresh = s.mode === "fresh", showForecast = fresh;
+    const m = { l: 0, r: 0, t: fresh ? 84 : 16, b: 24 }, pw = W - m.l - m.r;
+    const obsT = Date.parse(s.now.observed_at), t0 = obsT - 24 * HOUR, t1 = obsT + 24 * HOUR;
+    // The last 24 h are context, so they get a quarter (phone) or a third of the width.
+    const pastShare = phone ? 0.3 : 0.33;
+    const x = (t) => t <= obsT ? m.l + ((t - t0) / (obsT - t0)) * pastShare * pw : m.l + pastShare * pw + ((t - obsT) / (t1 - obsT)) * (1 - pastShare) * pw;
+    const pts = showForecast ? s.f.points : [];
+    const hist = s.history.filter((o) => Date.parse(o.observed_at) >= t0 - 1);
+    const top = Math.max(...pts.map((p) => upper90(p) ?? p.level_cm), ...hist.map((o) => o.level_cm));
+    const yMax = Math.max(250, Math.ceil((top + 10) / 25) * 25);
+    const y = (v) => m.t + (1 - v / yMax) * (H - m.t - m.b);
+    const out = [], zones = [];
+
+    CATS.forEach((c, i) => {
+      const lo = Math.max(0, c.from), hi = Math.min(yMax, CATS[i + 1] ? CATS[i + 1].from : yMax);
+      zones.push(`<rect x="${m.l}" y="${y(hi)}" width="${pw}" height="${y(lo) - y(hi)}" fill="var(--c${c.n})" fill-opacity="${c.n === 1 ? "var(--zone-a)" : "var(--zone-b)"}"/>`);
+      if (c.n > 1) {
+        zones.push(`<line x1="${m.l}" x2="${W - m.r}" y1="${y(c.from)}" y2="${y(c.from)}" stroke="var(--c${c.n})" stroke-width="1.5"/>`);
+      }
+      out.push(`<text x="${W - m.r - 8}" y="${(y(lo) + y(hi)) / 2 + 5}" text-anchor="end" font-weight="700" font-size="16" style="fill:var(--foreground)">${c.n}</text>`);
+    });
+
+    let lastTick = -Infinity;
+    for (let t = Math.ceil(t0 / HOUR) * HOUR; t <= t1; t += HOUR) {
+      const hr = berlinHour(t);
+      if (hr % 6 || (t < obsT && hr % 12)) continue;
+      const label = hr === 0 ? fWeekday.format(new Date(t)) : `${hr} Uhr`;
+      if (x(t) < m.l + 16 || x(t) > W - 24 || x(t) - lastTick < 44) continue;
+      lastTick = x(t);
+      out.push(`<text x="${x(t)}" y="${H - 6}" text-anchor="middle" ${hr === 0 ? 'font-weight="700"' : ""}>${label}</text>`);
+      out.push(`<line x1="${x(t)}" x2="${x(t)}" y1="${H - m.b}" y2="${H - m.b + 4}" stroke="var(--muted-foreground)"/>`);
+    }
+
+    const start = { t: obsT, v: s.now.level_cm };
+    const area = (cov) => {
+      const bs = pts.map((p) => ({ t: Date.parse(p.valid_at), b: band(p, cov) })).filter((q) => q.b);
+      if (!bs.length) return "";
+      const up = [`${x(start.t)},${y(start.v)}`, ...bs.map((q) => `${x(q.t)},${y(q.b.upper_cm)}`)];
+      const poly = `<polygon points="${[...up, ...bs.map((q) => `${x(q.t)},${y(q.b.lower_cm)}`).reverse()].join(" ")}" fill="var(--band${cov})"/>`;
+      // The dashed top of the lighter band matches the dashed "möglich" box.
+      return cov === 90 ? poly + `<polyline points="${up.join(" ")}" fill="none" stroke="var(--foreground)" stroke-opacity=".55" stroke-width="1.2" stroke-dasharray="4 3"/>` : poly;
+    };
+    const line = (arr) => arr.map((q, i) => `${i ? "L" : "M"}${x(q.t).toFixed(1)},${y(q.v).toFixed(1)}`).join("");
+    const fcColor = fresh ? "var(--foreground)" : "var(--muted-foreground)";
+    const fc = pts.length ? area(90) + area(80) + `<path d="${line([start, ...pts.map((p) => ({ t: Date.parse(p.valid_at), v: p.level_cm }))])}" fill="none" stroke="${fcColor}" stroke-width="2.6" stroke-dasharray="7 4"/>` : "";
+    const histPath = `<path d="${line(hist.map((o) => ({ t: Date.parse(o.observed_at), v: o.level_cm })))}" fill="none" stroke="var(--foreground)" stroke-width="2.6"/>`;
+    const dot = `<circle cx="${x(obsT)}" cy="${y(s.now.level_cm)}" r="7" fill="${s.mode === "stale" ? "var(--muted-foreground)" : "var(--foreground)"}" stroke="var(--card)" stroke-width="3"/>`;
+
+    // HTML labels over the SVG: the three windows on top, the current level beside its dot.
+    const labels = fresh ? s.marks.map((k) => k.empty ? "" :
+      `<div class="mk" style="right:${W - x(obsT + k.hours * HOUR) + (k.hours === 24 ? 6 : 4)}px"><div class="mk-h">${k.hours} Std.</div>` +
+      `<div class="mk-v">${fmtInt(k.peak.level_cm)}<small> cm</small></div><div class="mk-c">${k.cat.n > 1 ? cat(k.cat) : ""}${k.possible ? cat(k.possible, true) : ""}</div></div>`).join("") : "";
+    const nowY = y(s.now.level_cm), above = nowY - 78 > m.t;
+    const nowPos = above ? `bottom:${H - nowY + 12}px` : `top:${nowY + 12}px`;
+    const nowLabel = `<div class="now" style="right:${W - x(obsT) + 10}px;${nowPos}">` +
+      `<div class="now-l">${s.mode === "stale" ? "" : "Jetzt "}<b class="arrow">${trendArrow(s.trend)}</b></div>` +
+      `<div class="now-v">${fmtInt(s.now.level_cm)}<small> cm</small></div><div class="now-t">${fmtClock(s.now.observed_at)}</div></div>`;
+
+    box.className = fresh ? "" : s.mode === "stale" ? "grey stale" : "grey";
+    box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><g class="zones">${zones.join("")}</g>${out.join("")}${fc}${histPath}${dot}</svg>${labels}${nowLabel}`;
+    box.setAttribute("aria-label", fresh
+      ? `Pegel jetzt ${fmtInt(s.now.level_cm)} cm. Höchststand in 3, 12 und 24 Stunden: ${s.marks.map((k) => fmtInt(k.peak.level_cm)).join(", ")} cm.`
+      : `Zuletzt gemessen ${fmtInt(s.now.level_cm)} cm um ${fmtClock(s.now.observed_at)}. Keine aktuelle Prognose.`);
+  }
+
+  function renderActions(s) {
+    $("actions").innerHTML = actionPlan(s).map((a) => {
+      let when = "";
+      if (s.mode === "fresh" && a.expectedFrom) when = `ab ${hourLabel(a.expectedFrom, s.nowMs)}`;
+      else if (s.mode === "fresh" && a.possibleFrom) when = `möglich ab ${hourLabel(a.possibleFrom, s.nowMs)}`;
+      return `<li><b>${a.label}</b><span>${a.text}</span>${when ? `<span class="when">${when}</span>` : ""}</li>`;
+    }).join("");
+  }
+
+  function select(state) {
+    current = state;
+    document.querySelectorAll(".mock button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.state === state)));
+    render(state);
+  }
+  document.querySelectorAll(".mock button").forEach((b) => b.addEventListener("click", () => { history.replaceState(null, "", "#" + b.dataset.state); select(b.dataset.state); }));
+  addEventListener("hashchange", () => { const h = location.hash.slice(1); if (h in STATES) select(h); });
+  // Freshness can change while the page stays open overnight: re-check every minute and on return.
+  setInterval(() => render(current), 60e3);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) render(current); });
+  let resizeTimer;
+  addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => renderChart(last), 100); });
+  const fromHash = location.hash.slice(1);
+  select(fromHash in STATES ? fromHash : "normal");
+  document.fonts && document.fonts.ready.then(() => renderChart(last));
+})();
+</script>
+</body>
+</html>

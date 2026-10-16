@@ -1,0 +1,427 @@
+<!doctype html>
+<!--
+Mockup 4 "Wasser". The chart is a cross-section of the brook on a dark petrol
+band: the area under the line is glowing water over the five category zones.
+Measured water is solid, forecast water lighter, the 80/90 % ranges are mist
+above it. The water moves only while the forecast is current; the line itself
+never moves. Barrier trigger (Kat. 3 = above 165 cm vs. 185 cm) is open with the client.
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pegel Deilbach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --background: oklch(99% .003 90); --foreground: oklch(20% .025 215);
+  --brand: oklch(36% .04 215); --brand-deep: oklch(28% .035 215); --brand-foreground: oklch(97% .005 90);
+  --accent: oklch(72% .18 50); --accent-foreground: oklch(18% .025 215);
+  --muted-foreground: oklch(48% .02 215); --border: oklch(90% .008 210);
+  --c1: oklch(70% .13 155); --c2: oklch(86% .15 92); --c3: oklch(55% .19 30);
+  --c4: oklch(47% .19 22); --c5: oklch(33% .12 15);
+  --c1-ink: oklch(22% .04 155); --c2-ink: oklch(25% .05 80); --c3-ink: #fff; --c4-ink: #fff; --c5-ink: #fff;
+  /* The water band is always dark, in both themes. */
+  --deep: oklch(24% .035 215); --deep-ink: oklch(97% .005 90); --deep-muted: oklch(78% .02 215);
+  --deep-line: oklch(100% 0 0 / .1); --plot: oklch(20% .03 215);
+  --water: oklch(78% .11 225); --water-line: oklch(92% .07 220); --mist: oklch(85% .06 220);
+  --still: oklch(58% .01 230); --still-line: oklch(80% .01 230);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: oklch(18% .025 215); --foreground: oklch(97% .005 90);
+    --muted-foreground: oklch(75% .02 215); --border: oklch(34% .02 215); --brand-deep: oklch(14% .02 215);
+  }
+}
+:root[data-theme="dark"] {
+  --background: oklch(18% .025 215); --foreground: oklch(97% .005 90);
+  --muted-foreground: oklch(75% .02 215); --border: oklch(34% .02 215); --brand-deep: oklch(14% .02 215);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--background); color: var(--foreground);
+  font: 16px/1.5 "Manrope", system-ui, sans-serif; overflow-x: hidden; }
+a { color: inherit; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+/* Header, as on energiekonzepte-ruhr.de */
+header { background: var(--background); border-bottom: 1px solid var(--border); }
+header .wrap { display: flex; align-items: center; height: 64px; gap: 24px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand img { width: 40px; height: 40px; border-radius: 8px; background: var(--brand); object-fit: cover; }
+.brand span { font: 700 13px "Space Grotesk", sans-serif; letter-spacing: .2em; }
+nav { flex: 1; display: flex; justify-content: center; gap: 32px; font-size: 14px; color: var(--muted-foreground); }
+nav a { text-decoration: none; }
+.cta { background: var(--accent); color: var(--accent-foreground); border-radius: 999px; padding: 8px 18px;
+  font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; text-decoration: none; white-space: nowrap; }
+.burger { display: none; margin-left: auto; width: 24px; height: 24px; color: var(--foreground); }
+@media (max-width: 860px) { nav, header .cta { display: none; } .burger { display: block; } }
+
+/* The dark water band */
+.band { background: var(--deep); color: var(--deep-ink); padding: 36px 0 40px; }
+@media (max-width: 600px) { .band { padding: 18px 0 20px; } }
+h1 { margin: 0 0 20px; text-align: center; font: 500 clamp(1.75rem, 4vw, 2.75rem)/1.1 "Space Grotesk", sans-serif;
+  letter-spacing: .05em; text-transform: uppercase; }
+@media (max-width: 600px) { h1 { margin-bottom: 10px; } }
+.status { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px 24px; flex-wrap: wrap; margin-bottom: 16px; }
+.now .lbl { font-size: 14px; color: var(--deep-muted); }
+.now .big { font: 700 64px/1 "Space Grotesk", sans-serif; letter-spacing: -.02em; }
+.now .big small { font-size: 22px; font-weight: 500; margin-left: 4px; }
+.stale .now .big { color: var(--still-line); }
+.verdict { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 6px 14px 6px 6px; font-weight: 600; }
+.pill.maybe { border: 2px dashed; padding: 4px 12px 4px 4px; }
+.k { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font: 700 15px "Space Grotesk", sans-serif; }
+.k.maybe { border: 2px dashed oklch(100% 0 0 / .85); }
+.badge { border-radius: 999px; padding: 6px 14px; background: oklch(100% 0 0 / .1); font-weight: 600; }
+.official { border-radius: 999px; padding: 6px 14px; border: 1.5px solid var(--deep-ink); font-weight: 600; text-decoration: none; font-size: 14px; }
+
+.chart { position: relative; height: 460px; }
+@media (max-width: 600px) { .chart { height: 410px; margin: 0 -8px; } }
+.chart svg { display: block; width: 100%; height: 100%; }
+.chart text { font: 12px "Manrope", sans-serif; fill: var(--deep-muted); }
+.chart .chip text { font: 700 12px "Space Grotesk", sans-serif; }
+.mark { position: absolute; top: 0; text-align: center; line-height: 1.15; white-space: nowrap; }
+.mark .h { font-size: 12px; color: var(--deep-muted); }
+.mark .v { font: 700 20px "Space Grotesk", sans-serif; display: flex; align-items: center; gap: 5px; }
+.mark .k { width: 20px; height: 20px; font-size: 12px; }
+.mark .v small { font-size: 13px; font-weight: 500; }
+@media (max-width: 600px) { .mark small { display: none; } }
+
+/* Below the band */
+.below { text-align: center; padding: 32px 0 44px; }
+details { display: inline-block; text-align: left; min-width: min(100%, 420px); }
+summary { cursor: pointer; color: oklch(55% .17 50); font-weight: 600; list-style: none; text-align: center; }
+summary::after { content: " →"; }
+details[open] summary::after { content: " ↓"; }
+.todo { margin: 16px 0 0; padding: 0; list-style: none; }
+.todo li { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); font-size: 15px; }
+.todo .at { font: 600 15px "Space Grotesk", sans-serif; }
+.todo .when { font-weight: 700; }
+.todo .when.maybe { font-weight: 500; color: var(--muted-foreground); }
+.note { font-size: 13px; color: var(--muted-foreground); margin-top: 28px; }
+footer { background: var(--brand-deep); color: var(--brand-foreground); font-size: 14px; padding: 28px 0 12px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+/* Mockup-only state switch */
+.mock { flex-basis: 100%; display: flex; gap: 4px; font-size: 11px; opacity: .6; padding-top: 12px; }
+.mock a { text-decoration: none; padding: 0 5px; border-radius: 4px; }
+.mock a[aria-current] { background: var(--brand-foreground); color: var(--brand-deep); }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="brand" href="https://energiekonzepte-ruhr.de"><img alt="" src="https://energiekonzepte-ruhr.de/__l5e/assets-v1/8f36ba36-7bb6-4a8a-bb76-56bc6768ce21/energiekonzepte-ruhr-logo.jpg"><span>ENERGIEKONZEPTE RUHR</span></a>
+  <nav><a href="#">Energieberatung</a><a href="#">Mieterstrom</a><a href="#">Team</a><a href="#">Wissen</a><a href="#">Kontakt</a></nav>
+  <a class="cta" href="#">Kontakt aufnehmen</a>
+  <svg class="burger" viewBox="0 0 24 24" aria-label="Menü" role="img"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+</div></header>
+
+<section class="band" id="band"><div class="wrap">
+  <h1>Pegel Deilbach</h1>
+  <div class="status">
+    <div class="now">
+      <div class="lbl" id="nowLbl"></div>
+      <div class="big"><span id="nowVal"></span><small>cm</small></div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+  <div class="chart" id="chart"></div>
+</div></section>
+
+<main class="wrap below">
+  <details><summary>Was tun?</summary><ul class="todo" id="todo"></ul></details>
+  <p class="note">Keine amtliche Warnung · <a href="https://www.hochwasserportal.nrw.de">Hochwasserportal NRW</a></p>
+</main>
+
+<footer><div class="wrap">
+  <span>Energiekonzepte Ruhr · Essen-Kupferdreh</span>
+  <span><a href="#">Impressum</a> · <a href="#">Datenschutz</a></span>
+  <div class="mock" aria-label="Mockup">Mockup: <a href="#normal">normal</a><a href="#flood">flood</a><a href="#stale">stale</a><a href="#fallback">fallback</a></div>
+</div></footer>
+
+<script id="data" type="application/json">{"normal":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-10-16T09:30:00Z","newest_observation_at":"2026-10-16T09:22:03Z","situation":"strong","points":[{"valid_at":"2026-10-16T10:22:00Z","level_cm":19.0,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T11:22:00Z","level_cm":19.0,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T12:22:00Z","level_cm":19.0,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T13:22:00Z","level_cm":18.9,"bands":[{"coverage_percent":80,"lower_cm":17.4,"upper_cm":20.4},{"coverage_percent":90,"lower_cm":17.4,"upper_cm":20.4}]},{"valid_at":"2026-10-16T14:22:00Z","level_cm":19.0,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T15:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.7}]},{"valid_at":"2026-10-16T16:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.8}]},{"valid_at":"2026-10-16T17:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.0}]},{"valid_at":"2026-10-16T18:22:00Z","level_cm":19.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":20.8},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.2}]},{"valid_at":"2026-10-16T19:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":20.9},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.4}]},{"valid_at":"2026-10-16T20:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":21.0},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.6}]},{"valid_at":"2026-10-16T21:22:00Z","level_cm":19.5,"bands":[{"coverage_percent":80,"lower_cm":18.0,"upper_cm":21.1},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":21.7}]},{"valid_at":"2026-10-16T22:22:00Z","level_cm":21.0,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":24.8},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":26.2}]},{"valid_at":"2026-10-16T23:22:00Z","level_cm":22.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":27.7},{"coverage_percent":90,"lower_cm":16.3,"upper_cm":29.6}]},{"valid_at":"2026-10-17T00:22:00Z","level_cm":25.4,"bands":[{"coverage_percent":80,"lower_cm":18.2,"upper_cm":34.2},{"coverage_percent":90,"lower_cm":15.7,"upper_cm":37.5}]},{"valid_at":"2026-10-17T01:22:00Z","level_cm":29.2,"bands":[{"coverage_percent":80,"lower_cm":19.2,"upper_cm":41.5},{"coverage_percent":90,"lower_cm":15.8,"upper_cm":45.7}]},{"valid_at":"2026-10-17T02:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":19.9,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.2,"upper_cm":49.3}]},{"valid_at":"2026-10-17T03:22:00Z","level_cm":31.3,"bands":[{"coverage_percent":80,"lower_cm":20.1,"upper_cm":45.2},{"coverage_percent":90,"lower_cm":16.4,"upper_cm":50.0}]},{"valid_at":"2026-10-17T04:22:00Z","level_cm":31.1,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":49.4}]},{"valid_at":"2026-10-17T05:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44.0},{"coverage_percent":90,"lower_cm":17.1,"upper_cm":49.1}]},{"valid_at":"2026-10-17T06:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":44.0},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.9}]},{"valid_at":"2026-10-17T07:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.9},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.8}]},{"valid_at":"2026-10-17T08:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":48.5}]},{"valid_at":"2026-10-17T09:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":48.0}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-10-14T10:22:03Z","level_cm":20.8},{"observed_at":"2026-10-14T11:22:03Z","level_cm":20.3},{"observed_at":"2026-10-14T12:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T13:22:03Z","level_cm":19.7},{"observed_at":"2026-10-14T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-14T15:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T16:22:03Z","level_cm":20.7},{"observed_at":"2026-10-14T17:22:03Z","level_cm":21.0},{"observed_at":"2026-10-14T18:22:03Z","level_cm":21.1},{"observed_at":"2026-10-14T19:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T20:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T21:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T22:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T23:22:03Z","level_cm":20.4},{"observed_at":"2026-10-15T00:22:03Z","level_cm":20.3},{"observed_at":"2026-10-15T01:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T02:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T03:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T04:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T05:22:03Z","level_cm":20.0},{"observed_at":"2026-10-15T06:22:03Z","level_cm":19.6},{"observed_at":"2026-10-15T07:22:03Z","level_cm":20.0},{"observed_at":"2026-10-15T08:22:03Z","level_cm":20.1},{"observed_at":"2026-10-15T09:22:03Z","level_cm":18.9},{"observed_at":"2026-10-15T10:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T11:22:03Z","level_cm":17.7},{"observed_at":"2026-10-15T12:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T13:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-15T16:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T17:22:03Z","level_cm":19.0},{"observed_at":"2026-10-15T18:22:03Z","level_cm":19.0},{"observed_at":"2026-10-15T19:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T20:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T21:22:03Z","level_cm":18.6},{"observed_at":"2026-10-15T22:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T23:22:03Z","level_cm":18.5},{"observed_at":"2026-10-16T00:22:03Z","level_cm":18.0},{"observed_at":"2026-10-16T01:22:03Z","level_cm":18.3},{"observed_at":"2026-10-16T02:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T03:22:03Z","level_cm":18.8},{"observed_at":"2026-10-16T04:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T05:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T06:22:03Z","level_cm":19.7},{"observed_at":"2026-10-16T07:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T08:22:03Z","level_cm":19.0},{"observed_at":"2026-10-16T09:22:03Z","level_cm":18.9}]}},"flood_made_up":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-11-19T15:30:00Z","newest_observation_at":"2026-11-19T15:22:02Z","situation":"strong","points":[{"valid_at":"2026-11-19T16:22:00Z","level_cm":133.7,"bands":[{"coverage_percent":80,"lower_cm":127.5,"upper_cm":139.9},{"coverage_percent":90,"lower_cm":125.6,"upper_cm":141.8}]},{"valid_at":"2026-11-19T17:22:00Z","level_cm":138.7,"bands":[{"coverage_percent":80,"lower_cm":130.3,"upper_cm":147.1},{"coverage_percent":90,"lower_cm":127.8,"upper_cm":149.6}]},{"valid_at":"2026-11-19T18:22:00Z","level_cm":145.8,"bands":[{"coverage_percent":80,"lower_cm":135.2,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":132.0,"upper_cm":159.6}]},{"valid_at":"2026-11-19T19:22:00Z","level_cm":154.4,"bands":[{"coverage_percent":80,"lower_cm":141.6,"upper_cm":167.2},{"coverage_percent":90,"lower_cm":137.8,"upper_cm":171.0}]},{"valid_at":"2026-11-19T20:22:00Z","level_cm":163.1,"bands":[{"coverage_percent":80,"lower_cm":148.1,"upper_cm":178.1},{"coverage_percent":90,"lower_cm":143.6,"upper_cm":182.6}]},{"valid_at":"2026-11-19T21:22:00Z","level_cm":169.6,"bands":[{"coverage_percent":80,"lower_cm":152.4,"upper_cm":186.8},{"coverage_percent":90,"lower_cm":147.2,"upper_cm":192.0}]},{"valid_at":"2026-11-19T22:22:00Z","level_cm":172.0,"bands":[{"coverage_percent":80,"lower_cm":152.6,"upper_cm":191.4},{"coverage_percent":90,"lower_cm":146.8,"upper_cm":197.2}]},{"valid_at":"2026-11-19T23:22:00Z","level_cm":168.0,"bands":[{"coverage_percent":80,"lower_cm":146.4,"upper_cm":189.6},{"coverage_percent":90,"lower_cm":139.9,"upper_cm":196.1}]},{"valid_at":"2026-11-20T00:22:00Z","level_cm":159.9,"bands":[{"coverage_percent":80,"lower_cm":136.1,"upper_cm":183.7},{"coverage_percent":90,"lower_cm":129.0,"upper_cm":190.8}]},{"valid_at":"2026-11-20T01:22:00Z","level_cm":149.6,"bands":[{"coverage_percent":80,"lower_cm":123.6,"upper_cm":175.6},{"coverage_percent":90,"lower_cm":115.8,"upper_cm":183.4}]},{"valid_at":"2026-11-20T02:22:00Z","level_cm":139.4,"bands":[{"coverage_percent":80,"lower_cm":111.2,"upper_cm":167.6},{"coverage_percent":90,"lower_cm":102.7,"upper_cm":176.1}]},{"valid_at":"2026-11-20T03:22:00Z","level_cm":130.7,"bands":[{"coverage_percent":80,"lower_cm":100.3,"upper_cm":161.1},{"coverage_percent":90,"lower_cm":91.2,"upper_cm":170.2}]},{"valid_at":"2026-11-20T04:22:00Z","level_cm":124.1,"bands":[{"coverage_percent":80,"lower_cm":91.5,"upper_cm":156.7},{"coverage_percent":90,"lower_cm":81.7,"upper_cm":166.5}]},{"valid_at":"2026-11-20T05:22:00Z","level_cm":119.5,"bands":[{"coverage_percent":80,"lower_cm":84.7,"upper_cm":154.3},{"coverage_percent":90,"lower_cm":74.3,"upper_cm":164.7}]},{"valid_at":"2026-11-20T06:22:00Z","level_cm":116.4,"bands":[{"coverage_percent":80,"lower_cm":79.4,"upper_cm":153.4},{"coverage_percent":90,"lower_cm":68.3,"upper_cm":164.5}]},{"valid_at":"2026-11-20T07:22:00Z","level_cm":114.0,"bands":[{"coverage_percent":80,"lower_cm":74.8,"upper_cm":153.2},{"coverage_percent":90,"lower_cm":63.0,"upper_cm":165.0}]},{"valid_at":"2026-11-20T08:22:00Z","level_cm":112.2,"bands":[{"coverage_percent":80,"lower_cm":70.8,"upper_cm":153.6},{"coverage_percent":90,"lower_cm":58.4,"upper_cm":166.0}]},{"valid_at":"2026-11-20T09:22:00Z","level_cm":110.4,"bands":[{"coverage_percent":80,"lower_cm":66.8,"upper_cm":154.0},{"coverage_percent":90,"lower_cm":53.7,"upper_cm":167.1}]},{"valid_at":"2026-11-20T10:22:00Z","level_cm":108.8,"bands":[{"coverage_percent":80,"lower_cm":63.0,"upper_cm":154.6},{"coverage_percent":90,"lower_cm":49.3,"upper_cm":168.3}]},{"valid_at":"2026-11-20T11:22:00Z","level_cm":107.2,"bands":[{"coverage_percent":80,"lower_cm":59.2,"upper_cm":155.2},{"coverage_percent":90,"lower_cm":44.8,"upper_cm":169.6}]},{"valid_at":"2026-11-20T12:22:00Z","level_cm":105.6,"bands":[{"coverage_percent":80,"lower_cm":55.4,"upper_cm":155.8},{"coverage_percent":90,"lower_cm":40.3,"upper_cm":170.9}]},{"valid_at":"2026-11-20T13:22:00Z","level_cm":104.0,"bands":[{"coverage_percent":80,"lower_cm":51.6,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":35.9,"upper_cm":172.1}]},{"valid_at":"2026-11-20T14:22:00Z","level_cm":102.4,"bands":[{"coverage_percent":80,"lower_cm":47.8,"upper_cm":157.0},{"coverage_percent":90,"lower_cm":31.4,"upper_cm":173.4}]},{"valid_at":"2026-11-20T15:22:00Z","level_cm":100.8,"bands":[{"coverage_percent":80,"lower_cm":44.0,"upper_cm":157.6},{"coverage_percent":90,"lower_cm":27.0,"upper_cm":174.6}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-11-17T16:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T17:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T18:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T19:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T20:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T21:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T22:22:02Z","level_cm":35.0},{"observed_at":"2026-11-17T23:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T00:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T01:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T02:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T03:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T04:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T05:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T06:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T07:22:02Z","level_cm":35.0},{"observed_at":"2026-11-18T08:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T09:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T10:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T11:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T12:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T13:22:02Z","level_cm":35.3},{"observed_at":"2026-11-18T14:22:02Z","level_cm":35.4},{"observed_at":"2026-11-18T15:22:02Z","level_cm":35.6},{"observed_at":"2026-11-18T16:22:02Z","level_cm":35.9},{"observed_at":"2026-11-18T17:22:02Z","level_cm":36.2},{"observed_at":"2026-11-18T18:22:02Z","level_cm":36.7},{"observed_at":"2026-11-18T19:22:02Z","level_cm":37.3},{"observed_at":"2026-11-18T20:22:02Z","level_cm":38.2},{"observed_at":"2026-11-18T21:22:02Z","level_cm":39.4},{"observed_at":"2026-11-18T22:22:02Z","level_cm":41.0},{"observed_at":"2026-11-18T23:22:02Z","level_cm":43.2},{"observed_at":"2026-11-19T00:22:02Z","level_cm":46.1},{"observed_at":"2026-11-19T01:22:02Z","level_cm":49.8},{"observed_at":"2026-11-19T02:22:02Z","level_cm":54.4},{"observed_at":"2026-11-19T03:22:02Z","level_cm":60.0},{"observed_at":"2026-11-19T04:22:02Z","level_cm":66.5},{"observed_at":"2026-11-19T05:22:02Z","level_cm":73.8},{"observed_at":"2026-11-19T06:22:02Z","level_cm":81.5},{"observed_at":"2026-11-19T07:22:02Z","level_cm":89.2},{"observed_at":"2026-11-19T08:22:02Z","level_cm":96.5},{"observed_at":"2026-11-19T09:22:02Z","level_cm":103.0},{"observed_at":"2026-11-19T10:22:02Z","level_cm":108.6},{"observed_at":"2026-11-19T11:22:02Z","level_cm":113.2},{"observed_at":"2026-11-19T12:22:02Z","level_cm":116.9},{"observed_at":"2026-11-19T13:22:02Z","level_cm":119.8},{"observed_at":"2026-11-19T14:22:02Z","level_cm":122.0},{"observed_at":"2026-11-19T15:22:02Z","level_cm":128.0}]}}}</script>
+
+<script id="logic">
+// Pure logic, no DOM. In the real page CATS, ACTIONS, MODEL and the stale limit come from config/pegel.json.
+const HOUR = 3600e3, STALE_MS = 90 * 60e3, MARKS = [3, 12, 24], MODEL = "ridge:change:v2";
+const CATS = [
+  { n: 1, name: "unkritisch", from: -Infinity },
+  { n: 2, name: "kritisch", from: 145 },
+  { n: 3, name: "sehr kritisch", from: 165 },
+  { n: 4, name: "extrem kritisch", from: 185 },
+  { n: 5, name: "Chaos", from: 225 },
+];
+// Barriers: "Kat. 3" means above 165 cm; whether it should be 185 cm is open with the client.
+const ACTIONS = [
+  { level: 165, at: "165 cm", text: "Rückstauventil, Pumpe" },
+  { level: 165, at: "Kat. 3", text: "Barrieren" },
+  { level: 185, at: "185 cm", text: "Sandsäcke" },
+  { level: 225, at: "225 cm", text: "EG räumen, Strom aus" },
+];
+
+// Strictly above the threshold, as in core/categories.py: 145,0 cm is category 1.
+function category(level) { let c = CATS[0]; for (const k of CATS) if (level > k.from) c = k; return c; }
+function band(point, coverage) { return point.bands.find((b) => b.coverage_percent === coverage) || null; }
+function upper90(point) { const b = band(point, 90); return b ? b.upper_cm : null; }
+function fmtNum(v, digits = 0) { return v.toLocaleString("de-DE", { minimumFractionDigits: digits, maximumFractionDigits: digits }); }
+
+const berlin = (opts) => new Intl.DateTimeFormat("de-DE", { timeZone: "Europe/Berlin", ...opts });
+const fTime = berlin({ hour: "2-digit", minute: "2-digit" });
+const fDate = berlin({ year: "numeric", month: "2-digit", day: "2-digit" });
+const fWeekday = berlin({ weekday: "short" });
+const fHour = berlin({ hour: "numeric", hourCycle: "h23" });
+function berlinHour(ms) { return Number(fHour.formatToParts(new Date(ms)).find((p) => p.type === "hour").value); }
+function berlinDayIndex(ms) { const [d, m, y] = fDate.format(new Date(ms)).split("."); return Date.UTC(+y, +m - 1, +d) / 864e5; }
+function fmtClock(iso) { return fTime.format(new Date(iso)) + " Uhr"; }
+// Forecast times only to the hour; after midnight with the day.
+function hourLabel(iso, refMs, word = "") {
+  const ms = Date.parse(iso), diff = berlinDayIndex(ms) - berlinDayIndex(refMs);
+  const day = diff === 0 ? "" : diff === 1 ? "morgen " : fWeekday.format(new Date(ms)) + " ";
+  return `${day}${word}${berlinHour(ms)} Uhr`;
+}
+
+function isFallback(forecast) {
+  return forecast.model !== MODEL || forecast.points.length === 0 || forecast.points.every((p) => p.bands.length === 0);
+}
+// Windows by time (valid_at minus newest observation), not by array index.
+function pointsWithin(points, obsMs, hours) { return points.filter((p) => (Date.parse(p.valid_at) - obsMs) / HOUR <= hours + 0.1); }
+function windowSummary(points, obsMs, hours) {
+  const w = pointsWithin(points, obsMs, hours);
+  if (!w.length) return { hours, empty: true };
+  let peak = w[0], upper = null;
+  for (const p of w) {
+    if (p.level_cm > peak.level_cm) peak = p;
+    const u = upper90(p);
+    if (u !== null && (upper === null || u > upper)) upper = u;
+  }
+  return { hours, empty: false, peak, upper, end: w[w.length - 1], cat: category(peak.level_cm), possibleCat: upper === null ? null : category(upper) };
+}
+// First point above the threshold and the last point before it (or the newest reading).
+// Shown times use `before`: the crossing starts in the hour after it, so "ab 21 Uhr" is not late.
+function firstAbove(points, obsIso, threshold, value) {
+  const i = points.findIndex((p) => value(p) !== null && value(p) > threshold);
+  if (i < 0) return null;
+  return { point: points[i], before: i === 0 ? obsIso : points[i - 1].valid_at };
+}
+function freshness(forecast, newestObsIso, nowMs) {
+  const obsAge = nowMs - Date.parse(newestObsIso), fcAge = nowMs - Date.parse(forecast.issued_at);
+  return { stale: obsAge > STALE_MS || fcAge > STALE_MS };
+}
+function summarize(forecast, history, nowMs) {
+  const obs = history.observations, now = obs[obs.length - 1];
+  const obsIso = forecast.newest_observation_at, obsMs = Date.parse(obsIso), pts = forecast.points;
+  const mode = freshness(forecast, now.observed_at, nowMs).stale ? "stale" : isFallback(forecast) ? "fallback" : "fresh";
+  return {
+    f: forecast, obs, now, nowMs, mode,
+    marks: MARKS.map((h) => windowSummary(pts, obsMs, h)), all: windowSummary(pts, obsMs, 24),
+    expectedAt: (n) => firstAbove(pts, obsIso, CATS[n - 1].from, (p) => p.level_cm),
+    possibleAt: (n) => firstAbove(pts, obsIso, CATS[n - 1].from, upper90),
+  };
+}
+// The short status: the line sets the category; a higher category reached by the 90 % top is shown beside it.
+function verdict(s) {
+  if (s.mode !== "fresh") return { kind: s.mode };
+  const E = s.all.cat, P = s.all.possibleCat || E, out = [];
+  if (E.n > 1 || P.n === 1) out.push({ cat: E, text: E.n > 1 ? `${E.name} ${hourLabel(s.expectedAt(E.n).before, s.nowMs, "ab ")}` : E.name });
+  if (P.n > E.n) out.push({ cat: P, maybe: true, text: `möglich ${hourLabel(s.possibleAt(P.n).before, s.nowMs, "ab ")}` });
+  return { kind: "fresh", items: out };
+}
+function actionPlan(s) {
+  const pts = s.f.points, obsIso = s.f.newest_observation_at;
+  return ACTIONS.map((a) => ({ ...a, expected: firstAbove(pts, obsIso, a.level, (p) => p.level_cm), possible: firstAbove(pts, obsIso, a.level, upper90) }));
+}
+if (typeof module !== "undefined") module.exports = { CATS, category, windowSummary, firstAbove, freshness, isFallback, summarize, verdict, actionPlan, hourLabel, fmtNum };
+</script>
+
+<script>
+const DATA = JSON.parse(document.getElementById("data").textContent);
+const fl = DATA.flood_made_up;
+// Mockup only: each state has a fixed "now". The real page uses Date.now().
+const STATES = {
+  normal: { f: DATA.normal.forecast, h: DATA.normal.history, now: "2026-10-16T09:41:00Z" },
+  flood: { f: fl.forecast, h: fl.history, now: "2026-11-19T15:41:00Z" },
+  stale: { f: fl.forecast, h: fl.history, now: "2026-11-19T17:40:00Z" },
+  fallback: { f: { ...fl.forecast, model: "persistence", points: fl.forecast.points.map((p) => ({ valid_at: p.valid_at, level_cm: 128, bands: [] })) }, h: fl.history, now: "2026-11-19T15:41:00Z" },
+};
+const $ = (id) => document.getElementById(id);
+const NS = "http://www.w3.org/2000/svg";
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+let S, scene = null, raf = 0;
+
+function stateName() { const k = location.hash.slice(1); return STATES[k] ? k : "normal"; }
+function nowMs() { return Date.parse(STATES[stateName()].now); }
+const chip = (n, maybe = false) => maybe
+  ? `<span class="k maybe" style="background:color-mix(in srgb, var(--c${n}) 55%, transparent)">${n}</span>`
+  : `<span class="k" style="background:var(--c${n});color:var(--c${n}-ink)">${n}</span>`;
+
+function render() {
+  const st = STATES[stateName()];
+  S = summarize(st.f, st.h, nowMs());
+  const live = S.mode === "fresh";
+  document.querySelectorAll(".mock a").forEach((a) => a.toggleAttribute("aria-current", a.hash === "#" + stateName()));
+  $("band").classList.toggle("stale", S.mode === "stale");
+  $("nowLbl").textContent = `${S.mode === "stale" ? "Zuletzt" : "Jetzt"} · ${fmtClock(S.now.observed_at)}`;
+  $("nowVal").textContent = fmtNum(S.now.level_cm);
+
+  const v = verdict(S), box = $("verdict");
+  if (live) {
+    box.innerHTML = v.items.map((it) => it.maybe
+      ? `<span class="pill maybe" style="border-color:oklch(100% 0 0 / .7)">${chip(it.cat.n, true)}${it.text}</span>`
+      : `<span class="pill" style="background:var(--c${it.cat.n});color:var(--c${it.cat.n}-ink)">${chip(it.cat.n)}${it.text}</span>`).join("");
+    // The chip inside a solid pill needs a ring to stand out from the pill itself.
+    box.querySelectorAll(".pill:not(.maybe) .k").forEach((k) => { k.style.boxShadow = "0 0 0 2px oklch(100% 0 0 / .85)"; });
+  } else {
+    box.innerHTML = `<span class="badge">${S.mode === "stale" ? "Veraltet" : "Keine Prognose"} · ${fmtClock(S.now.observed_at)}</span><a class="official" href="https://www.hochwasserportal.nrw.de">Hochwasserportal NRW</a>`;
+  }
+
+  $("todo").innerHTML = actionPlan(S).map((a) => {
+    let when = "";
+    if (live && a.expected) when = `<span class="when">${hourLabel(a.expected.before, S.nowMs, "ab ")}</span>`;
+    else if (live && a.possible) when = `<span class="when maybe">möglich ${hourLabel(a.possible.before, S.nowMs, "ab ")}</span>`;
+    return `<li><span class="at">${a.at}</span><span>${a.text}</span>${when}</li>`;
+  }).join("");
+  buildChart();
+}
+
+// ---- Chart: zones, water, mist, window marks ----
+function buildChart() {
+  const host = $("chart"), W = host.clientWidth, H = host.clientHeight;
+  const live = S.mode === "fresh";
+  const gut = 30, top = live ? 56 : 8, bottom = 26, plotW = W - gut - 8, plotH = H - top - bottom;
+  const obsMs = Date.parse(S.now.observed_at);
+  const past = live ? 12 : 24, future = live ? 24 : 0;  // no forecast drawn without a current one
+  const t0 = obsMs - past * HOUR, t1 = obsMs + future * HOUR;
+  const pts = live ? S.f.points : [];
+  let peak = Math.max(...S.obs.map((o) => o.level_cm));
+  for (const p of pts) peak = Math.max(peak, upper90(p) ?? p.level_cm);
+  const yMax = Math.max(165, Math.ceil((peak + 18) / 10) * 10);
+  const X = (ms) => gut + ((ms - t0) / (t1 - t0)) * plotW;
+  const Y = (cm) => top + plotH - (cm / yMax) * plotH;
+  const nowX = X(obsMs);
+
+  const series = S.obs.filter((o) => Date.parse(o.observed_at) >= t0 - HOUR).map((o) => [Date.parse(o.observed_at), o.level_cm]);
+  for (const p of pts) series.push([Date.parse(p.valid_at), p.level_cm]);
+  const level = (ms) => {
+    const i = series.findIndex((s) => s[0] >= ms);
+    if (i < 0) return series[series.length - 1][1];
+    if (i === 0) return series[0][1];
+    const [a, va] = series[i - 1], [b, vb] = series[i];
+    return va + ((vb - va) * (ms - a)) / (b - a);
+  };
+  const xs = [];
+  for (let x = gut; x < nowX; x += 2) xs.push(x);
+  const split = xs.length;
+  xs.push(nowX);
+  for (let x = Math.ceil(nowX / 2) * 2 + 2; x < gut + plotW; x += 2) xs.push(x);
+  if (xs.at(-1) < gut + plotW) xs.push(gut + plotW);
+  const baseY = xs.map((x) => Y(level(t0 + ((x - gut) / plotW) * (t1 - t0))));
+  const linePath = (from, to) => "M" + xs.slice(from, to).map((x, i) => `${x.toFixed(1)},${baseY[from + i].toFixed(1)}`).join("L");
+
+  const water = S.mode === "stale" ? "still" : "water", neutral = !live;  // no green and no verdict without a current forecast
+  let svg = `<svg xmlns="${NS}" viewBox="0 0 ${W} ${H}" aria-label="Wasserstand, gemessen und Prognose" role="img"><defs>
+    <linearGradient id="gPast" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--${water})" stop-opacity=".95"/><stop offset="1" stop-color="var(--${water})" stop-opacity=".55"/></linearGradient>
+    <linearGradient id="gFc" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--water)" stop-opacity=".55"/><stop offset="1" stop-color="var(--water)" stop-opacity=".18"/></linearGradient>
+    <clipPath id="plot"><rect x="${gut}" y="${top}" width="${plotW}" height="${plotH}" rx="6"/></clipPath></defs>
+    <g clip-path="url(#plot)"><rect x="${gut}" y="${top}" width="${plotW}" height="${plotH}" fill="var(--plot)"/>`;
+  for (const c of CATS) {
+    const lo = Math.max(0, c.from), hi = CATS[c.n] ? CATS[c.n].from : Infinity;
+    if (lo >= yMax) continue;
+    const y1 = Y(Math.min(hi, yMax)), y2 = Y(lo);
+    if (!neutral) svg += `<rect x="${gut}" y="${y1}" width="${plotW}" height="${y2 - y1}" fill="var(--c${c.n})" fill-opacity="${c.n === 1 ? .24 : .34}"/>`;
+    if (c.n > 1) svg += `<line x1="${gut}" x2="${gut + plotW}" y1="${y2}" y2="${y2}" stroke="${neutral ? "var(--deep-line)" : `var(--c${c.n})`}" stroke-opacity=".8"/>`;
+  }
+  for (let ms = Math.ceil(t0 / HOUR) * HOUR; ms <= t1; ms += HOUR) {
+    if (berlinHour(ms) % 6) continue;
+    const x = X(ms);
+    if (x > gut + 14 && x < gut + plotW - 14) svg += `<line x1="${x}" x2="${x}" y1="${top}" y2="${top + plotH}" stroke="var(--deep-line)"/>`;
+  }
+  if (live) {
+    const area = (cov) => {
+      const up = pts.map((p) => `${X(Date.parse(p.valid_at))},${Y(band(p, cov).upper_cm)}`);
+      const line = pts.map((p) => `${X(Date.parse(p.valid_at))},${Y(p.level_cm)}`).reverse();
+      return `M${nowX},${Y(S.now.level_cm)} L${up.join(" L")} L${line.join(" L")}Z`;
+    };
+    svg += `<path d="${area(90)}" fill="var(--mist)" fill-opacity=".14"/><path d="${area(80)}" fill="var(--mist)" fill-opacity=".22"/>`;
+  }
+  svg += `<path id="back" fill="var(--${water})" fill-opacity=".3"/><path id="fPast" fill="url(#gPast)"/><path id="fFc" fill="url(#gFc)"/>`;
+  // The line is drawn once and never moves: the values stay exact.
+  const lineColor = S.mode === "stale" ? "var(--still-line)" : "var(--water-line)";
+  svg += `<path d="${linePath(0, split + 1)}" fill="none" stroke="${lineColor}" stroke-width="6" stroke-opacity=".18" stroke-linejoin="round"/>`;
+  svg += `<path d="${linePath(0, split + 1)}" fill="none" stroke="${lineColor}" stroke-width="2.2" stroke-linejoin="round"/>`;
+  if (live) svg += `<path d="${linePath(split, xs.length)}" fill="none" stroke="${lineColor}" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round"/>`;
+  svg += `</g><circle cx="${nowX}" cy="${Y(S.now.level_cm)}" r="5" fill="var(--deep)" stroke="${lineColor}" stroke-width="2.5"/>`;
+  for (const c of CATS) {
+    const lo = Math.max(0, c.from), hi = CATS[c.n] ? CATS[c.n].from : Infinity;
+    if (lo >= yMax) continue;
+    const y1 = Y(Math.min(hi, yMax)), y2 = Y(lo);
+    if (y2 - y1 < 22) continue;
+    const cy = (y1 + y2) / 2, bg = neutral ? "var(--still)" : `var(--c${c.n})`, ink = neutral ? "var(--deep-ink)" : `var(--c${c.n}-ink)`;
+    svg += `<g class="chip"><circle cx="${gut / 2 - 2}" cy="${cy}" r="10" fill="${bg}"/><text x="${gut / 2 - 2}" y="${cy + 4}" text-anchor="middle" style="fill:${ink}">${c.n}</text></g>`;
+  }
+  for (let ms = Math.ceil(t0 / HOUR) * HOUR; ms <= t1; ms += HOUR) {
+    const h = berlinHour(ms), x = X(ms);
+    if (h % 6 || x < gut + 14 || x > gut + plotW - 14) continue;
+    svg += `<text x="${x}" y="${H - 8}" text-anchor="middle">${h === 0 ? fWeekday.format(new Date(ms)) : `${h} Uhr`}</text>`;
+  }
+  host.innerHTML = svg + "</svg>";
+
+  // 3/12/24 h marks in a row above the plot, each over its hour: the highest level up to then.
+  if (live) {
+    const marks = S.marks.filter((m) => !m.empty).map((m) => {
+      const el = document.createElement("div");
+      el.className = "mark";
+      const up = m.possibleCat && m.possibleCat.n > m.cat.n;
+      el.innerHTML = `<div class="h">${m.hours} Std.</div><div class="v">${chip(m.cat.n)}${fmtNum(m.peak.level_cm)}<small>cm</small>${up ? chip(m.possibleCat.n, true) : ""}</div>`;
+      host.append(el);
+      return { el, x: X(obsMs + m.hours * HOUR), w: el.offsetWidth };
+    });
+    let minLeft = gut, maxRight = gut + plotW;
+    for (const m of marks) { m.left = Math.max(minLeft, m.x - m.w / 2); minLeft = m.left + m.w + 8; }
+    for (const m of [...marks].reverse()) { m.left = Math.min(m.left, maxRight - m.w); maxRight = m.left - 8; }
+    for (const m of marks) m.el.style.left = m.left + "px";
+  }
+
+  scene = { xs, baseY, split, nowX, bottomY: top + plotH, gut, plotW };
+  cancelAnimationFrame(raf);
+  draw(0);
+  if (live && !reduceMotion.matches && !document.hidden) raf = requestAnimationFrame(loop);
+}
+
+// Two sine layers on the water fill only: front small and faster, back larger, slower, the other way.
+// The amplitude fades out at the Jetzt dot.
+function wave(x, t, layer) {
+  return layer ? 3 * Math.sin(x / 19 + t * 0.7 + 1.3) : 2 * Math.sin(x / 11 - t * 1.4) + 0.7 * Math.sin(x / 5.3 - t * 2.1);
+}
+function draw(t) {
+  const sc = scene, moving = S.mode === "fresh";
+  const surface = (layer) => sc.xs.map((x, i) => [x, sc.baseY[i] + (moving ? wave(x, t, layer) * Math.min(1, Math.abs(x - sc.nowX) / 24) : 0) + (layer ? -4 : 2)]);
+  const fill = (s, from, to) => {
+    const part = s.slice(from, to);
+    return `M${part.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L")}L${part.at(-1)[0]},${sc.bottomY}L${part[0][0]},${sc.bottomY}Z`;
+  };
+  const front = surface(0), back = surface(1);
+  $("back").setAttribute("d", fill(back, 0, back.length));
+  $("fPast").setAttribute("d", fill(front, 0, sc.split + 1));
+  $("fFc").setAttribute("d", sc.split + 1 < front.length ? fill(front, sc.split, front.length) : "");
+}
+let last = 0;
+function loop(ts) {
+  raf = requestAnimationFrame(loop);
+  if (ts - last < 33) return;  // about 30 fps is enough for slow waves
+  last = ts;
+  draw(ts / 1000);
+}
+
+addEventListener("hashchange", render);
+addEventListener("resize", () => { clearTimeout(render.t); render.t = setTimeout(render, 150); });
+// Freshness is re-checked every minute and when the tab comes back; the animation pauses while hidden.
+setInterval(render, 60e3);
+document.addEventListener("visibilitychange", () => { if (document.hidden) cancelAnimationFrame(raf); else render(); });
+reduceMotion.addEventListener("change", render);
+document.fonts.ready.then(render);
+render();
+</script>
+</body>
+</html>
