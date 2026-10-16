@@ -12,7 +12,7 @@
 <title>Deilbach Pegel Vorhersage</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --background: oklch(99% .003 90); --foreground: oklch(20% .025 215);
@@ -43,24 +43,33 @@
   --water: oklch(60% .1 235); --water-back: oklch(50% .08 235); --water-line: oklch(75% .1 235); --house: oklch(52% .04 215); --window: oklch(80% .06 85);
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--background); color: var(--foreground); font: 16px/1.5 Manrope, system-ui, sans-serif; }
-a { color: inherit; }
-.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+/* Base, header, footer and type scale copied from energiekonzepte-ruhr.de (Tailwind build: max-w-6xl, px-6, md = 768px). */
+body { margin: 0; background: var(--background); color: var(--foreground); font: 16px/1.5 Manrope, system-ui, sans-serif; font-feature-settings: "ss01", "cv11"; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: inherit; }
+.wrap { max-width: 72rem; margin: 0 auto; padding: 0 24px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-header.site { background: var(--background); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 2; }
-header.site .wrap { display: flex; align-items: center; gap: 24px; height: 64px; }
-.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.brand img { width: 40px; height: 40px; border-radius: 8px; display: block; }
-.brand span { font: 700 13px "Space Grotesk", sans-serif; letter-spacing: .2em; }
-header nav { flex: 1; display: none; justify-content: center; gap: 32px; font-size: 14px; color: var(--muted-foreground); }
-header nav a { text-decoration: none; }
-.pill { display: inline-block; border-radius: 99px; padding: 8px 18px; font: 600 12px Manrope, sans-serif; text-decoration: none; }
-.pill.cta { background: var(--accent); color: var(--accent-foreground); text-transform: uppercase; letter-spacing: .03em; display: none; }
-.burger { margin-left: auto; width: 24px; height: 24px; }
-@media (min-width: 900px) { header nav { display: flex; } .pill.cta { display: inline-block; } .burger { display: none; } }
+header.site { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid color-mix(in oklab, var(--border) 60%, transparent); background: color-mix(in oklab, var(--background) 85%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+header.site .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand img { width: 40px; height: 40px; border-radius: 6px; display: block; }
+.brand span { font: 600 14px/20px "Space Grotesk", system-ui, sans-serif; text-transform: uppercase; letter-spacing: .18em; color: var(--foreground); }
+.topnav { display: none; align-items: center; gap: 32px; }
+.topnav a { font-size: 14px; line-height: 20px; font-weight: 500; color: color-mix(in oklab, var(--foreground) 70%, transparent); transition: color .15s cubic-bezier(.4, 0, .2, 1); }
+.topnav a:hover { color: var(--foreground); }
+.cta { display: none; border-radius: 9999px; background: var(--accent); color: var(--accent-foreground); padding: 8px 16px; font-size: 12px; line-height: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; transition: filter .15s cubic-bezier(.4, 0, .2, 1); }
+.cta:hover { filter: brightness(1.1); }
+.burger { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 0; border-radius: 6px; background: none; color: var(--foreground); padding: 0; cursor: pointer; }
+.mobilenav { border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); background: var(--background); }
+.mobilenav[hidden] { display: none; }
+.mobilenav .wrap { display: flex; flex-direction: column; gap: 4px; padding-top: 12px; padding-bottom: 12px; }
+.mobilenav a { border-radius: 6px; padding: 8px 12px; font-size: 14px; line-height: 20px; font-weight: 500; color: color-mix(in oklab, var(--foreground) 80%, transparent); }
+.mobilenav a:hover { background: var(--muted); color: var(--foreground); }
+@media (min-width: 768px) { .topnav { display: flex; } .cta { display: inline-flex; } .burger, .mobilenav { display: none !important; } }
 
-h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text-transform: uppercase; letter-spacing: .08em; margin: 28px 0 12px; }
+main.wrap { padding-top: 64px; padding-bottom: 64px; }
+h1 { font: 600 36px/40px "Space Grotesk", system-ui, sans-serif; letter-spacing: -.025em; margin: 0 0 24px; }
+@media (min-width: 640px) { h1 { font-size: 48px; line-height: 1; } }
 /* Verdict left, level now right on desktop; stacked on the phone. */
 .hero { display: grid; gap: 14px 32px; }
 @media (min-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr) auto; align-items: start; } .hero .level { text-align: right; } .hero .nowrow { justify-content: flex-end; } }
@@ -74,6 +83,8 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .chip.off { background: var(--grey) !important; color: var(--foreground); }
 .badge { display: inline-block; padding: 2px 12px; border-radius: 99px; border: 2px solid var(--foreground); font-weight: 700; font-size: 16px; }
 .verdict a { font-size: 16px; }
+.verdict a, .legal a { color: var(--accent); font-weight: 500; }
+.verdict a:hover, .legal a:hover { text-decoration: underline; }
 .nowrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; }
 .nowrow .big { font: 700 34px/1.1 "Space Grotesk", sans-serif; }
 .nowrow .chip { font-size: 14px; }
@@ -83,7 +94,7 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .is-old .nowrow .big, .is-old .dist b { color: var(--muted-foreground); }
 
 .stage { margin: 24px 0 0; }
-.card { background: var(--card); border-radius: 1rem; box-shadow: 0 1px 3px oklch(20% .025 215 / .08), 0 8px 24px oklch(20% .025 215 / .06); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; box-shadow: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a; }
 /* Chart (round-1 B) */
 .chartcard { padding: 12px 10px; margin-top: 12px; }
 .chart { position: relative; touch-action: pan-y; cursor: crosshair; outline: none; border-radius: .5rem; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
@@ -102,10 +113,10 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 @media (prefers-reduced-motion: reduce) { #curLine, #cue { transition: none; } }
 .chart .cue { font-size: 16px; font-weight: 700; fill: var(--foreground); }
 /* Section labels */
-.label { text-transform: uppercase; letter-spacing: .12em; font: 500 13px "Space Grotesk", sans-serif; color: var(--muted-foreground); margin: 0 0 8px; }
+.label, .levels .label { text-transform: uppercase; letter-spacing: .025em; font: 500 30px/36px "Space Grotesk", system-ui, sans-serif; color: var(--foreground); margin: 0 0 24px; }
 
 /* Was bedeuten die Stufen? */
-.levels { margin: 32px 0 0; }
+.levels { margin: 64px 0 0; }
 @media (min-width: 900px) { .levels ol { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 .levels ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); }
 .levels li { background: var(--card); border: 1px solid var(--border); border-left: 6px solid var(--tone); border-radius: 0 .5rem .5rem 0; padding: 10px 12px; }
@@ -122,22 +133,36 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .tag { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 0 6px; border-radius: 4px; border: 1.5px solid var(--foreground); }
 .tag.maybe { border-style: dashed; }
 /* So entsteht die Vorhersage */
-.how { margin: 48px 0 0; }
+.how { margin: 64px 0 0; }
 .how ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); counter-reset: step; }
-.how li { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 16px; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 2px 12px; align-items: start; }
+.how li { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; box-shadow: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a; padding: 24px; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 2px 12px; align-items: start; }
 .how svg { grid-row: span 2; width: 40px; height: 40px; color: var(--brand); }
 :root[data-theme="dark"] .how svg { color: var(--brand-foreground); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .how svg { color: var(--brand-foreground); } }
-.how h3 { font: 600 16px/1.3 "Space Grotesk", sans-serif; margin: 0; }
-.how li p { font-size: 14px; line-height: 1.45; color: var(--muted-foreground); margin: 0; }
+.how h3 { font: 500 20px/28px "Space Grotesk", system-ui, sans-serif; letter-spacing: -.01em; color: var(--brand); margin: 0; }
+:root[data-theme="dark"] .how h3 { color: var(--brand-foreground); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .how h3 { color: var(--brand-foreground); } }
+.how li p { font-size: 14px; line-height: 1.625; color: color-mix(in oklab, var(--foreground) 80%, transparent); margin: 4px 0 0; }
 .how .note { font-size: 13px; color: var(--muted-foreground); margin: 12px 0 0; }
-.legal { margin: 32px 0 0; font-size: 14px; color: var(--muted-foreground); }
-.legal a { color: oklch(55% .16 50); font-weight: 600; }
-footer { margin-top: 40px; background: var(--brand-deep); color: var(--brand-foreground); font-size: 14px; }
-footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
-.mock { display: flex; gap: 2px; opacity: .6; }
-.mock button { font: 12px Manrope, sans-serif; border: 0; background: none; color: var(--brand-foreground); padding: 2px 6px; border-radius: 4px; cursor: pointer; }
-.mock button[aria-pressed="true"] { text-decoration: underline; }
+.legal { margin: 48px 0 0; font-size: 14px; color: var(--muted-foreground); }
+footer.site { background: var(--brand-deep); color: color-mix(in oklab, var(--brand-foreground) 95%, transparent); }
+footer.site .cols { display: grid; gap: 32px; padding-top: 48px; padding-bottom: 48px; }
+@media (min-width: 768px) { footer.site .cols { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+footer.site .logo { display: block; height: 80px; width: auto; }
+footer.site p { margin: 12px 0 0; font-size: 14px; line-height: 20px; }
+footer.site p.addr { margin-top: 16px; line-height: 1.625; }
+footer.site .social { margin-top: 16px; display: flex; align-items: center; gap: 12px; }
+footer.site .social a { color: color-mix(in oklab, var(--brand-foreground) 80%, transparent); transition: color .15s cubic-bezier(.4, 0, .2, 1); }
+footer.site .social svg { display: block; width: 24px; height: 24px; }
+footer.site h3 { margin: 0; font: 500 20px/28px "Space Grotesk", system-ui, sans-serif; letter-spacing: -.01em; color: var(--brand-foreground); }
+footer.site ul { list-style: none; margin: 12px 0 0; padding: 0; font-size: 14px; line-height: 20px; }
+footer.site li + li { margin-top: 4px; }
+footer.site a:hover { color: var(--accent); }
+footer.site .copy { border-top: 1px solid color-mix(in oklab, var(--brand-foreground) 15%, transparent); padding: 16px 0; text-align: center; font-size: 12px; line-height: 16px; }
+/* Mockup-only state switch, kept apart from the client's footer. */
+.mock { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2px 4px; padding: 4px 16px; background: var(--muted); color: var(--muted-foreground); font-size: 11px; }
+.mock button { font: 11px Manrope, sans-serif; border: 0; background: none; color: inherit; padding: 2px 6px; border-radius: 4px; cursor: pointer; }
+.mock button[aria-pressed="true"] { text-decoration: underline; color: var(--foreground); }
 /* Scene (axonometric site of the gauge, by the illustrator) */
 /* ---- Scene ---- */
 .sc-scene {
@@ -298,12 +323,15 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
 </style>
 </head>
 <body>
-<header class="site"><div class="wrap">
-  <a class="brand" href="https://energiekonzepte-ruhr.de"><img src="https://energiekonzepte-ruhr.de/__l5e/assets-v1/8f36ba36-7bb6-4a8a-bb76-56bc6768ce21/energiekonzepte-ruhr-logo.jpg" alt=""><span>ENERGIEKONZEPTE RUHR</span></a>
-  <nav><a href="#">Energieberatung</a><a href="#">Mieterstrom</a><a href="#">Team</a><a href="#">Wissen</a><a href="#">Kontakt</a></nav>
-  <a class="pill cta" href="#">Kontakt aufnehmen</a>
-  <svg class="burger" viewBox="0 0 24 24" aria-label="Menü"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2"/></svg>
-</div></header>
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="https://energiekonzepte-ruhr.de/"><img src="https://energiekonzepte-ruhr.de/__l5e/assets-v1/8f36ba36-7bb6-4a8a-bb76-56bc6768ce21/energiekonzepte-ruhr-logo.jpg" alt="Energiekonzepte Ruhr" width="40" height="40"><span>Energiekonzepte Ruhr</span></a>
+    <nav class="topnav"><a href="https://energiekonzepte-ruhr.de/energieberatung">Energieberatung</a><a href="https://energiekonzepte-ruhr.de/mieterstrom">Mieterstrom</a><a href="https://energiekonzepte-ruhr.de/about">Team</a><a href="https://energiekonzepte-ruhr.de/wissen">Wissen</a><a href="https://energiekonzepte-ruhr.de/kontakt">Kontakt</a></nav>
+    <a class="cta" href="https://energiekonzepte-ruhr.de/kontakt">Kontakt aufnehmen</a>
+    <button type="button" class="burger" id="burger" aria-label="Menü" aria-expanded="false" aria-controls="mobilenav"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+  <nav class="mobilenav" id="mobilenav" hidden><div class="wrap"><a href="https://energiekonzepte-ruhr.de/">Home</a><a href="https://energiekonzepte-ruhr.de/energieberatung">Energieberatung</a><a href="https://energiekonzepte-ruhr.de/mieterstrom">Mieterstrom</a><a href="https://energiekonzepte-ruhr.de/about">Team</a><a href="https://energiekonzepte-ruhr.de/wissen">Wissen</a><a href="https://energiekonzepte-ruhr.de/kontakt">Kontakt</a></div></nav>
+</header>
 
 <main class="wrap">
   <h1>Deilbach Pegel Vorhersage</h1>
@@ -343,11 +371,32 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
   <p class="legal">Keine amtliche Warnung<span id="legalLink"> · <a href="https://www.hochwasserportal.nrw.de">Hochwasserportal NRW</a></span></p>
 </main>
 
-<footer><div class="wrap">
-  <span>Energiekonzepte Ruhr · Kupferdreh, Essen</span>
-  <span><a href="#">Impressum</a> · <a href="#">Datenschutz</a></span>
-  <span class="mock" role="group" aria-label="Nur im Mockup"><button data-state="normal">normal</button><button data-state="flood">flood</button><button data-state="stale">stale</button><button data-state="fallback">fallback</button><button data-state="chaos">Chaos</button></span>
-</div></footer>
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <img class="logo" src="https://energiekonzepte-ruhr.de/__l5e/assets-v1/81351c0f-6f82-488f-8028-ddae3413b73c/logo-and-type-light.svg" alt="Energiekonzepte Ruhr">
+      <p class="addr">Jörg Berresheim<br>Langmannskamp 11<br>45276 Essen, Deutschland</p>
+      <div class="social">
+        <a href="https://www.linkedin.com/in/jorgberresheim/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn-Profil von Jörg Berresheim"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+        <a href="https://www.xing.com/profile/Joerg_Berresheim" target="_blank" rel="noopener noreferrer" aria-label="Xing-Profil von Jörg Berresheim"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.188 0c-.517 0-.741.325-.927.66 0 0-7.455 13.224-7.702 13.657.015.024 4.919 9.023 4.919 9.023.17.308.436.66.967.66h3.454c.211 0 .375-.078.463-.22.089-.151.089-.346-.009-.536l-4.879-8.916c-.004-.006-.004-.016 0-.022L21.235.756c.095-.191.097-.387.006-.535C21.151.078 20.987 0 20.775 0h-3.454l.867 0zM3.648 4.74c-.211 0-.39.07-.478.22-.09.152-.075.347.02.538l2.335 4.05c.005.009.005.014 0 .023L1.86 16.51c-.099.188-.093.381 0 .536.087.144.244.236.456.236h3.34c.5 0 .746-.341.916-.65l3.708-6.557-2.354-4.137c-.171-.305-.421-.65-.929-.65H3.648z"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h3>Kontakt</h3>
+      <p>Tel.: <a href="tel:+4915738993484">+49 157 38993484</a><br>E-Mail: <a href="mailto:info@energiekonzepte-ruhr.de">info@energiekonzepte-ruhr.de</a></p>
+    </div>
+    <div>
+      <h3>Leistungen</h3>
+      <ul><li><a href="https://energiekonzepte-ruhr.de/energieberatung">Energieberatung</a></li><li><a href="https://energiekonzepte-ruhr.de/quick-check">Quick-Check Beratung</a></li><li><a href="https://energiekonzepte-ruhr.de/sanierungsfahrplan">Sanierungsfahrplan</a></li><li><a href="https://energiekonzepte-ruhr.de/zuschussbegleitung-beg">Zuschussbegleitung BEG</a></li><li><a href="https://energiekonzepte-ruhr.de/zuschuesse-beg">Zuschuss vom BAFA</a></li><li><a href="https://energiekonzepte-ruhr.de/photovoltaik">Photovoltaik</a></li><li><a href="https://energiekonzepte-ruhr.de/mieterstrom">Mieterstrom</a></li><li><a href="https://energiekonzepte-ruhr.de/stromabrechnung">Stromabrechnung MFH</a></li></ul>
+    </div>
+    <div>
+      <h3>Navigation</h3>
+      <ul><li><a href="https://energiekonzepte-ruhr.de/about">Team</a></li><li><a href="https://energiekonzepte-ruhr.de/kontakt">Kontakt</a></li><li><a href="https://energiekonzepte-ruhr.de/impressum">Impressum</a></li></ul>
+    </div>
+  </div>
+  <div class="copy">©2026 Energiekonzepte Ruhr</div>
+</footer>
+<div class="mock" role="group" aria-label="Nur im Mockup">Mockup: <button data-state="normal">normal</button><button data-state="flood">flood</button><button data-state="stale">stale</button><button data-state="fallback">fallback</button><button data-state="chaos">Chaos</button></div>
 
 <script id="data" type="application/json">{"normal":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-10-16T09:30:00Z","newest_observation_at":"2026-10-16T09:22:03Z","situation":"strong","points":[{"valid_at":"2026-10-16T10:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T11:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T12:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T13:22:00Z","level_cm":18.9,"bands":[{"coverage_percent":80,"lower_cm":17.4,"upper_cm":20.4},{"coverage_percent":90,"lower_cm":17.4,"upper_cm":20.4}]},{"valid_at":"2026-10-16T14:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T15:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.7}]},{"valid_at":"2026-10-16T16:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.8}]},{"valid_at":"2026-10-16T17:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21}]},{"valid_at":"2026-10-16T18:22:00Z","level_cm":19.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":20.8},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.2}]},{"valid_at":"2026-10-16T19:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":20.9},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.4}]},{"valid_at":"2026-10-16T20:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":21},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.6}]},{"valid_at":"2026-10-16T21:22:00Z","level_cm":19.5,"bands":[{"coverage_percent":80,"lower_cm":18,"upper_cm":21.1},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":21.7}]},{"valid_at":"2026-10-16T22:22:00Z","level_cm":21,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":24.8},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":26.2}]},{"valid_at":"2026-10-16T23:22:00Z","level_cm":22.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":27.7},{"coverage_percent":90,"lower_cm":16.3,"upper_cm":29.6}]},{"valid_at":"2026-10-17T00:22:00Z","level_cm":25.4,"bands":[{"coverage_percent":80,"lower_cm":18.2,"upper_cm":34.2},{"coverage_percent":90,"lower_cm":15.7,"upper_cm":37.5}]},{"valid_at":"2026-10-17T01:22:00Z","level_cm":29.2,"bands":[{"coverage_percent":80,"lower_cm":19.2,"upper_cm":41.5},{"coverage_percent":90,"lower_cm":15.8,"upper_cm":45.7}]},{"valid_at":"2026-10-17T02:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":19.9,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.2,"upper_cm":49.3}]},{"valid_at":"2026-10-17T03:22:00Z","level_cm":31.3,"bands":[{"coverage_percent":80,"lower_cm":20.1,"upper_cm":45.2},{"coverage_percent":90,"lower_cm":16.4,"upper_cm":50}]},{"valid_at":"2026-10-17T04:22:00Z","level_cm":31.1,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":49.4}]},{"valid_at":"2026-10-17T05:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44},{"coverage_percent":90,"lower_cm":17.1,"upper_cm":49.1}]},{"valid_at":"2026-10-17T06:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":44},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.9}]},{"valid_at":"2026-10-17T07:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.9},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.8}]},{"valid_at":"2026-10-17T08:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":48.5}]},{"valid_at":"2026-10-17T09:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":48}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-10-14T10:22:03Z","level_cm":20.8},{"observed_at":"2026-10-14T11:22:03Z","level_cm":20.3},{"observed_at":"2026-10-14T12:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T13:22:03Z","level_cm":19.7},{"observed_at":"2026-10-14T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-14T15:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T16:22:03Z","level_cm":20.7},{"observed_at":"2026-10-14T17:22:03Z","level_cm":21},{"observed_at":"2026-10-14T18:22:03Z","level_cm":21.1},{"observed_at":"2026-10-14T19:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T20:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T21:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T22:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T23:22:03Z","level_cm":20.4},{"observed_at":"2026-10-15T00:22:03Z","level_cm":20.3},{"observed_at":"2026-10-15T01:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T02:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T03:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T04:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T05:22:03Z","level_cm":20},{"observed_at":"2026-10-15T06:22:03Z","level_cm":19.6},{"observed_at":"2026-10-15T07:22:03Z","level_cm":20},{"observed_at":"2026-10-15T08:22:03Z","level_cm":20.1},{"observed_at":"2026-10-15T09:22:03Z","level_cm":18.9},{"observed_at":"2026-10-15T10:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T11:22:03Z","level_cm":17.7},{"observed_at":"2026-10-15T12:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T13:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-15T16:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T17:22:03Z","level_cm":19},{"observed_at":"2026-10-15T18:22:03Z","level_cm":19},{"observed_at":"2026-10-15T19:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T20:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T21:22:03Z","level_cm":18.6},{"observed_at":"2026-10-15T22:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T23:22:03Z","level_cm":18.5},{"observed_at":"2026-10-16T00:22:03Z","level_cm":18},{"observed_at":"2026-10-16T01:22:03Z","level_cm":18.3},{"observed_at":"2026-10-16T02:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T03:22:03Z","level_cm":18.8},{"observed_at":"2026-10-16T04:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T05:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T06:22:03Z","level_cm":19.7},{"observed_at":"2026-10-16T07:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T08:22:03Z","level_cm":19},{"observed_at":"2026-10-16T09:22:03Z","level_cm":18.9}]}},"flood_made_up":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-11-19T15:30:00Z","newest_observation_at":"2026-11-19T15:22:02Z","situation":"strong","points":[{"valid_at":"2026-11-19T16:22:00Z","level_cm":133.7,"bands":[{"coverage_percent":80,"lower_cm":127.5,"upper_cm":139.9},{"coverage_percent":90,"lower_cm":125.6,"upper_cm":141.8}]},{"valid_at":"2026-11-19T17:22:00Z","level_cm":138.7,"bands":[{"coverage_percent":80,"lower_cm":130.3,"upper_cm":147.1},{"coverage_percent":90,"lower_cm":127.8,"upper_cm":149.6}]},{"valid_at":"2026-11-19T18:22:00Z","level_cm":145.8,"bands":[{"coverage_percent":80,"lower_cm":135.2,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":132,"upper_cm":159.6}]},{"valid_at":"2026-11-19T19:22:00Z","level_cm":154.4,"bands":[{"coverage_percent":80,"lower_cm":141.6,"upper_cm":167.2},{"coverage_percent":90,"lower_cm":137.8,"upper_cm":171}]},{"valid_at":"2026-11-19T20:22:00Z","level_cm":163.1,"bands":[{"coverage_percent":80,"lower_cm":148.1,"upper_cm":178.1},{"coverage_percent":90,"lower_cm":143.6,"upper_cm":182.6}]},{"valid_at":"2026-11-19T21:22:00Z","level_cm":169.6,"bands":[{"coverage_percent":80,"lower_cm":152.4,"upper_cm":186.8},{"coverage_percent":90,"lower_cm":147.2,"upper_cm":192}]},{"valid_at":"2026-11-19T22:22:00Z","level_cm":172,"bands":[{"coverage_percent":80,"lower_cm":152.6,"upper_cm":191.4},{"coverage_percent":90,"lower_cm":146.8,"upper_cm":197.2}]},{"valid_at":"2026-11-19T23:22:00Z","level_cm":168,"bands":[{"coverage_percent":80,"lower_cm":146.4,"upper_cm":189.6},{"coverage_percent":90,"lower_cm":139.9,"upper_cm":196.1}]},{"valid_at":"2026-11-20T00:22:00Z","level_cm":159.9,"bands":[{"coverage_percent":80,"lower_cm":136.1,"upper_cm":183.7},{"coverage_percent":90,"lower_cm":129,"upper_cm":190.8}]},{"valid_at":"2026-11-20T01:22:00Z","level_cm":149.6,"bands":[{"coverage_percent":80,"lower_cm":123.6,"upper_cm":175.6},{"coverage_percent":90,"lower_cm":115.8,"upper_cm":183.4}]},{"valid_at":"2026-11-20T02:22:00Z","level_cm":139.4,"bands":[{"coverage_percent":80,"lower_cm":111.2,"upper_cm":167.6},{"coverage_percent":90,"lower_cm":102.7,"upper_cm":176.1}]},{"valid_at":"2026-11-20T03:22:00Z","level_cm":130.7,"bands":[{"coverage_percent":80,"lower_cm":100.3,"upper_cm":161.1},{"coverage_percent":90,"lower_cm":91.2,"upper_cm":170.2}]},{"valid_at":"2026-11-20T04:22:00Z","level_cm":124.1,"bands":[{"coverage_percent":80,"lower_cm":91.5,"upper_cm":156.7},{"coverage_percent":90,"lower_cm":81.7,"upper_cm":166.5}]},{"valid_at":"2026-11-20T05:22:00Z","level_cm":119.5,"bands":[{"coverage_percent":80,"lower_cm":84.7,"upper_cm":154.3},{"coverage_percent":90,"lower_cm":74.3,"upper_cm":164.7}]},{"valid_at":"2026-11-20T06:22:00Z","level_cm":116.4,"bands":[{"coverage_percent":80,"lower_cm":79.4,"upper_cm":153.4},{"coverage_percent":90,"lower_cm":68.3,"upper_cm":164.5}]},{"valid_at":"2026-11-20T07:22:00Z","level_cm":114,"bands":[{"coverage_percent":80,"lower_cm":74.8,"upper_cm":153.2},{"coverage_percent":90,"lower_cm":63,"upper_cm":165}]},{"valid_at":"2026-11-20T08:22:00Z","level_cm":112.2,"bands":[{"coverage_percent":80,"lower_cm":70.8,"upper_cm":153.6},{"coverage_percent":90,"lower_cm":58.4,"upper_cm":166}]},{"valid_at":"2026-11-20T09:22:00Z","level_cm":110.4,"bands":[{"coverage_percent":80,"lower_cm":66.8,"upper_cm":154},{"coverage_percent":90,"lower_cm":53.7,"upper_cm":167.1}]},{"valid_at":"2026-11-20T10:22:00Z","level_cm":108.8,"bands":[{"coverage_percent":80,"lower_cm":63,"upper_cm":154.6},{"coverage_percent":90,"lower_cm":49.3,"upper_cm":168.3}]},{"valid_at":"2026-11-20T11:22:00Z","level_cm":107.2,"bands":[{"coverage_percent":80,"lower_cm":59.2,"upper_cm":155.2},{"coverage_percent":90,"lower_cm":44.8,"upper_cm":169.6}]},{"valid_at":"2026-11-20T12:22:00Z","level_cm":105.6,"bands":[{"coverage_percent":80,"lower_cm":55.4,"upper_cm":155.8},{"coverage_percent":90,"lower_cm":40.3,"upper_cm":170.9}]},{"valid_at":"2026-11-20T13:22:00Z","level_cm":104,"bands":[{"coverage_percent":80,"lower_cm":51.6,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":35.9,"upper_cm":172.1}]},{"valid_at":"2026-11-20T14:22:00Z","level_cm":102.4,"bands":[{"coverage_percent":80,"lower_cm":47.8,"upper_cm":157},{"coverage_percent":90,"lower_cm":31.4,"upper_cm":173.4}]},{"valid_at":"2026-11-20T15:22:00Z","level_cm":100.8,"bands":[{"coverage_percent":80,"lower_cm":44,"upper_cm":157.6},{"coverage_percent":90,"lower_cm":27,"upper_cm":174.6}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-11-17T16:22:02Z","level_cm":35},{"observed_at":"2026-11-17T17:22:02Z","level_cm":35},{"observed_at":"2026-11-17T18:22:02Z","level_cm":35},{"observed_at":"2026-11-17T19:22:02Z","level_cm":35},{"observed_at":"2026-11-17T20:22:02Z","level_cm":35},{"observed_at":"2026-11-17T21:22:02Z","level_cm":35},{"observed_at":"2026-11-17T22:22:02Z","level_cm":35},{"observed_at":"2026-11-17T23:22:02Z","level_cm":35},{"observed_at":"2026-11-18T00:22:02Z","level_cm":35},{"observed_at":"2026-11-18T01:22:02Z","level_cm":35},{"observed_at":"2026-11-18T02:22:02Z","level_cm":35},{"observed_at":"2026-11-18T03:22:02Z","level_cm":35},{"observed_at":"2026-11-18T04:22:02Z","level_cm":35},{"observed_at":"2026-11-18T05:22:02Z","level_cm":35},{"observed_at":"2026-11-18T06:22:02Z","level_cm":35},{"observed_at":"2026-11-18T07:22:02Z","level_cm":35},{"observed_at":"2026-11-18T08:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T09:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T10:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T11:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T12:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T13:22:02Z","level_cm":35.3},{"observed_at":"2026-11-18T14:22:02Z","level_cm":35.4},{"observed_at":"2026-11-18T15:22:02Z","level_cm":35.6},{"observed_at":"2026-11-18T16:22:02Z","level_cm":35.9},{"observed_at":"2026-11-18T17:22:02Z","level_cm":36.2},{"observed_at":"2026-11-18T18:22:02Z","level_cm":36.7},{"observed_at":"2026-11-18T19:22:02Z","level_cm":37.3},{"observed_at":"2026-11-18T20:22:02Z","level_cm":38.2},{"observed_at":"2026-11-18T21:22:02Z","level_cm":39.4},{"observed_at":"2026-11-18T22:22:02Z","level_cm":41},{"observed_at":"2026-11-18T23:22:02Z","level_cm":43.2},{"observed_at":"2026-11-19T00:22:02Z","level_cm":46.1},{"observed_at":"2026-11-19T01:22:02Z","level_cm":49.8},{"observed_at":"2026-11-19T02:22:02Z","level_cm":54.4},{"observed_at":"2026-11-19T03:22:02Z","level_cm":60},{"observed_at":"2026-11-19T04:22:02Z","level_cm":66.5},{"observed_at":"2026-11-19T05:22:02Z","level_cm":73.8},{"observed_at":"2026-11-19T06:22:02Z","level_cm":81.5},{"observed_at":"2026-11-19T07:22:02Z","level_cm":89.2},{"observed_at":"2026-11-19T08:22:02Z","level_cm":96.5},{"observed_at":"2026-11-19T09:22:02Z","level_cm":103},{"observed_at":"2026-11-19T10:22:02Z","level_cm":108.6},{"observed_at":"2026-11-19T11:22:02Z","level_cm":113.2},{"observed_at":"2026-11-19T12:22:02Z","level_cm":116.9},{"observed_at":"2026-11-19T13:22:02Z","level_cm":119.8},{"observed_at":"2026-11-19T14:22:02Z","level_cm":122},{"observed_at":"2026-11-19T15:22:02Z","level_cm":128}]}}}</script>
 <script id="core">
@@ -1211,6 +1260,13 @@ chartEl.addEventListener("blur", release);
 Scene.mount($("scene"));
 document.querySelectorAll(".mock button").forEach((b) => b.addEventListener("click", () => { location.hash = b.dataset.state; }));
 addEventListener("hashchange", render);
+const burger = document.getElementById("burger"), mobileNav = document.getElementById("mobilenav");
+burger.addEventListener("click", () => {
+  const open = mobileNav.hidden;
+  mobileNav.hidden = !open;
+  burger.setAttribute("aria-expanded", open);
+  burger.querySelector("path").setAttribute("d", open ? "M6 6l12 12M6 18L18 6" : "M4 7h16M4 12h16M4 17h16");
+});
 addEventListener("resize", () => { clearTimeout(render.t); render.t = setTimeout(render, 150); });
 // Freshness is re-checked every minute and when the tab comes back; the waves pause while hidden.
 setInterval(() => { if (!anim.active) render(); }, 60e3);
