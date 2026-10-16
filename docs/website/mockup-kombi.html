@@ -112,6 +112,9 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .levels li.maybe { border-left-style: dashed; }
 .levels .tag { margin-top: 6px; text-transform: none; letter-spacing: 0; font-size: 13px; font-weight: 600; }
 .levels li.now { outline: 2px solid var(--foreground); outline-offset: -1px; }
+/* Categories the forecast doesn't reach: muted, still readable. */
+.levels li.off { border-left-color: var(--grey); color: var(--muted-foreground); }
+.levels li.off .chip { filter: grayscale(1); }
 .levels .head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .levels .chip { font-size: 13px; }
 .levels .range { font-size: 14px; font-weight: 600; }
@@ -353,9 +356,9 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
 const CATEGORIES = [
   { n: 1, name: "unkritisch", from: -Infinity, color: "var(--c1)", text: "Keine Maßnahmen nötig." },
   { n: 2, name: "kritisch", from: 145, color: "var(--c2)", text: "Der Deilbach tritt am Parkplatz Kupferdreh über das Ufer. Mobile Hochwasserbarrieren aufbauen." },
-  { n: 3, name: "sehr kritisch", from: 165, color: "var(--c3)", dark: true, text: "Wasser geht über die Mauer. Rückstauventil schließen, Pumpe anschließen." },
-  { n: 4, name: "extrem kritisch", from: 185, color: "var(--c4)", dark: true, text: "Barrieren und erhöhte Mauer halten den Hof trocken. Sandsäcke im Hof auslegen." },
-  { n: 5, name: "Chaos", from: 225, color: "var(--c5)", dark: true, text: "Wasser fließt in den Hof. EG-Wohnung räumen, Strom abschalten." },
+  { n: 3, name: "sehr kritisch", from: 165, color: "var(--c3)", dark: true, text: "Wasser geht über die Mauer. Rückstauventil schließen, Pumpe anschließen, Sandsäcke auslegen." },
+  { n: 4, name: "extrem kritisch", from: 185, color: "var(--c4)", dark: true, text: "Wasser geht über die Barrieren. Die Sandsäcke halten das Wasser vom Haus fern." },
+  { n: 5, name: "Chaos", from: 225, color: "var(--c5)", dark: true, text: "Wasser fließt ins Haus. EG-Wohnung räumen, Strom abschalten." },
 ];
 const MODEL = "ridge:change:v2", STALE_MINUTES = 90, CRITICAL_CM = 145, SCALE_TOP_CM = 250, HOUR = 3600e3;
 
@@ -462,7 +465,9 @@ if (typeof module !== "undefined") module.exports = { summarize, scaleTop, verdi
 // The scene: water, wall, barriers, sandbags and house at a given level.
 const Scene = (() => {
   // One place for every height (cm above the gauge zero) and the layout (u across the valley, v along the river).
-  const LEVELS = { park: 145, wall: 165, barriersUp: 145, sandbags: 185, barrierTop: 225, floor: 225 };
+  // Barriers go up above 145 and hold to 185; sandbags go out above 165 and hold to 225, where the house floor is.
+  const LEVELS = { park: 145, wall: 165, barriersUp: 145, sandbags: 165, barrierTop: 185, bagTop: 225, floor: 225 };
+  const BAGS = { u0: 584, u1: 600, v0: 46 };  // sandbag wall: a run along the facade and a run across the front
   const CATS = [[-Infinity, "unkritisch"], [145, "kritisch"], [165, "sehr kritisch"], [185, "extrem kritisch"], [225, "Chaos"]];
   const LV = 250, BOTTOM = -40, UMAX = 800;
   const PARK_U = 240, BED_U = 262, WALL_U0 = 470, WALL_U1 = 486, BAR_U = 488;
@@ -497,7 +502,7 @@ const Scene = (() => {
   const uLeft = (L) => (L >= LEVELS.park ? 0 : PARK_U + (BED_U - PARK_U) * (LEVELS.park - L) / LEVELS.park);
   const barriersUp = (L) => L > LEVELS.barriersUp;
   // Right edge of the water: the wall, then the barriers (up from category 2, above 145 cm), then the house.
-  const uRight = (L) => (L <= LEVELS.wall ? WALL_U0 : L <= LEVELS.barrierTop ? BAR_U : HOUSE.u0);
+  const uRight = (L) => (L <= LEVELS.wall ? WALL_U0 : L <= LEVELS.barrierTop ? BAR_U : L <= LEVELS.bagTop ? BAGS.u0 : HOUSE.u0);
   const catOf = (L) => CATS.reduce((n, c, i) => (L > c[0] ? i : n), 0);
 
   // ---- terrain ----
@@ -618,17 +623,23 @@ const Scene = (() => {
     return o;
   }
 
+  // A low wall of sandbags around the house front, five rows from the yard (165 cm) to 225 cm, laid row by row.
   function sandbags() {
     if (bagT <= 0) return "";
-    const drop = (1 - bagT) * 18, Y = LEVELS.wall, hgt = 11;
-    let o = `<g opacity="${f1(bagT * 100) / 100}">`;
-    o += qT(Y, 590, 616, 150, 218, "sc-shadow");
-    const rows = [[0, [152, 169, 186, 203]], [1, [160.5, 177.5, 194.5]], [2, [169, 186]]];
-    for (const [r, vs] of rows) for (let j = vs.length - 1; j >= 0; j--) {
-      const z0 = Y + r * hgt + drop;
-      o += box(594 + r * 2, 610 - r * 2, vs[j] + 1, vs[j] + 16, z0, z0 + hgt - 1, "sc-bag");
+    const Y = LEVELS.wall, rows = 5, hgt = (LEVELS.bagTop - Y) / rows, L = 18;
+    let o = qT(Y, BAGS.u0 - 4, BAGS.u1 + 4, BAGS.v0 - 4, LV, "sc-shadow");
+    for (let r = 0; r < rows; r++) {
+      const t = Math.min(1, Math.max(0, bagT * rows - r));
+      if (t <= 0) break;
+      const z0 = Y + r * hgt + (1 - t) * 14, z1 = z0 + hgt - 0.8, inset = r * 0.8, off = r % 2 ? L / 2 : 0;
+      let row = "";
+      // side run along the facade, back to front
+      for (let v = LV - off; v > BAGS.v0 + 16; v -= L) row += box(BAGS.u0 + inset, BAGS.u1 - inset, Math.max(BAGS.v0 + 16, v - L) + 0.8, v - 0.6, z0, z1, "sc-bag");
+      // front run across to the block edge, far to near
+      for (let u = UMAX - off; u > BAGS.u0; u -= L) row += box(Math.max(BAGS.u0, u - L) + 0.6 + (u - L <= BAGS.u0 ? inset : 0), u - 0.6, BAGS.v0 + inset, BAGS.v0 + 16 - inset, z0, z1, "sc-bag");
+      o += `<g opacity="${f1(t * 100) / 100}">${row}</g>`;
     }
-    return o + "</g>";
+    return o;
   }
 
   function tree(u, v, z0, h, r) {
@@ -672,18 +683,20 @@ const Scene = (() => {
     const uL = uLeft(L), uR = uRight(L);
     const mud = stale ? 0 : muddiness(L);
     const top = [[uL, 0, L], [uR, 0, L], [uR, LV, L], [uL, LV, L]];
-    const yard = L > LEVELS.floor ? [[uR, 0, L], [UMAX, 0, L], [UMAX, HOUSE.v0, L], [uR, HOUSE.v0, L]] : null;
+    // Over the barriers the yard floods up to the sandbags (the strip in front of them too); over the bags, up to the house.
+    const frontV = L > LEVELS.bagTop ? HOUSE.v0 : BAGS.v0;
+    const yard = L > LEVELS.barrierTop ? [[uR, 0, L], [UMAX, 0, L], [UMAX, frontV, L], [uR, frontV, L]] : null;
     // The surface stays translucent: clear blue cross-fades into muddy brown, so what is under it shows through.
     const op = (x) => f1(x * 100) / 100;
     let o = `<g opacity="${op(1 - mud)}">${path(top, "sc-water-t")}${yard ? path(yard, "sc-water-t") : ""}</g>`;
     if (mud > 0) o += `<g opacity="${op(mud)}">${path(top, "sc-mud-t")}${yard ? path(yard, "sc-mud-t") : ""}</g>`;
     // A light rim where the surface meets walls: the wall or barriers, and the house when it is reached.
     const rim = (a, b) => { const p = pt(...a), q = pt(...b); return `M${f1(p[0])},${f1(p[1])}L${f1(q[0])},${f1(q[1])}`; };
-    const rims = yard ? rim([HOUSE.u0, LV, L], [HOUSE.u0, HOUSE.v0, L]) + rim([HOUSE.u0, HOUSE.v0, L], [UMAX, HOUSE.v0, L]) : rim([uR, 0, L], [uR, LV, L]);
+    const rims = yard ? rim([uR, LV, L], [uR, frontV, L]) + rim([uR, frontV, L], [UMAX, frontV, L]) : rim([uR, 0, L], [uR, LV, L]);
     o += `<path class="sc-rim" d="${rims}"/>`;
     if (uL === 0) o += qU(0, 0, LV, LEVELS.park, L, "sc-water-l") + (mud > 0 ? `<g opacity="${f1(mud * 100) / 100}">${qU(0, 0, LV, LEVELS.park, L, "sc-mud-f")}</g>` : "");
     // front cut: the region between the terrain profile and the surface
-    const uR0 = L > LEVELS.floor ? UMAX : uR;
+    const uR0 = L > LEVELS.barrierTop ? UMAX : uR;
     const prof = [[0, LEVELS.park], [PARK_U, LEVELS.park], [BED_U, 0], [WALL_U0, 0], [WALL_U0, LEVELS.wall], [UMAX, LEVELS.wall]];
     const pts = [[uL, 0, L]];
     for (const [u, z] of prof) if (u >= uL && u < uR0) pts.push([u, 0, Math.min(z, L)]);
@@ -804,7 +817,7 @@ const Scene = (() => {
 
   function guideLines() {
     let o = "";
-    for (const z of [LEVELS.park, LEVELS.wall, LEVELS.sandbags, LEVELS.floor]) {
+    for (const z of [LEVELS.park, LEVELS.wall, LEVELS.barrierTop, LEVELS.bagTop]) {
       const a = pt(0, STAFF.v0, z), b = pt(UMAX, STAFF.v0, z), c = pt(HOUSE.u0, HOUSE.v0, z), d = pt(HOUSE.u0, LV, z);
       o += `<path class="sc-guide" d="M${f1(a[0])},${f1(a[1])}L${f1(b[0])},${f1(b[1])}M${f1(c[0])},${f1(c[1])}L${f1(d[0])},${f1(d[1])}"/><text class="sc-guide-text" x="${f1(a[0] - 4)}" y="${f1(a[1] + 4)}" text-anchor="end">${z}</text>`;
     }
@@ -847,7 +860,7 @@ const Scene = (() => {
     box.setAttribute("x", f1(right - w)); box.setAttribute("width", f1(w)); t.setAttribute("x", f1(right - w / 2));
     placeSkip(lastTs || performance.now());
     const n = catOf(L);
-    const what = ["Das Wasser bleibt im Bachbett.", "Der Parkplatz ist überschwemmt, die mobilen Barrieren stehen.", "Das Wasser geht über die Mauer, die Barrieren halten es.", "Die Barrieren halten das Wasser, Sandsäcke liegen vor der Tür.", "Das Wasser steht im Hof und am Haus."][n];
+    const what = ["Das Wasser bleibt im Bachbett.", "Der Parkplatz ist überschwemmt, die mobilen Barrieren stehen.", "Das Wasser geht über die Mauer, die Barrieren halten es, Sandsäcke liegen um das Haus.", "Das Wasser geht über die Barrieren in den Hof, die Sandsäcke halten das Haus trocken.", "Das Wasser geht über die Sandsäcke und steht am Haus."][n];
     svg.setAttribute("aria-label", `Schaubild Pegel Kupferdreh: ${label || Math.round(L) + " cm"}, Kategorie ${n + 1} (${CATS[n][1]}). ${what}${stale ? " Die Daten sind veraltet." : ""}`);
   }
 
@@ -999,7 +1012,7 @@ function render() {
   $("dist").innerHTML = gap > 0 ? `Bis kritisch (145 cm): noch <b>${num(Math.floor(gap))} cm</b>`
     : `Kritische Marke (145 cm) um <b>${num(Math.ceil(-gap))} cm</b> überschritten`;
 
-  $("levels").innerHTML = levelsHtml(S.mode === "stale" ? null : categoryOf(cur.level_cm), S.plan);
+  $("levels").innerHTML = levelsHtml(categoryOf(cur.level_cm), S.plan, S.mode !== "stale");
 
   renderChart(state.sample);
   anim.homeIdx = S.series.length - 1 - (ok ? state.sample.forecast.points.length : 0);
@@ -1023,15 +1036,16 @@ function verdictHtml(v) {
 // One card per category with what happens and what to do; the current one outlined. The forecast tags each
 // card with when the line crosses its threshold, or when the 90 % top does (dashed bar: only possible).
 // `rows` is empty when stale or in fallback, so no tags then.
-function levelsHtml(current, rows) {
+// Cards the forecast doesn't reach (no row) and that aren't the current category are greyed out.
+function levelsHtml(current, rows, outlineCurrent) {
   return CATEGORIES.map((c, i) => {
     const next = CATEGORIES[i + 1], r = rows.find((row) => row.category.n === c.n);
     const range = i === 0 ? `bis ${next.from} cm` : next ? `${c.from}–${next.from} cm` : `über ${c.from} cm`;
     const maybe = r && !r.now && !r.expectedAt;
     const tag = !r || r.now ? "" : r.expectedAt ? `<span class="tag">erwartet ${hourAt(r.expectedAt, now)}</span>`
       : `<span class="tag maybe">möglich ${hourAt(r.possibleAt, now, "ab")}</span>`;
-    const isNow = current && c.n === current.n;
-    return `<li class="${isNow ? "now" : ""}${maybe ? " maybe" : ""}" style="--tone:${c.color}"${isNow ? ' aria-current="true"' : ""}>` +
+    const isNow = c.n === current.n, outlined = isNow && outlineCurrent;
+    return `<li class="${outlined ? "now" : ""}${maybe ? " maybe" : ""}${!isNow && !r ? " off" : ""}" style="--tone:${c.color}"${outlined ? ' aria-current="true"' : ""}>` +
       `<div class="head">${chip(c)}<span class="range">${range}</span></div>${tag}<p>${c.text}</p></li>`;
   }).join("");
 }
