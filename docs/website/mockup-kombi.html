@@ -1,0 +1,606 @@
+<!doctype html>
+<!--
+  Mockup "Kombi": the verdict sentence of round-1 C, the Verlauf chart of round-1 B,
+  the house and gauge staff of round-2 Pegellatte with the waves of round-2 Wasser,
+  and the Zeitplan of round-1 A. Pointing at the chart (mouse, finger or arrow keys)
+  moves the water at the house to the level at that hour.
+  Open question for the client: barriers at 165 cm (start of Kat. 3) or 185 cm.
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deilbach Pegel Vorhersage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --background: oklch(99% .003 90); --foreground: oklch(20% .025 215);
+  --brand: oklch(36% .04 215); --brand-deep: oklch(28% .035 215); --brand-foreground: oklch(97% .005 90);
+  --accent: oklch(72% .18 50); --accent-foreground: oklch(18% .025 215);
+  --muted: oklch(96% .008 210); --muted-foreground: oklch(48% .02 215);
+  --border: oklch(90% .008 210); --card: #fff; --destructive: oklch(58% .22 27);
+  --c1: oklch(66% .13 155); --c2: oklch(85% .15 92); --c3: oklch(55% .19 30);
+  --c4: oklch(50% .2 25); --c5: oklch(34% .12 15); --grey: oklch(78% .01 215);
+  --band80: oklch(36% .04 215 / .30); --band90: oklch(36% .04 215 / .14);
+  /* illustration */
+  --sky: oklch(97% .01 220); --ground: oklch(88% .025 80); --wall: oklch(74% .012 215);
+  --water: oklch(62% .11 235); --water-back: oklch(72% .09 230); --water-line: oklch(48% .12 240);
+  --house: oklch(36% .04 215); --window: oklch(92% .03 85);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --background: oklch(18% .025 215); --foreground: oklch(97% .005 90);
+  --muted: oklch(24% .025 215); --muted-foreground: oklch(76% .02 215); --border: oklch(32% .025 215); --card: oklch(22% .025 215);
+  --grey: oklch(45% .01 215); --band80: oklch(85% .04 215 / .32); --band90: oklch(85% .04 215 / .15);
+  --sky: oklch(22% .025 215); --ground: oklch(33% .02 80); --wall: oklch(45% .012 215);
+  --water: oklch(60% .1 235); --water-back: oklch(50% .08 235); --water-line: oklch(75% .1 235); --house: oklch(52% .04 215); --window: oklch(80% .06 85);
+}}
+:root[data-theme="dark"] {
+  --background: oklch(18% .025 215); --foreground: oklch(97% .005 90);
+  --muted: oklch(24% .025 215); --muted-foreground: oklch(76% .02 215); --border: oklch(32% .025 215); --card: oklch(22% .025 215);
+  --grey: oklch(45% .01 215); --band80: oklch(85% .04 215 / .32); --band90: oklch(85% .04 215 / .15);
+  --sky: oklch(22% .025 215); --ground: oklch(33% .02 80); --wall: oklch(45% .012 215);
+  --water: oklch(60% .1 235); --water-back: oklch(50% .08 235); --water-line: oklch(75% .1 235); --house: oklch(52% .04 215); --window: oklch(80% .06 85);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--background); color: var(--foreground); font: 16px/1.5 Manrope, system-ui, sans-serif; }
+a { color: inherit; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+header.site { background: var(--background); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 2; }
+header.site .wrap { display: flex; align-items: center; gap: 24px; height: 64px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand img { width: 40px; height: 40px; border-radius: 8px; display: block; }
+.brand span { font: 700 13px "Space Grotesk", sans-serif; letter-spacing: .2em; }
+header nav { flex: 1; display: none; justify-content: center; gap: 32px; font-size: 14px; color: var(--muted-foreground); }
+header nav a { text-decoration: none; }
+.pill { display: inline-block; border-radius: 99px; padding: 8px 18px; font: 600 12px Manrope, sans-serif; text-decoration: none; }
+.pill.cta { background: var(--accent); color: var(--accent-foreground); text-transform: uppercase; letter-spacing: .03em; display: none; }
+.burger { margin-left: auto; width: 24px; height: 24px; }
+@media (min-width: 900px) { header nav { display: flex; } .pill.cta { display: inline-block; } .burger { display: none; } }
+
+main { text-align: center; }
+h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text-transform: uppercase; letter-spacing: .08em; margin: 28px 0 12px; }
+/* Verdict (round-1 C) */
+.verdict { font-weight: 600; font-size: clamp(17px, 4.6vw, 22px); line-height: 1.5; margin: 0; }
+.verdict .line { display: block; }
+.verdict .when { white-space: nowrap; }
+.chip { display: inline-block; padding: 1px 10px; border-radius: 99px; font: 700 .8em/1.5 Manrope, sans-serif; color: oklch(18% .025 215); vertical-align: .08em; white-space: nowrap; }
+.chip.dark { color: #fff; }
+.chip.ghost { background: transparent !important; color: var(--foreground); border: 2px dashed var(--chip); padding: 0 8px; }
+.chip.off { background: var(--grey) !important; color: var(--foreground); }
+.badge { display: inline-block; padding: 2px 12px; border-radius: 99px; border: 2px solid var(--foreground); font-weight: 700; font-size: 16px; }
+.verdict a { font-size: 16px; margin-left: 8px; }
+.nowrow { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px 10px; margin: 14px 0 0; }
+.nowrow .big { font: 700 34px/1.1 "Space Grotesk", sans-serif; }
+.nowrow .chip { font-size: 14px; }
+.nowrow .sub { font-size: 14px; color: var(--muted-foreground); }
+.dist { font-size: 15px; margin: 2px 0 0; }
+.dist b { font-size: 18px; }
+.is-old .nowrow .big, .is-old .dist b { color: var(--muted-foreground); }
+
+.stage { max-width: 640px; margin: 24px auto 0; text-align: left; }
+.card { background: var(--card); border-radius: 1rem; box-shadow: 0 1px 3px oklch(20% .025 215 / .08), 0 8px 24px oklch(20% .025 215 / .06); }
+/* Chart (round-1 B) */
+.chartcard { padding: 12px 10px; }
+.chart { position: relative; touch-action: pan-y; cursor: crosshair; outline: none; border-radius: .5rem; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.chart.static { cursor: default; }
+.chart:focus-visible { box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--foreground); }
+.chart svg { display: block; width: 100%; }
+.chart text { font-family: Manrope, sans-serif; fill: var(--muted-foreground); font-size: 12px; }
+.chart .strong { fill: var(--foreground); font-weight: 700; }
+.chart .halo { paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-opacity: .85; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 12px; color: var(--muted-foreground); margin-top: 8px; white-space: nowrap; justify-content: center; }
+.sw { display: inline-block; width: 10px; height: 10px; vertical-align: middle; margin-right: 3px; border-radius: 2px; }
+/* House (round-2 Pegellatte) */
+.scene { margin-top: 12px; overflow: hidden; }
+.scene svg { display: block; width: 100%; height: auto; }
+.scene text { font-family: Manrope, sans-serif; fill: var(--foreground); font-size: 13px; font-weight: 600; }
+#curLine, #cue { transition: opacity .25s ease; }
+@media (prefers-reduced-motion: reduce) { #curLine, #cue { transition: none; } }
+.chart .cue { font-size: 16px; font-weight: 700; fill: var(--foreground); }
+/* Zeitplan (round-1 A) */
+.plansec { max-width: 640px; margin: 32px auto 0; text-align: left; }
+.label { text-transform: uppercase; letter-spacing: .12em; font: 500 13px "Space Grotesk", sans-serif; color: var(--muted-foreground); margin: 0 0 8px; text-align: center; }
+.plan { display: grid; gap: 10px; }
+.plan .row { border-left: 6px solid var(--tone); padding: 8px 12px; background: var(--card); border-radius: 0 .5rem .5rem 0; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.plan .row.maybe { border-left-style: dashed; }
+.plan h3 { font-size: 16px; margin: 0; }
+.plan .times { font-size: 14px; margin: 2px 0 4px; }
+.plan ul { margin: 0; padding-left: 18px; font-size: 15px; }
+
+.legal { margin: 32px 0 0; font-size: 14px; color: var(--muted-foreground); }
+.legal a { color: oklch(55% .16 50); font-weight: 600; }
+footer { margin-top: 40px; background: var(--brand-deep); color: var(--brand-foreground); font-size: 14px; }
+footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+.mock { display: flex; gap: 2px; opacity: .6; }
+.mock button { font: 12px Manrope, sans-serif; border: 0; background: none; color: var(--brand-foreground); padding: 2px 6px; border-radius: 4px; cursor: pointer; }
+.mock button[aria-pressed="true"] { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="https://energiekonzepte-ruhr.de"><img src="https://energiekonzepte-ruhr.de/__l5e/assets-v1/8f36ba36-7bb6-4a8a-bb76-56bc6768ce21/energiekonzepte-ruhr-logo.jpg" alt=""><span>ENERGIEKONZEPTE RUHR</span></a>
+  <nav><a href="#">Energieberatung</a><a href="#">Mieterstrom</a><a href="#">Team</a><a href="#">Wissen</a><a href="#">Kontakt</a></nav>
+  <a class="pill cta" href="#">Kontakt aufnehmen</a>
+  <svg class="burger" viewBox="0 0 24 24" aria-label="Menü"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2"/></svg>
+</div></header>
+
+<main class="wrap">
+  <h1>Deilbach Pegel Vorhersage</h1>
+  <p class="verdict" id="verdict" role="status"></p>
+  <div class="nowrow" id="now"></div>
+  <p class="dist" id="dist"></p>
+
+  <div class="stage">
+    <div class="card chartcard">
+      <div class="chart" id="chart" tabindex="0" role="slider" aria-label="Pegelverlauf: Stunde wählen, das Wasser am Haus folgt"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="card scene" id="scene"></div>
+  </div>
+
+  <!-- Open question for the client: do the mobile barriers go up at 165 cm (start of Kat. 3) or only shortly before 185 cm? -->
+  <section class="plansec" id="plansec">
+    <p class="label">Zeitplan · laut Maßnahmenplan</p>
+    <div class="plan" id="plan"></div>
+  </section>
+
+  <p class="legal">Keine amtliche Warnung<span id="legalLink"> · <a href="https://www.hochwasserportal.nrw.de">Hochwasserportal NRW</a></span></p>
+</main>
+
+<footer><div class="wrap">
+  <span>Energiekonzepte Ruhr · Kupferdreh, Essen</span>
+  <span><a href="#">Impressum</a> · <a href="#">Datenschutz</a></span>
+  <span class="mock" role="group" aria-label="Nur im Mockup"><button data-state="normal">normal</button><button data-state="flood">flood</button><button data-state="stale">stale</button><button data-state="fallback">fallback</button></span>
+</div></footer>
+
+<script id="data" type="application/json">{"normal":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-10-16T09:30:00Z","newest_observation_at":"2026-10-16T09:22:03Z","situation":"strong","points":[{"valid_at":"2026-10-16T10:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T11:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T12:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T13:22:00Z","level_cm":18.9,"bands":[{"coverage_percent":80,"lower_cm":17.4,"upper_cm":20.4},{"coverage_percent":90,"lower_cm":17.4,"upper_cm":20.4}]},{"valid_at":"2026-10-16T14:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T15:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.7}]},{"valid_at":"2026-10-16T16:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.8}]},{"valid_at":"2026-10-16T17:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21}]},{"valid_at":"2026-10-16T18:22:00Z","level_cm":19.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":20.8},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.2}]},{"valid_at":"2026-10-16T19:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":20.9},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.4}]},{"valid_at":"2026-10-16T20:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":21},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.6}]},{"valid_at":"2026-10-16T21:22:00Z","level_cm":19.5,"bands":[{"coverage_percent":80,"lower_cm":18,"upper_cm":21.1},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":21.7}]},{"valid_at":"2026-10-16T22:22:00Z","level_cm":21,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":24.8},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":26.2}]},{"valid_at":"2026-10-16T23:22:00Z","level_cm":22.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":27.7},{"coverage_percent":90,"lower_cm":16.3,"upper_cm":29.6}]},{"valid_at":"2026-10-17T00:22:00Z","level_cm":25.4,"bands":[{"coverage_percent":80,"lower_cm":18.2,"upper_cm":34.2},{"coverage_percent":90,"lower_cm":15.7,"upper_cm":37.5}]},{"valid_at":"2026-10-17T01:22:00Z","level_cm":29.2,"bands":[{"coverage_percent":80,"lower_cm":19.2,"upper_cm":41.5},{"coverage_percent":90,"lower_cm":15.8,"upper_cm":45.7}]},{"valid_at":"2026-10-17T02:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":19.9,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.2,"upper_cm":49.3}]},{"valid_at":"2026-10-17T03:22:00Z","level_cm":31.3,"bands":[{"coverage_percent":80,"lower_cm":20.1,"upper_cm":45.2},{"coverage_percent":90,"lower_cm":16.4,"upper_cm":50}]},{"valid_at":"2026-10-17T04:22:00Z","level_cm":31.1,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":49.4}]},{"valid_at":"2026-10-17T05:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44},{"coverage_percent":90,"lower_cm":17.1,"upper_cm":49.1}]},{"valid_at":"2026-10-17T06:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":44},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.9}]},{"valid_at":"2026-10-17T07:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.9},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.8}]},{"valid_at":"2026-10-17T08:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":48.5}]},{"valid_at":"2026-10-17T09:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":48}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-10-14T10:22:03Z","level_cm":20.8},{"observed_at":"2026-10-14T11:22:03Z","level_cm":20.3},{"observed_at":"2026-10-14T12:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T13:22:03Z","level_cm":19.7},{"observed_at":"2026-10-14T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-14T15:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T16:22:03Z","level_cm":20.7},{"observed_at":"2026-10-14T17:22:03Z","level_cm":21},{"observed_at":"2026-10-14T18:22:03Z","level_cm":21.1},{"observed_at":"2026-10-14T19:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T20:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T21:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T22:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T23:22:03Z","level_cm":20.4},{"observed_at":"2026-10-15T00:22:03Z","level_cm":20.3},{"observed_at":"2026-10-15T01:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T02:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T03:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T04:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T05:22:03Z","level_cm":20},{"observed_at":"2026-10-15T06:22:03Z","level_cm":19.6},{"observed_at":"2026-10-15T07:22:03Z","level_cm":20},{"observed_at":"2026-10-15T08:22:03Z","level_cm":20.1},{"observed_at":"2026-10-15T09:22:03Z","level_cm":18.9},{"observed_at":"2026-10-15T10:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T11:22:03Z","level_cm":17.7},{"observed_at":"2026-10-15T12:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T13:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-15T16:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T17:22:03Z","level_cm":19},{"observed_at":"2026-10-15T18:22:03Z","level_cm":19},{"observed_at":"2026-10-15T19:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T20:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T21:22:03Z","level_cm":18.6},{"observed_at":"2026-10-15T22:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T23:22:03Z","level_cm":18.5},{"observed_at":"2026-10-16T00:22:03Z","level_cm":18},{"observed_at":"2026-10-16T01:22:03Z","level_cm":18.3},{"observed_at":"2026-10-16T02:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T03:22:03Z","level_cm":18.8},{"observed_at":"2026-10-16T04:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T05:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T06:22:03Z","level_cm":19.7},{"observed_at":"2026-10-16T07:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T08:22:03Z","level_cm":19},{"observed_at":"2026-10-16T09:22:03Z","level_cm":18.9}]}},"flood_made_up":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-11-19T15:30:00Z","newest_observation_at":"2026-11-19T15:22:02Z","situation":"strong","points":[{"valid_at":"2026-11-19T16:22:00Z","level_cm":133.7,"bands":[{"coverage_percent":80,"lower_cm":127.5,"upper_cm":139.9},{"coverage_percent":90,"lower_cm":125.6,"upper_cm":141.8}]},{"valid_at":"2026-11-19T17:22:00Z","level_cm":138.7,"bands":[{"coverage_percent":80,"lower_cm":130.3,"upper_cm":147.1},{"coverage_percent":90,"lower_cm":127.8,"upper_cm":149.6}]},{"valid_at":"2026-11-19T18:22:00Z","level_cm":145.8,"bands":[{"coverage_percent":80,"lower_cm":135.2,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":132,"upper_cm":159.6}]},{"valid_at":"2026-11-19T19:22:00Z","level_cm":154.4,"bands":[{"coverage_percent":80,"lower_cm":141.6,"upper_cm":167.2},{"coverage_percent":90,"lower_cm":137.8,"upper_cm":171}]},{"valid_at":"2026-11-19T20:22:00Z","level_cm":163.1,"bands":[{"coverage_percent":80,"lower_cm":148.1,"upper_cm":178.1},{"coverage_percent":90,"lower_cm":143.6,"upper_cm":182.6}]},{"valid_at":"2026-11-19T21:22:00Z","level_cm":169.6,"bands":[{"coverage_percent":80,"lower_cm":152.4,"upper_cm":186.8},{"coverage_percent":90,"lower_cm":147.2,"upper_cm":192}]},{"valid_at":"2026-11-19T22:22:00Z","level_cm":172,"bands":[{"coverage_percent":80,"lower_cm":152.6,"upper_cm":191.4},{"coverage_percent":90,"lower_cm":146.8,"upper_cm":197.2}]},{"valid_at":"2026-11-19T23:22:00Z","level_cm":168,"bands":[{"coverage_percent":80,"lower_cm":146.4,"upper_cm":189.6},{"coverage_percent":90,"lower_cm":139.9,"upper_cm":196.1}]},{"valid_at":"2026-11-20T00:22:00Z","level_cm":159.9,"bands":[{"coverage_percent":80,"lower_cm":136.1,"upper_cm":183.7},{"coverage_percent":90,"lower_cm":129,"upper_cm":190.8}]},{"valid_at":"2026-11-20T01:22:00Z","level_cm":149.6,"bands":[{"coverage_percent":80,"lower_cm":123.6,"upper_cm":175.6},{"coverage_percent":90,"lower_cm":115.8,"upper_cm":183.4}]},{"valid_at":"2026-11-20T02:22:00Z","level_cm":139.4,"bands":[{"coverage_percent":80,"lower_cm":111.2,"upper_cm":167.6},{"coverage_percent":90,"lower_cm":102.7,"upper_cm":176.1}]},{"valid_at":"2026-11-20T03:22:00Z","level_cm":130.7,"bands":[{"coverage_percent":80,"lower_cm":100.3,"upper_cm":161.1},{"coverage_percent":90,"lower_cm":91.2,"upper_cm":170.2}]},{"valid_at":"2026-11-20T04:22:00Z","level_cm":124.1,"bands":[{"coverage_percent":80,"lower_cm":91.5,"upper_cm":156.7},{"coverage_percent":90,"lower_cm":81.7,"upper_cm":166.5}]},{"valid_at":"2026-11-20T05:22:00Z","level_cm":119.5,"bands":[{"coverage_percent":80,"lower_cm":84.7,"upper_cm":154.3},{"coverage_percent":90,"lower_cm":74.3,"upper_cm":164.7}]},{"valid_at":"2026-11-20T06:22:00Z","level_cm":116.4,"bands":[{"coverage_percent":80,"lower_cm":79.4,"upper_cm":153.4},{"coverage_percent":90,"lower_cm":68.3,"upper_cm":164.5}]},{"valid_at":"2026-11-20T07:22:00Z","level_cm":114,"bands":[{"coverage_percent":80,"lower_cm":74.8,"upper_cm":153.2},{"coverage_percent":90,"lower_cm":63,"upper_cm":165}]},{"valid_at":"2026-11-20T08:22:00Z","level_cm":112.2,"bands":[{"coverage_percent":80,"lower_cm":70.8,"upper_cm":153.6},{"coverage_percent":90,"lower_cm":58.4,"upper_cm":166}]},{"valid_at":"2026-11-20T09:22:00Z","level_cm":110.4,"bands":[{"coverage_percent":80,"lower_cm":66.8,"upper_cm":154},{"coverage_percent":90,"lower_cm":53.7,"upper_cm":167.1}]},{"valid_at":"2026-11-20T10:22:00Z","level_cm":108.8,"bands":[{"coverage_percent":80,"lower_cm":63,"upper_cm":154.6},{"coverage_percent":90,"lower_cm":49.3,"upper_cm":168.3}]},{"valid_at":"2026-11-20T11:22:00Z","level_cm":107.2,"bands":[{"coverage_percent":80,"lower_cm":59.2,"upper_cm":155.2},{"coverage_percent":90,"lower_cm":44.8,"upper_cm":169.6}]},{"valid_at":"2026-11-20T12:22:00Z","level_cm":105.6,"bands":[{"coverage_percent":80,"lower_cm":55.4,"upper_cm":155.8},{"coverage_percent":90,"lower_cm":40.3,"upper_cm":170.9}]},{"valid_at":"2026-11-20T13:22:00Z","level_cm":104,"bands":[{"coverage_percent":80,"lower_cm":51.6,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":35.9,"upper_cm":172.1}]},{"valid_at":"2026-11-20T14:22:00Z","level_cm":102.4,"bands":[{"coverage_percent":80,"lower_cm":47.8,"upper_cm":157},{"coverage_percent":90,"lower_cm":31.4,"upper_cm":173.4}]},{"valid_at":"2026-11-20T15:22:00Z","level_cm":100.8,"bands":[{"coverage_percent":80,"lower_cm":44,"upper_cm":157.6},{"coverage_percent":90,"lower_cm":27,"upper_cm":174.6}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-11-17T16:22:02Z","level_cm":35},{"observed_at":"2026-11-17T17:22:02Z","level_cm":35},{"observed_at":"2026-11-17T18:22:02Z","level_cm":35},{"observed_at":"2026-11-17T19:22:02Z","level_cm":35},{"observed_at":"2026-11-17T20:22:02Z","level_cm":35},{"observed_at":"2026-11-17T21:22:02Z","level_cm":35},{"observed_at":"2026-11-17T22:22:02Z","level_cm":35},{"observed_at":"2026-11-17T23:22:02Z","level_cm":35},{"observed_at":"2026-11-18T00:22:02Z","level_cm":35},{"observed_at":"2026-11-18T01:22:02Z","level_cm":35},{"observed_at":"2026-11-18T02:22:02Z","level_cm":35},{"observed_at":"2026-11-18T03:22:02Z","level_cm":35},{"observed_at":"2026-11-18T04:22:02Z","level_cm":35},{"observed_at":"2026-11-18T05:22:02Z","level_cm":35},{"observed_at":"2026-11-18T06:22:02Z","level_cm":35},{"observed_at":"2026-11-18T07:22:02Z","level_cm":35},{"observed_at":"2026-11-18T08:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T09:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T10:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T11:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T12:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T13:22:02Z","level_cm":35.3},{"observed_at":"2026-11-18T14:22:02Z","level_cm":35.4},{"observed_at":"2026-11-18T15:22:02Z","level_cm":35.6},{"observed_at":"2026-11-18T16:22:02Z","level_cm":35.9},{"observed_at":"2026-11-18T17:22:02Z","level_cm":36.2},{"observed_at":"2026-11-18T18:22:02Z","level_cm":36.7},{"observed_at":"2026-11-18T19:22:02Z","level_cm":37.3},{"observed_at":"2026-11-18T20:22:02Z","level_cm":38.2},{"observed_at":"2026-11-18T21:22:02Z","level_cm":39.4},{"observed_at":"2026-11-18T22:22:02Z","level_cm":41},{"observed_at":"2026-11-18T23:22:02Z","level_cm":43.2},{"observed_at":"2026-11-19T00:22:02Z","level_cm":46.1},{"observed_at":"2026-11-19T01:22:02Z","level_cm":49.8},{"observed_at":"2026-11-19T02:22:02Z","level_cm":54.4},{"observed_at":"2026-11-19T03:22:02Z","level_cm":60},{"observed_at":"2026-11-19T04:22:02Z","level_cm":66.5},{"observed_at":"2026-11-19T05:22:02Z","level_cm":73.8},{"observed_at":"2026-11-19T06:22:02Z","level_cm":81.5},{"observed_at":"2026-11-19T07:22:02Z","level_cm":89.2},{"observed_at":"2026-11-19T08:22:02Z","level_cm":96.5},{"observed_at":"2026-11-19T09:22:02Z","level_cm":103},{"observed_at":"2026-11-19T10:22:02Z","level_cm":108.6},{"observed_at":"2026-11-19T11:22:02Z","level_cm":113.2},{"observed_at":"2026-11-19T12:22:02Z","level_cm":116.9},{"observed_at":"2026-11-19T13:22:02Z","level_cm":119.8},{"observed_at":"2026-11-19T14:22:02Z","level_cm":122},{"observed_at":"2026-11-19T15:22:02Z","level_cm":128}]}}}</script>
+<script id="core">
+// Pure logic, mirrors what the React component would do. No DOM in here.
+// shortcut: categories and actions copied from config/pegel.json; the real page gets them from the API.
+const CATEGORIES = [
+  { n: 1, name: "unkritisch", from: -Infinity, color: "var(--c1)" },
+  { n: 2, name: "kritisch", from: 145, color: "var(--c2)" },
+  { n: 3, name: "sehr kritisch", from: 165, color: "var(--c3)", dark: true },
+  { n: 4, name: "extrem kritisch", from: 185, color: "var(--c4)", dark: true },
+  { n: 5, name: "Chaos", from: 225, color: "var(--c5)", dark: true },
+];
+// One line per action with its real trigger level; info lines describe what happens.
+const ACTIONS = [
+  { at: 145, info: true, text: "Der Deilbach tritt am Parkplatz Kupferdreh über das Ufer." },
+  { at: 165, text: "Rückstauventil schließen und Pumpe anschließen." },
+  { at: 165, text: "Mobile Hochwasserbarrieren aufbauen (vor 185 cm)." },
+  { at: 185, info: true, text: "Ohne Barrieren ginge das Wasser über die Mauer." },
+  { at: 185, text: "Sandsäcke im Hof auslegen." },
+  { at: 225, text: "EG-Wohnung räumen, Strom abschalten." },
+];
+const MODEL = "ridge:change:v2", STALE_MINUTES = 90, CRITICAL_CM = 145, SCALE_TOP_CM = 250, HOUR = 3600e3;
+
+// Strictly above the threshold, as in core/categories.py: 145,0 cm is still Kat. 1.
+const categoryOf = (cm) => CATEGORIES.filter((c) => cm > c.from).pop();
+const bandOf = (p, coverage) => p.bands.find((b) => b.coverage_percent === coverage) || null;
+const upper90 = (p) => (bandOf(p, 90) ? bandOf(p, 90).upper_cm : p.level_cm);
+const isFallback = (f) => f.model !== MODEL || f.points.some((p) => !p.bands.length);
+// Hour of the last point BEFORE the crossing (shared rule); the newest reading if the first point already crosses.
+function crossingTime(forecast, cm, valueOf) {
+  const i = forecast.points.findIndex((p) => valueOf(p) > cm);
+  return i < 0 ? null : i === 0 ? forecast.newest_observation_at : forecast.points[i - 1].valid_at;
+}
+
+// The line sets the category; every higher category the 90 % top reaches is named too, with its earliest time.
+function verdict(forecast, currentCm) {
+  const expected = categoryOf(Math.max(...forecast.points.map((p) => p.level_cm)));
+  const expectedAt = expected.n > categoryOf(currentCm).n ? crossingTime(forecast, expected.from, (p) => p.level_cm) : null;
+  const possible = CATEGORIES.filter((c) => c.n > expected.n)
+    .map((c) => ({ category: c, at: crossingTime(forecast, c.from, upper90) }))
+    .filter((x) => x.at);
+  return { expected, expectedAt, possible };
+}
+
+// One row per threshold up to the highest category the line or the 90 % top reaches.
+function planRows(forecast, currentCm, v) {
+  const top = v.possible.length ? v.possible[v.possible.length - 1].category : v.expected;
+  return CATEGORIES.slice(1, top.n).map((c) => ({
+    category: c,
+    now: currentCm > c.from,
+    expectedAt: crossingTime(forecast, c.from, (p) => p.level_cm),
+    possibleAt: crossingTime(forecast, c.from, upper90),
+    actions: ACTIONS.filter((a) => a.at === c.from),
+  }));
+}
+
+// The hoverable series: measured hours of the last 24 h, plus the forecast points when it may be shown.
+function hoverSeries(sample, withForecast) {
+  const obs = sample.history.observations, lastMs = Date.parse(obs[obs.length - 1].observed_at);
+  const measured = obs.filter((o) => Date.parse(o.observed_at) >= lastMs - 24 * HOUR - 1)
+    .map((o) => ({ ms: Date.parse(o.observed_at), iso: o.observed_at, level: o.level_cm, band: null }));
+  if (!withForecast) return measured;
+  // The ranges open from the newest reading, as in the chart.
+  measured[measured.length - 1].band = { lower: measured[measured.length - 1].level, upper: measured[measured.length - 1].level };
+  return measured.concat(sample.forecast.points.map((p) => ({ ms: Date.parse(p.valid_at), iso: p.valid_at, level: p.level_cm,
+    band: bandOf(p, 90) ? { lower: bandOf(p, 90).lower_cm, upper: bandOf(p, 90).upper_cm } : null, forecast: true })));
+}
+function nearestIndex(series, ms) {
+  let best = 0;
+  series.forEach((p, i) => { if (Math.abs(p.ms - ms) < Math.abs(series[best].ms - ms)) best = i; });
+  return best;
+}
+// Linear between hourly points; used while the water glides from one hour to the next.
+function valueAt(series, ms, pick) {
+  if (ms <= series[0].ms) return pick(series[0]);
+  for (let i = 1; i < series.length; i++) {
+    if (ms <= series[i].ms) {
+      const a = pick(series[i - 1]), b = pick(series[i]);
+      if (a == null || b == null) return ms - series[i - 1].ms < series[i].ms - ms ? a : b;
+      return a + (b - a) * (ms - series[i - 1].ms) / (series[i].ms - series[i - 1].ms);
+    }
+  }
+  return pick(series[series.length - 1]);
+}
+const levelAt = (series, ms) => valueAt(series, ms, (p) => p.level);
+
+// One scale top for the chart and the house: 250 cm, raised for both only when the measured line,
+// the forecast line or the 90 % top goes higher.
+function scaleTop(sample, withForecast) {
+  const values = hoverSeries(sample, false).map((p) => p.level)
+    .concat(withForecast ? sample.forecast.points.flatMap((p) => [p.level_cm, upper90(p)]) : []);
+  const top = Math.max(...values);
+  return top > SCALE_TOP_CM ? Math.ceil((top + 10) / 25) * 25 : SCALE_TOP_CM;
+}
+
+function summarize(sample, nowIso) {
+  const f = sample.forecast, obs = sample.history.observations;
+  const current = obs[obs.length - 1];
+  const ageMin = (iso) => (Date.parse(nowIso) - Date.parse(iso)) / 60e3;
+  const stale = ageMin(current.observed_at) > STALE_MINUTES || ageMin(f.issued_at) > STALE_MINUTES;
+  const mode = stale ? "stale" : isFallback(f) ? "fallback" : "ok";
+  const v = verdict(f, current.level_cm);
+  return { mode, current, verdict: v, plan: mode === "ok" ? planRows(f, current.level_cm, v) : [],
+    series: hoverSeries(sample, mode === "ok"), scaleTop: scaleTop(sample, mode === "ok") };
+}
+
+// Formatting (German, Europe/Berlin)
+const TZ = "Europe/Berlin";
+const num = (v) => Math.round(v).toLocaleString("de-DE");
+const parts = (iso) => Object.fromEntries(new Intl.DateTimeFormat("de-DE", { timeZone: TZ, day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", weekday: "short", hourCycle: "h23" })
+  .formatToParts(new Date(iso)).map((p) => [p.type, p.value]));
+const sameDay = (a, b) => parts(a).day === parts(b).day && parts(a).month === parts(b).month;
+function dayWord(iso, nowIso) {
+  const ms = Date.parse(nowIso);
+  if (sameDay(iso, nowIso)) return "heute";
+  if (sameDay(iso, new Date(ms + 864e5).toISOString())) return "morgen";
+  if (sameDay(iso, new Date(ms - 864e5).toISOString())) return "gestern";
+  return `${parts(iso).weekday} ${parts(iso).day}.${parts(iso).month}.`;
+}
+const hourAt = (iso, nowIso, word = "gegen") => `${dayWord(iso, nowIso)} ${word} ${Number(parts(iso).hour)} Uhr`;
+const clock = (iso) => `${parts(iso).hour}:${parts(iso).minute} Uhr`;
+if (typeof module !== "undefined") module.exports = { summarize, scaleTop, verdict, planRows, hoverSeries, nearestIndex, levelAt, categoryOf, isFallback, crossingTime, hourAt, dayWord, clock, num };
+</script>
+<script>
+const SAMPLES = JSON.parse(document.getElementById("data").textContent);
+// Mockup only: a persistence forecast (flat at the last level, no bands) on the flood history.
+const fallbackSample = {
+  history: SAMPLES.flood_made_up.history,
+  forecast: { ...SAMPLES.flood_made_up.forecast, model: "persistence", situation: null,
+    points: SAMPLES.flood_made_up.forecast.points.map((p) => ({ valid_at: p.valid_at, level_cm: 128, bands: [] })) },
+};
+// Mockup only: the "now" each state is viewed at. The real page uses new Date().
+const STATES = {
+  normal: { sample: SAMPLES.normal, now: "2026-10-16T09:41:00Z" },
+  flood: { sample: SAMPLES.flood_made_up, now: "2026-11-19T15:41:00Z" },
+  stale: { sample: SAMPLES.flood_made_up, now: "2026-11-19T17:40:00Z" },
+  fallback: { sample: fallbackSample, now: "2026-11-19T15:41:00Z" },
+};
+// Hash: "#flood" or, for screenshots, "#flood&hover=2026-11-19T22:22Z".
+const hashParts = () => location.hash.slice(1).split("&");
+const stateFromHash = () => (hashParts()[0] in STATES ? hashParts()[0] : "normal");
+const debugHover = () => (hashParts().find((p) => p.startsWith("hover=")) || "").slice(6) || null;
+// Mockup only: "&raise=100" lifts every level by 100 cm to show the scale growing above 250 cm.
+function withRaise(state) {
+  const d = Number((hashParts().find((p) => p.startsWith("raise=")) || "").slice(6)) || 0;
+  if (!d) return state;
+  const f = state.sample.forecast, h = state.sample.history;
+  return { ...state, sample: {
+    history: { ...h, observations: h.observations.map((o) => ({ ...o, level_cm: o.level_cm + d })) },
+    forecast: { ...f, points: f.points.map((p) => ({ ...p, level_cm: p.level_cm + d, bands: p.bands.map((b) => ({ ...b, lower_cm: b.lower_cm + d, upper_cm: b.upper_cm + d })) })) } } };
+}
+const $ = (id) => document.getElementById(id);
+const PORTAL = `<a href="https://www.hochwasserportal.nrw.de">Hochwasserportal NRW</a>`;
+const chip = (c, mode = "") => `<span class="chip${c.dark ? " dark" : ""} ${mode}" style="background:${c.color};--chip:${c.color}">${c.n} · ${c.name}</span>`;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+let S, now, geo = null, scene = null;   // summary, mock "now", chart and house geometry
+const anim = { shownMs: 0, targetIdx: 0, homeIdx: 0, active: false, bandOpacity: 0, raf: 0, last: 0 };
+
+function render() {
+  const name = stateFromHash(), state = STATES[name];
+  now = state.now;
+  S = summarize(state.sample, now);
+  const ok = S.mode === "ok", cur = S.current;
+  document.body.classList.toggle("is-old", S.mode === "stale");
+  document.querySelectorAll(".mock button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.state === name));
+
+  const v = S.verdict, reading = `${sameDay(cur.observed_at, now) ? "" : dayWord(cur.observed_at, now) + " "}${clock(cur.observed_at)}`;
+  $("verdict").innerHTML = S.mode === "stale" ? `<span class="line"><span class="badge">Veraltet · ${reading}</span></span><span class="line">${PORTAL}</span>`
+    : S.mode === "fallback" ? `<span class="line"><span class="badge">Keine Prognose · ${reading}</span></span><span class="line">${PORTAL}</span>`
+    : verdictHtml(v);
+  $("legalLink").hidden = !ok;   // stale and fallback show the portal link next to the badge instead
+  $("now").innerHTML = `<span class="big">${num(cur.level_cm)} cm</span>${chip(categoryOf(cur.level_cm), S.mode === "stale" ? "off" : "")}<span class="sub">gemessen ${reading}</span>`;
+  const gap = CRITICAL_CM - cur.level_cm;
+  $("dist").innerHTML = gap > 0 ? `Bis kritisch (145 cm): noch <b>${num(Math.floor(gap))} cm</b>`
+    : `Kritische Marke (145 cm) um <b>${num(Math.ceil(-gap))} cm</b> überschritten`;
+
+  $("plansec").hidden = !S.plan.length;
+  $("plan").innerHTML = planHtml(S.plan);
+
+  scene = sceneGeometry();
+  renderChart(state.sample);
+  $("scene").innerHTML = sceneSvg();
+  anim.homeIdx = S.series.length - 1 - (ok ? state.sample.forecast.points.length : 0);
+  const hover = debugHover();
+  if (hover) point(nearestIndex(S.series, Date.parse(hover)), true);
+  else { anim.active = false; anim.targetIdx = anim.homeIdx; anim.shownMs = S.series[anim.homeIdx].ms; anim.bandOpacity = 0; }
+  updateLabels();
+  kick();
+}
+
+function verdictHtml(v) {
+  const first = v.expectedAt ? `Voraussichtlich ${chip(v.expected)} <span class="when">${hourAt(v.expectedAt, now)}</span>`
+    : v.expected.n === 1 ? `Voraussichtlich ${chip(v.expected)} in den nächsten 24 Stunden` : `Voraussichtlich weiter ${chip(v.expected)}`;
+  const second = v.possible.map((p, i) => `${i ? "" : "Möglich: "}${chip(p.category, "ghost")} <span class="when">${hourAt(p.at, now, "ab")}</span>`).join(", ");
+  return `<span class="line">${first}</span>` + (second ? `<span class="line">${second}</span>` : "");
+}
+
+function planHtml(rows) {
+  return rows.map((r) => {
+    const maybe = !r.now && !r.expectedAt;
+    const times = r.now ? "jetzt überschritten" : r.expectedAt ? `erwartet ${hourAt(r.expectedAt, now)}` : `nicht erwartet · möglich ${hourAt(r.possibleAt, now, "ab")}`;
+    const c = r.category;
+    return `<div class="row${maybe ? " maybe" : ""}" style="--tone:${c.color}"><h3>Über ${c.from} cm · ${c.n} · ${c.name}</h3>
+      <div class="times">${times}</div>
+      <ul>${r.actions.map((a) => `<li>${a.info ? a.text : (maybe ? "Vorbereiten: " : "") + a.text}</li>`).join("")}</ul></div>`;
+  }).join("");
+}
+
+// House geometry, 1 SVG unit = 1 cm: the scale top sits 20 units below the picture's top edge, the bed (-15) 15 above its bottom.
+// On wide screens the picture extends to the left (more river), so it stays low; `pxPerCm` is shared with the chart.
+function sceneGeometry() {
+  const top = S.scaleTop, height = top + 50, w = $("scene").clientWidth || 360;
+  const pxPerCm = Math.min(w / 360, 340 / 300);
+  return { top, height, pxPerCm, sx: Math.max(0, Math.round(w / pxPerCm - 360)) };
+}
+const sy = (cm) => scene.top + 20 - Math.max(-20, Math.min(cm, scene.top + 5));
+const STAFF_X = 232, WALL_X = 248;
+const bankX = (cm) => (cm >= 145 ? -scene.sx : 30 + (145 - cm) / 160 * 55);  // left bank: 145 cm at x 30, bed at x 85
+
+// Verlauf chart (round-1 B). Fixed scale from 0 to the shared top, with the house's px per cm.
+function renderChart(sample) {
+  const box = $("chart"), ok = S.mode === "ok", colored = S.mode !== "stale", W = Math.max(300, box.clientWidth || 300), phone = W < 500;
+  const m = { l: 8, r: 8, t: 10, b: 26 }, yMax = S.scaleTop, H = m.t + m.b + yMax * scene.pxPerCm;
+  const obsT = Date.parse(S.current.observed_at), pts = ok ? sample.forecast.points : [];
+  const t0 = obsT - 24 * HOUR, t1 = obsT + 24 * HOUR + 10 * 60e3;
+  const hist = S.series.filter((p) => !p.forecast);
+  const x = (t) => m.l + ((t - t0) / (t1 - t0)) * (W - m.l - m.r);
+  const y = (v) => m.t + (1 - v / yMax) * (H - m.t - m.b);
+  const out = [];
+  CATEGORIES.forEach((c, i) => {
+    const lo = Math.max(0, c.from), hi = Math.min(yMax, CATEGORIES[i + 1] ? CATEGORIES[i + 1].from : yMax);
+    out.push(`<rect x="${m.l}" y="${y(hi)}" width="${W - m.l - m.r}" height="${y(lo) - y(hi)}" fill="${colored ? c.color : "var(--grey)"}" opacity="${colored ? (c.n === 1 ? 0.12 : 0.22) : 0.2}"/>`);
+    if (c.n > 1) {
+      out.push(`<line x1="${m.l}" x2="${W - m.r}" y1="${y(c.from)}" y2="${y(c.from)}" stroke="${colored ? c.color : "var(--grey)"}" stroke-width="1.5"/>`);
+      out.push(`<text class="strong halo" x="${W - m.r - 4}" y="${y(c.from) - 4}" text-anchor="end">${c.from} · ${c.n}</text>`);
+    }
+  });
+  for (let t = Math.ceil(t0 / HOUR) * HOUR; t <= t1; t += HOUR) {
+    const p = parts(new Date(t).toISOString()), hr = Number(p.hour);
+    if (hr % (phone ? 12 : 6)) continue;
+    out.push(`<line x1="${x(t)}" x2="${x(t)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--border)" stroke-width="${hr === 0 ? 1.2 : 0.5}"/>`);
+    if (x(t) < m.l + 18 || x(t) > W - m.r - 18) continue;   // a label at the edge would be clipped
+    out.push(`<text x="${x(t)}" y="${H - 8}" text-anchor="middle" ${hr === 0 ? 'font-weight="700"' : ""}>${hr === 0 ? p.weekday : hr + " Uhr"}</text>`);
+  }
+  const start = { t: obsT, v: S.current.level_cm };
+  const area = (cov) => {
+    const bs = pts.map((p) => ({ t: Date.parse(p.valid_at), b: p.bands.find((b) => b.coverage_percent === cov) })).filter((q) => q.b);
+    if (!bs.length) return "";
+    const up = [`${x(start.t)},${y(start.v)}`, ...bs.map((q) => `${x(q.t)},${y(q.b.upper_cm)}`)];
+    return `<polygon points="${[...up, ...bs.map((q) => `${x(q.t)},${y(q.b.lower_cm)}`).reverse()].join(" ")}" fill="var(--band${cov})"/>`;
+  };
+  out.push(area(90), area(80));
+  const line = (arr) => arr.map((q, i) => `${i ? "L" : "M"}${x(q.t).toFixed(1)},${y(q.v).toFixed(1)}`).join("");
+  const lineColor = S.mode === "stale" ? "var(--muted-foreground)" : "var(--foreground)";
+  out.push(`<path d="${line(hist.map((o) => ({ t: o.ms, v: o.level })))}" fill="none" stroke="${lineColor}" stroke-width="2.2" stroke-linejoin="round"/>`);
+  if (pts.length) out.push(`<path d="${line([start, ...pts.map((p) => ({ t: Date.parse(p.valid_at), v: p.level_cm }))])}" fill="none" stroke="var(--foreground)" stroke-width="2.6" stroke-dasharray="6 4"/>`);
+  out.push(`<line x1="${x(obsT)}" x2="${x(obsT)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--foreground)" stroke-width="1"/>`);
+  const nowMs = Date.parse(now);
+  if (S.mode === "stale" && nowMs < t1) {
+    out.push(`<line x1="${x(nowMs)}" x2="${x(nowMs)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--destructive)" stroke-width="2" stroke-dasharray="4 3"/>`);
+    out.push(`<text x="${x(nowMs) + 4}" y="${H - m.b - 6}" font-weight="700" style="fill:var(--destructive)">jetzt</text>`);
+  }
+  out.push(`<circle cx="${x(obsT)}" cy="${y(S.current.level_cm)}" r="3.5" fill="${lineColor}"/>`);
+  // Drag cue above the newest reading; gone while the cursor is away from it.
+  if (S.series.length > 1) out.push(`<text id="cue" class="cue halo" x="${x(obsT)}" y="${y(S.current.level_cm) - 13}" text-anchor="middle" aria-hidden="true">↔</text>`);
+  // Cursor: the dot always marks the shown hour (the newest reading at rest); the line appears while pointing.
+  out.push(`<g pointer-events="none"><line id="curLine" y1="${m.t}" y2="${H - m.b}" stroke="var(--foreground)" stroke-width="1.5" stroke-opacity=".7" opacity="0"/>` +
+    `<circle id="curDot" r="6" fill="var(--card)" stroke="${lineColor}" stroke-width="2.5"/></g>`);
+  box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${out.join("")}</svg>`;
+  box.setAttribute("aria-valuemin", 0);
+  box.setAttribute("aria-valuemax", S.series.length - 1);
+  $("legend").innerHTML = `<span><span class="sw" style="height:3px;background:var(--foreground)"></span>gemessen</span>` +
+    (ok ? `<span><span class="sw" style="width:14px;height:0;border-top:3px dashed var(--foreground);border-radius:0"></span>Prognose</span>` +
+      `<span><span class="sw" style="background:var(--band80)"></span>wahrscheinlich</span><span><span class="sw" style="background:var(--band90)"></span>möglich</span>` : "");
+  geo = { x, y, t0, t1, m, W };
+}
+
+// House and gauge staff (round-2 Pegellatte) on the chart's scale.
+function sceneSvg() {
+  const colored = S.mode !== "stale", water = colored ? "var(--water)" : "var(--grey)";
+  const { sx, height, top } = scene;
+  let out = `<svg viewBox="${-sx} 0 ${360 + sx} ${height}" role="img" aria-label="Haus, Mauer und Pegellatte mit dem Wasserstand">`;
+  out += `<rect x="${-sx}" width="${360 + sx}" height="${height}" fill="var(--sky)"/>`;
+  out += `<path d="M282 ${sy(180)}V${sy(222)}L314 ${sy(248)}L346 ${sy(222)}V${sy(180)}Z" fill="var(--house)"/>`;
+  out += `<rect x="294" y="${sy(212)}" width="12" height="14" rx="1" fill="var(--window)"/><rect x="322" y="${sy(212)}" width="12" height="14" rx="1" fill="var(--window)"/><rect x="309" y="${sy(200)}" width="11" height="20" fill="var(--window)"/>`;
+  // Water under the terrain: the terrain hides it below the bank.
+  out += `<path id="wBack" fill="${colored ? "var(--water-back)" : "var(--grey)"}" opacity=".55"/><path id="wFront" fill="${water}" opacity=".6"/>`;
+  out += `<path d="M${-sx} ${sy(145)}H30L85 ${sy(-15)}H${WALL_X}V${height}H${-sx}Z" fill="var(--ground)"/>`;
+  out += `<rect x="${WALL_X + 12}" y="${sy(180)}" width="${360 - WALL_X - 12}" height="${height - sy(180)}" fill="var(--ground)"/>`;
+  out += `<rect x="${WALL_X}" y="${sy(185)}" width="12" height="${height - sy(185)}" fill="var(--wall)"/>`;
+  CATEGORIES.forEach((c, i) => {
+    const lo = i ? c.from : -15, hi = i < 4 ? CATEGORIES[i + 1].from : top;
+    out += `<rect x="${STAFF_X}" y="${sy(hi)}" width="16" height="${sy(lo) - sy(hi)}" fill="${colored ? c.color : "var(--grey)"}"/>`;
+    out += `<text x="${STAFF_X + 8}" y="${(sy(hi) + sy(lo)) / 2 + 4.5}" text-anchor="middle" style="fill:${!colored ? "var(--foreground)" : c.dark ? "#fff" : "oklch(18% .025 215)"}">${c.n}</text>`;
+  });
+  for (let cm = 0; cm < top; cm += 10) out += `<rect x="${STAFF_X}" y="${sy(cm) - .5}" width="${cm % 50 ? 4 : 7}" height="1" fill="oklch(18% .025 215)" opacity=".6"/>`;
+  out += `<rect id="wStaff" x="${STAFF_X}" width="16" fill="${water}" opacity=".45"/>`;
+  out += `<path id="wEdge" fill="none" stroke="${colored ? "var(--water-line)" : "var(--muted-foreground)"}" stroke-width="2" stroke-linejoin="round"/>`;
+  // 90 % range on the staff, only for forecast hours.
+  out += `<rect id="band" x="${STAFF_X - 5}" width="26" rx="3" fill="var(--sky)" fill-opacity=".2" stroke="var(--foreground)" stroke-opacity=".85" stroke-width="1.5" stroke-dasharray="4 2" opacity="0"/>`;
+  out += `<g id="tag"><rect id="tagBox" height="24" rx="12" fill="var(--card)" stroke="var(--foreground)" stroke-opacity=".25"/><text id="tagText" text-anchor="end"></text></g>`;
+  return out + `</svg>`;
+}
+
+// Two sine layers (round-2 Wasser): front small and faster, back larger and slower, the other way.
+function wave(x, t, layer) {
+  return layer ? 2.4 * Math.sin(x / 19 + t * 0.7 + 1.3) : 1.6 * Math.sin(x / 11 - t * 1.4) + 0.6 * Math.sin(x / 5.3 - t * 2.1);
+}
+const waving = () => S.mode !== "stale" && !reduceMotion.matches && !document.hidden;
+
+function draw(t) {
+  const level = levelAt(S.series, anim.shownMs), moving = waving(), { sx, height } = scene;
+  const right = level > 185 ? 360 : WALL_X, base = sy(level);
+  const surface = (layer) => {
+    const pts = [];
+    for (let xv = -sx; xv <= right + 0.1; xv += 6) pts.push([Math.min(xv, right), base + (moving ? wave(xv, t, layer) : 0) - (layer ? 2.5 : 0)]);
+    return pts;
+  };
+  const fill = (pts) => `M${pts.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L")}L${right},${height}L${-sx},${height}Z`;
+  const front = surface(0);
+  $("wBack").setAttribute("d", fill(surface(1)));
+  $("wFront").setAttribute("d", fill(front));
+  const edge = front.filter((p) => p[0] >= bankX(level) - 6);
+  $("wEdge").setAttribute("d", `M${edge.map((p) => `${Math.max(p[0], bankX(level)).toFixed(1)},${p[1].toFixed(1)}`).join("L")}`);
+  const staffTop = base + (moving ? wave(STAFF_X + 8, t, 0) : 0);
+  $("wStaff").setAttribute("y", staffTop);
+  $("wStaff").setAttribute("height", Math.max(0, sy(-15) - staffTop));
+  // Band on the staff and the tag follow the shown level.
+  const lo = valueAt(S.series, anim.shownMs, (p) => p.band && p.band.lower), hi = valueAt(S.series, anim.shownMs, (p) => p.band && p.band.upper);
+  const band = $("band");
+  if (lo != null && hi != null) { band.setAttribute("y", sy(hi) - 2); band.setAttribute("height", Math.max(4, sy(lo) - sy(hi) + 4)); }
+  band.setAttribute("opacity", anim.bandOpacity.toFixed(3));
+  $("tag").setAttribute("transform", `translate(${STAFF_X - 10},${Math.max(16, Math.min(base - 18, sy(-8)))})`);
+  if (geo) {
+    const cx = geo.x(anim.shownMs);
+    $("curLine").setAttribute("x1", cx); $("curLine").setAttribute("x2", cx);
+    $("curDot").setAttribute("cx", cx); $("curDot").setAttribute("cy", geo.y(level));
+  }
+}
+
+function step(ts) {
+  const dt = anim.last ? Math.min(250, ts - anim.last) : 16;
+  anim.last = ts;
+  const target = S.series[anim.targetIdx], k = reduceMotion.matches ? 1 : 1 - Math.exp(-dt / 140);
+  anim.shownMs += (target.ms - anim.shownMs) * k;
+  if (Math.abs(target.ms - anim.shownMs) < 20e3) anim.shownMs = target.ms;
+  const bandGoal = anim.active && target.forecast && target.band ? 1 : 0;
+  anim.bandOpacity += (bandGoal - anim.bandOpacity) * k;
+  if (Math.abs(bandGoal - anim.bandOpacity) < .01) anim.bandOpacity = bandGoal;
+  draw(ts / 1000);
+  const settled = anim.shownMs === target.ms && anim.bandOpacity === bandGoal;
+  anim.raf = waving() || !settled ? requestAnimationFrame(step) : 0;
+}
+function kick() {
+  cancelAnimationFrame(anim.raf);
+  anim.last = 0;
+  step(performance.now());
+}
+
+// Move the water to a point of the series; instant for screenshots.
+function point(idx, instant = false) {
+  clearTimeout(release.timer);
+  anim.active = true;
+  anim.targetIdx = Math.max(0, Math.min(S.series.length - 1, idx));
+  if (instant) {
+    $("curLine").style.transition = $("cue").style.transition = "none";
+    anim.shownMs = S.series[anim.targetIdx].ms; anim.bandOpacity = S.series[anim.targetIdx].forecast ? 1 : 0;
+  }
+  updateLabels();
+  if (!anim.raf) kick();
+}
+function release() {
+  clearTimeout(release.timer);
+  if (!anim.active) return;
+  anim.active = false;
+  anim.targetIdx = anim.homeIdx;
+  updateLabels();
+  if (!anim.raf) kick();
+}
+// The tag always names the shown hour; "heute" is left out, other days keep their word.
+function updateLabels() {
+  const p = S.series[anim.targetIdx], day = dayWord(p.iso, now);
+  const text = `${day === "heute" ? "" : day + " "}${Number(parts(p.iso).hour)} Uhr · ${num(p.level)} cm`;
+  $("tagText").textContent = text;
+  const w = $("tagText").getComputedTextLength();
+  $("tagText").setAttribute("x", -10); $("tagText").setAttribute("y", 4.5);
+  $("tagBox").setAttribute("x", -w - 20); $("tagBox").setAttribute("y", -12); $("tagBox").setAttribute("width", w + 20);
+  const away = anim.targetIdx !== anim.homeIdx;
+  $("curLine").style.opacity = away ? 1 : 0;
+  if ($("cue")) $("cue").style.opacity = away ? 0 : 1;
+  chartEl.setAttribute("aria-valuenow", anim.targetIdx);
+  chartEl.setAttribute("aria-valuetext", text);
+}
+
+// Mouse: follows on hover. Touch: follows from the first sideways move (a vertical swipe scrolls and leaves
+// the water alone), a tap picks one hour; the picked hour stays 1.5 s after the finger lifts.
+const chartEl = $("chart");
+let touch = null;
+function pointAtEvent(e) {
+  const r = chartEl.querySelector("svg").getBoundingClientRect();
+  const px = (e.clientX - r.left) * geo.W / r.width;
+  point(nearestIndex(S.series, geo.t0 + (px - geo.m.l) / (geo.W - geo.m.l - geo.m.r) * (geo.t1 - geo.t0)));
+}
+const holdThenRelease = () => { clearTimeout(release.timer); release.timer = setTimeout(release, 1500); };
+chartEl.addEventListener("pointerdown", (e) => {
+  if (e.pointerType === "mouse") return;
+  touch = { id: e.pointerId, x: e.clientX, y: e.clientY, following: false };
+});
+chartEl.addEventListener("pointermove", (e) => {
+  if (e.pointerType === "mouse") return pointAtEvent(e);
+  if (!touch || touch.id !== e.pointerId) return;
+  if (!touch.following) {
+    const dx = Math.abs(e.clientX - touch.x), dy = Math.abs(e.clientY - touch.y);
+    if (dy > 8 && dy > dx) { touch = null; return; }   // the page scrolls
+    if (dx < 6) return;
+    touch.following = true;
+    try { chartEl.setPointerCapture(e.pointerId); } catch { /* capture only keeps the drag past the chart edge */ }
+  }
+  pointAtEvent(e);
+});
+chartEl.addEventListener("pointerup", (e) => {
+  if (!touch || touch.id !== e.pointerId) return;
+  if (!touch.following) pointAtEvent(e);   // a tap
+  touch = null;
+  holdThenRelease();
+});
+chartEl.addEventListener("pointercancel", () => { if (touch && touch.following) holdThenRelease(); touch = null; });
+chartEl.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") release(); });
+chartEl.addEventListener("keydown", (e) => {
+  const moves = { ArrowLeft: anim.targetIdx - 1, ArrowRight: anim.targetIdx + 1, Home: 0, End: S.series.length - 1 };
+  if (e.key in moves) { e.preventDefault(); point(moves[e.key]); }
+  else if (e.key === "Escape") release();
+});
+chartEl.addEventListener("blur", release);
+
+document.querySelectorAll(".mock button").forEach((b) => b.addEventListener("click", () => { location.hash = b.dataset.state; }));
+addEventListener("hashchange", render);
+addEventListener("resize", () => { clearTimeout(render.t); render.t = setTimeout(render, 150); });
+// Freshness is re-checked every minute and when the tab comes back; the waves pause while hidden.
+setInterval(() => { if (!anim.active) render(); }, 60e3);
+document.addEventListener("visibilitychange", () => { if (document.hidden) { cancelAnimationFrame(anim.raf); anim.raf = 0; } else render(); });
+reduceMotion.addEventListener("change", kick);
+document.fonts.ready.then(() => { if (!anim.active || debugHover()) render(); });
+render();
+</script>
+</body>
+</html>
