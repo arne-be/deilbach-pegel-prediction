@@ -85,7 +85,7 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .stage { margin: 24px 0 0; }
 .card { background: var(--card); border-radius: 1rem; box-shadow: 0 1px 3px oklch(20% .025 215 / .08), 0 8px 24px oklch(20% .025 215 / .06); }
 /* Chart (round-1 B) */
-.chartcard { padding: 12px 10px; }
+.chartcard { padding: 12px 10px; margin-top: 12px; }
 .chart { position: relative; touch-action: pan-y; cursor: crosshair; outline: none; border-radius: .5rem; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
 .chart.static { cursor: default; }
 .chart:focus-visible { box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--foreground); }
@@ -96,25 +96,21 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .legend { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 12px; color: var(--muted-foreground); margin-top: 8px; white-space: nowrap; }
 .sw { display: inline-block; width: 10px; height: 10px; vertical-align: middle; margin-right: 3px; border-radius: 2px; }
 /* House (round-2 Pegellatte) */
-.scene { margin-top: 12px; overflow: hidden; }
+.scene { overflow: hidden; }
 .scene svg { display: block; width: 100%; height: auto; max-height: 520px; }
 #curLine, #cue { transition: opacity .25s ease; }
 @media (prefers-reduced-motion: reduce) { #curLine, #cue { transition: none; } }
 .chart .cue { font-size: 16px; font-weight: 700; fill: var(--foreground); }
-/* Zeitplan (round-1 A) */
-.plansec { margin: 32px 0 0; }
+/* Section labels */
 .label { text-transform: uppercase; letter-spacing: .12em; font: 500 13px "Space Grotesk", sans-serif; color: var(--muted-foreground); margin: 0 0 8px; }
-.plan { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); align-items: start; }
-.plan .row { border-left: 6px solid var(--tone); padding: 8px 12px; background: var(--card); border-radius: 0 .5rem .5rem 0; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.plan .row.maybe { border-left-style: dashed; }
-.plan h3 { font-size: 16px; margin: 0; }
-.plan .times { font-size: 14px; margin: 2px 0 4px; }
-.plan ul { margin: 0; padding-left: 18px; font-size: 15px; }
 
 /* Was bedeuten die Stufen? */
 .levels { margin: 32px 0 0; }
+@media (min-width: 900px) { .levels ol { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 .levels ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); }
-.levels li { background: var(--card); border: 1px solid var(--border); border-top: 4px solid var(--tone); border-radius: .5rem; padding: 10px 12px; }
+.levels li { background: var(--card); border: 1px solid var(--border); border-left: 6px solid var(--tone); border-radius: 0 .5rem .5rem 0; padding: 10px 12px; }
+.levels li.maybe { border-left-style: dashed; }
+.levels .tag { margin-top: 6px; text-transform: none; letter-spacing: 0; font-size: 13px; font-weight: 600; }
 .levels li.now { outline: 2px solid var(--foreground); outline-offset: -1px; }
 .levels .head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .levels .chip { font-size: 13px; }
@@ -157,7 +153,7 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
   --sc-win: oklch(93% .025 85); --sc-frame: oklch(26% .035 215); --sc-door: oklch(72% .18 50);
   --sc-bar-t: oklch(71% .19 33); --sc-bar-l: oklch(60% .21 29); --sc-bar-f: oklch(50% .19 27); --sc-rib: oklch(45% .17 27); --sc-rib-hi: oklch(74% .17 35);
   --sc-bag-t: oklch(86% .045 85); --sc-bag-l: oklch(75% .05 80); --sc-bag-f: oklch(65% .05 76);
-  --sc-water-t: oklch(75% .1 228 / .8); --sc-water-l: oklch(62% .11 233 / .9);
+  --sc-water-t: oklch(73% .1 228 / .62); --sc-water-l: oklch(62% .11 233 / .9);
   --sc-water-hi: oklch(97% .03 220); --sc-water-top: oklch(65% .11 235); --sc-water-bot: oklch(46% .1 245);
   --sc-tree-m: oklch(63% .085 152); --sc-tree-l: oklch(74% .085 145); --sc-tree-d: oklch(53% .075 160); --sc-trunk: oklch(42% .03 60);
   --sc-car1-t: oklch(46% .04 215); --sc-car1-l: oklch(38% .04 215); --sc-car1-f: oklch(31% .035 215);
@@ -168,6 +164,8 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
   --sc-shadow: oklch(20% .03 215 / .2); --sc-block-shadow: oklch(20% .03 215 / .28);
   --sc-c1: oklch(66% .13 155); --sc-c2: oklch(85% .15 92); --sc-c3: oklch(55% .19 30); --sc-c4: oklch(50% .2 25); --sc-c5: oklch(34% .12 15);
   --sc-tick: oklch(18% .025 215 / .7); --sc-card: #fff; --sc-ink: oklch(20% .025 215); --sc-ink-muted: oklch(48% .02 215);
+  --sc-mud-t: oklch(60% .055 68 / .6); --sc-mud-top: oklch(61% .05 66); --sc-mud-bot: oklch(45% .045 58); --sc-foam: oklch(94% .02 85);
+  --sc-skip-t: oklch(72% .12 245); --sc-skip-l: oklch(57% .15 250); --sc-skip-f: oklch(45% .14 255); --sc-skip-in: oklch(64% .13 248); --sc-skip-rust: oklch(48% .09 45);
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sc-scene {
   --sc-park-t: oklch(33% .015 235); --sc-park-l: oklch(28% .015 235); --sc-park-f: oklch(24% .015 235); --sc-line: oklch(90% .01 90 / .45);
@@ -181,7 +179,7 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
   --sc-win: oklch(85% .12 85); --sc-frame: oklch(20% .03 215);
   --sc-bar-t: oklch(60% .17 33); --sc-bar-l: oklch(51% .18 29); --sc-bar-f: oklch(43% .16 27); --sc-rib: oklch(38% .14 27); --sc-rib-hi: oklch(63% .15 35);
   --sc-bag-t: oklch(64% .04 85); --sc-bag-l: oklch(55% .04 80); --sc-bag-f: oklch(47% .04 76);
-  --sc-water-t: oklch(62% .1 226 / .8); --sc-water-l: oklch(52% .1 230 / .9);
+  --sc-water-t: oklch(60% .1 226 / .64); --sc-water-l: oklch(52% .1 230 / .9);
   --sc-water-top: oklch(56% .12 228); --sc-water-bot: oklch(34% .09 240);
   --sc-tree-m: oklch(40% .06 155); --sc-tree-l: oklch(48% .065 150); --sc-tree-d: oklch(33% .05 160); --sc-trunk: oklch(30% .02 60);
   --sc-car1-t: oklch(40% .035 215); --sc-car1-l: oklch(33% .035 215); --sc-car1-f: oklch(27% .03 215);
@@ -190,6 +188,7 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
   --sc-glass: oklch(24% .03 230); --sc-pole: oklch(48% .01 230);
   --sc-shadow: oklch(5% .02 215 / .3); --sc-block-shadow: oklch(5% .02 215 / .5);
   --sc-card: oklch(22% .025 215); --sc-ink: oklch(97% .005 90); --sc-ink-muted: oklch(76% .02 215);
+  --sc-mud-t: oklch(44% .05 62 / .64); --sc-mud-top: oklch(41% .05 60); --sc-mud-bot: oklch(28% .04 55); --sc-foam: oklch(82% .03 85);
 }}
 :root[data-theme="dark"] .sc-scene {
   --sc-park-t: oklch(33% .015 235); --sc-park-l: oklch(28% .015 235); --sc-park-f: oklch(24% .015 235); --sc-line: oklch(90% .01 90 / .45);
@@ -203,7 +202,7 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
   --sc-win: oklch(85% .12 85); --sc-frame: oklch(20% .03 215);
   --sc-bar-t: oklch(60% .17 33); --sc-bar-l: oklch(51% .18 29); --sc-bar-f: oklch(43% .16 27); --sc-rib: oklch(38% .14 27); --sc-rib-hi: oklch(63% .15 35);
   --sc-bag-t: oklch(64% .04 85); --sc-bag-l: oklch(55% .04 80); --sc-bag-f: oklch(47% .04 76);
-  --sc-water-t: oklch(62% .1 226 / .8); --sc-water-l: oklch(52% .1 230 / .9);
+  --sc-water-t: oklch(60% .1 226 / .64); --sc-water-l: oklch(52% .1 230 / .9);
   --sc-water-top: oklch(56% .12 228); --sc-water-bot: oklch(34% .09 240);
   --sc-tree-m: oklch(40% .06 155); --sc-tree-l: oklch(48% .065 150); --sc-tree-d: oklch(33% .05 160); --sc-trunk: oklch(30% .02 60);
   --sc-car1-t: oklch(40% .035 215); --sc-car1-l: oklch(33% .035 215); --sc-car1-f: oklch(27% .03 215);
@@ -212,6 +211,7 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
   --sc-glass: oklch(24% .03 230); --sc-pole: oklch(48% .01 230);
   --sc-shadow: oklch(5% .02 215 / .3); --sc-block-shadow: oklch(5% .02 215 / .5);
   --sc-card: oklch(22% .025 215); --sc-ink: oklch(97% .005 90); --sc-ink-muted: oklch(76% .02 215);
+  --sc-mud-t: oklch(44% .05 62 / .64); --sc-mud-top: oklch(41% .05 60); --sc-mud-bot: oklch(28% .04 55); --sc-foam: oklch(82% .03 85);
 }
 .sc-scene.sc-stale {
   --sc-water-t: oklch(60% .01 215 / .85); --sc-water-l: oklch(52% .01 215 / .88);
@@ -238,7 +238,28 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
 .sc-bag-t { fill: var(--sc-bag-t); stroke: var(--sc-bag-t); } .sc-bag-l { fill: var(--sc-bag-l); stroke: var(--sc-bag-l); } .sc-bag-f { fill: var(--sc-bag-f); stroke: var(--sc-bag-f); }
 .sc-water-t { fill: var(--sc-water-t); } .sc-water-l { fill: var(--sc-water-l); }
 .sc-water-hi { fill: none; stroke: var(--sc-water-hi); stroke-width: 1px; stroke-linecap: round; }
-.sc-ripple { fill: none; stroke: var(--sc-water-hi); stroke-width: 1px; stroke-linecap: round; opacity: .55; }
+.sc-ripple path { fill: none; stroke: var(--sc-water-hi); stroke-width: 1.1px; stroke-linecap: round; }
+.sc-flow-a { opacity: .6; } .sc-flow-b { opacity: .4; }
+.sc-foam path { fill: none; stroke: var(--sc-foam); stroke-width: 2.4px; stroke-linecap: round; }
+.sc-foam-thin path { stroke-width: 1.2px; }
+.sc-rim { fill: none; stroke: var(--sc-foam); stroke-width: 2px; stroke-linecap: round; opacity: .85; }
+/* The flow: each layer slides one dash period downstream and loops (compositor-friendly, no JS per frame). */
+@keyframes sc-flow { from { transform: translate(0, 0); } to { transform: translate(var(--fx), var(--fy)); } }
+.sc-flow { animation: sc-flow 1s linear infinite; }
+.sc-flow-a { animation-duration: 1.1s; } .sc-flow-b { animation-duration: 2.2s; } .sc-flow-c { animation-duration: 1.5s; }
+.sc-stale .sc-flow { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .sc-flow { animation: none; } }
+.sc-mud-t { fill: var(--sc-mud-t); } .sc-mud-f { fill: url(#sc-mgrad); }
+.sc-mgrad-top { stop-color: var(--sc-mud-top); } .sc-mgrad-bot { stop-color: var(--sc-mud-bot); }
+.sc-skip-l { fill: var(--sc-skip-l); } .sc-skip-f { fill: var(--sc-skip-f); } .sc-skip-t { fill: var(--sc-skip-t); }
+.sc-skip-in { fill: var(--sc-skip-in); } .sc-skip-in2 { fill: var(--sc-skip-f); }
+.sc-skip-rust { fill: var(--sc-skip-rust); } .sc-skip-red { fill: oklch(58% .2 27); } .sc-skip-white { fill: oklch(96% .005 90); }
+.sc-skip-patch { fill: oklch(84% .15 92); }
+.sc-skip-foam { fill: none; stroke: var(--sc-foam); stroke-width: 3px; stroke-opacity: .75; }
+.sc-skip-wake { fill: var(--sc-foam); opacity: .55; } .sc-skip-floor { fill: var(--sc-skip-f); filter: brightness(.75); }
+.sc-skip-churn { fill: var(--sc-foam); opacity: .22; }
+.sc-skip-line { fill: none; stroke: var(--sc-foam); stroke-width: 2.4px; stroke-linecap: round; }
+.sc-tag { transition: opacity .25s ease; } .sc-tag.sc-behind { opacity: .1; }
 .sc-tree-m { fill: var(--sc-tree-m); } .sc-tree-l { fill: var(--sc-tree-l); } .sc-tree-d { fill: var(--sc-tree-d); }
 .sc-trunk-t, .sc-trunk-l, .sc-trunk-f { fill: var(--sc-trunk); } .sc-trunk-f { filter: brightness(.8); }
 .sc-car1-t { fill: var(--sc-car1-t); } .sc-car1-l { fill: var(--sc-car1-l); } .sc-car1-f { fill: var(--sc-car1-f); }
@@ -289,20 +310,15 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
   </div>
 
   <div class="stage">
+    <div class="card scene"><svg id="scene" class="sc-scene" role="img" aria-label="Schaubild Pegel Kupferdreh"></svg></div>
     <div class="card chartcard">
       <div class="chart" id="chart" tabindex="0" role="slider" aria-label="Pegelverlauf: Stunde wählen, das Wasser am Haus folgt"></div>
       <div class="legend" id="legend"></div>
     </div>
-    <div class="card scene"><svg id="scene" class="sc-scene" role="img" aria-label="Schaubild Pegel Kupferdreh"></svg></div>
   </div>
 
-  <section class="plansec" id="plansec">
-    <p class="label">Zeitplan · laut Maßnahmenplan</p>
-    <div class="plan" id="plan"></div>
-  </section>
-
   <section class="levels" aria-labelledby="levels-title">
-    <p class="label" id="levels-title">Was bedeuten die Stufen?</p>
+    <p class="label" id="levels-title">Stufen und Maßnahmen</p>
     <ol id="levels"></ol>
   </section>
 
@@ -327,7 +343,7 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
 <footer><div class="wrap">
   <span>Energiekonzepte Ruhr · Kupferdreh, Essen</span>
   <span><a href="#">Impressum</a> · <a href="#">Datenschutz</a></span>
-  <span class="mock" role="group" aria-label="Nur im Mockup"><button data-state="normal">normal</button><button data-state="flood">flood</button><button data-state="stale">stale</button><button data-state="fallback">fallback</button></span>
+  <span class="mock" role="group" aria-label="Nur im Mockup"><button data-state="normal">normal</button><button data-state="flood">flood</button><button data-state="stale">stale</button><button data-state="fallback">fallback</button><button data-state="chaos">Chaos</button></span>
 </div></footer>
 
 <script id="data" type="application/json">{"normal":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-10-16T09:30:00Z","newest_observation_at":"2026-10-16T09:22:03Z","situation":"strong","points":[{"valid_at":"2026-10-16T10:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T11:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T12:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T13:22:00Z","level_cm":18.9,"bands":[{"coverage_percent":80,"lower_cm":17.4,"upper_cm":20.4},{"coverage_percent":90,"lower_cm":17.4,"upper_cm":20.4}]},{"valid_at":"2026-10-16T14:22:00Z","level_cm":19,"bands":[{"coverage_percent":80,"lower_cm":17.5,"upper_cm":20.5},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":20.5}]},{"valid_at":"2026-10-16T15:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.7}]},{"valid_at":"2026-10-16T16:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":20.8}]},{"valid_at":"2026-10-16T17:22:00Z","level_cm":19.2,"bands":[{"coverage_percent":80,"lower_cm":17.7,"upper_cm":20.7},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21}]},{"valid_at":"2026-10-16T18:22:00Z","level_cm":19.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":20.8},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.2}]},{"valid_at":"2026-10-16T19:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":20.9},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.4}]},{"valid_at":"2026-10-16T20:22:00Z","level_cm":19.4,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":21},{"coverage_percent":90,"lower_cm":17.7,"upper_cm":21.6}]},{"valid_at":"2026-10-16T21:22:00Z","level_cm":19.5,"bands":[{"coverage_percent":80,"lower_cm":18,"upper_cm":21.1},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":21.7}]},{"valid_at":"2026-10-16T22:22:00Z","level_cm":21,"bands":[{"coverage_percent":80,"lower_cm":17.9,"upper_cm":24.8},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":26.2}]},{"valid_at":"2026-10-16T23:22:00Z","level_cm":22.3,"bands":[{"coverage_percent":80,"lower_cm":17.8,"upper_cm":27.7},{"coverage_percent":90,"lower_cm":16.3,"upper_cm":29.6}]},{"valid_at":"2026-10-17T00:22:00Z","level_cm":25.4,"bands":[{"coverage_percent":80,"lower_cm":18.2,"upper_cm":34.2},{"coverage_percent":90,"lower_cm":15.7,"upper_cm":37.5}]},{"valid_at":"2026-10-17T01:22:00Z","level_cm":29.2,"bands":[{"coverage_percent":80,"lower_cm":19.2,"upper_cm":41.5},{"coverage_percent":90,"lower_cm":15.8,"upper_cm":45.7}]},{"valid_at":"2026-10-17T02:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":19.9,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.2,"upper_cm":49.3}]},{"valid_at":"2026-10-17T03:22:00Z","level_cm":31.3,"bands":[{"coverage_percent":80,"lower_cm":20.1,"upper_cm":45.2},{"coverage_percent":90,"lower_cm":16.4,"upper_cm":50}]},{"valid_at":"2026-10-17T04:22:00Z","level_cm":31.1,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44.5},{"coverage_percent":90,"lower_cm":16.8,"upper_cm":49.4}]},{"valid_at":"2026-10-17T05:22:00Z","level_cm":30.9,"bands":[{"coverage_percent":80,"lower_cm":20.3,"upper_cm":44},{"coverage_percent":90,"lower_cm":17.1,"upper_cm":49.1}]},{"valid_at":"2026-10-17T06:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":44},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.9}]},{"valid_at":"2026-10-17T07:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.9},{"coverage_percent":90,"lower_cm":17.3,"upper_cm":48.8}]},{"valid_at":"2026-10-17T08:22:00Z","level_cm":30.7,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.5,"upper_cm":48.5}]},{"valid_at":"2026-10-17T09:22:00Z","level_cm":30.8,"bands":[{"coverage_percent":80,"lower_cm":20.4,"upper_cm":43.8},{"coverage_percent":90,"lower_cm":17.6,"upper_cm":48}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-10-14T10:22:03Z","level_cm":20.8},{"observed_at":"2026-10-14T11:22:03Z","level_cm":20.3},{"observed_at":"2026-10-14T12:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T13:22:03Z","level_cm":19.7},{"observed_at":"2026-10-14T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-14T15:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T16:22:03Z","level_cm":20.7},{"observed_at":"2026-10-14T17:22:03Z","level_cm":21},{"observed_at":"2026-10-14T18:22:03Z","level_cm":21.1},{"observed_at":"2026-10-14T19:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T20:22:03Z","level_cm":20.9},{"observed_at":"2026-10-14T21:22:03Z","level_cm":20.6},{"observed_at":"2026-10-14T22:22:03Z","level_cm":20.2},{"observed_at":"2026-10-14T23:22:03Z","level_cm":20.4},{"observed_at":"2026-10-15T00:22:03Z","level_cm":20.3},{"observed_at":"2026-10-15T01:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T02:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T03:22:03Z","level_cm":19.8},{"observed_at":"2026-10-15T04:22:03Z","level_cm":19.9},{"observed_at":"2026-10-15T05:22:03Z","level_cm":20},{"observed_at":"2026-10-15T06:22:03Z","level_cm":19.6},{"observed_at":"2026-10-15T07:22:03Z","level_cm":20},{"observed_at":"2026-10-15T08:22:03Z","level_cm":20.1},{"observed_at":"2026-10-15T09:22:03Z","level_cm":18.9},{"observed_at":"2026-10-15T10:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T11:22:03Z","level_cm":17.7},{"observed_at":"2026-10-15T12:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T13:22:03Z","level_cm":18.7},{"observed_at":"2026-10-15T14:22:03Z","level_cm":19.2},{"observed_at":"2026-10-15T16:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T17:22:03Z","level_cm":19},{"observed_at":"2026-10-15T18:22:03Z","level_cm":19},{"observed_at":"2026-10-15T19:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T20:22:03Z","level_cm":19.3},{"observed_at":"2026-10-15T21:22:03Z","level_cm":18.6},{"observed_at":"2026-10-15T22:22:03Z","level_cm":18.3},{"observed_at":"2026-10-15T23:22:03Z","level_cm":18.5},{"observed_at":"2026-10-16T00:22:03Z","level_cm":18},{"observed_at":"2026-10-16T01:22:03Z","level_cm":18.3},{"observed_at":"2026-10-16T02:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T03:22:03Z","level_cm":18.8},{"observed_at":"2026-10-16T04:22:03Z","level_cm":18.6},{"observed_at":"2026-10-16T05:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T06:22:03Z","level_cm":19.7},{"observed_at":"2026-10-16T07:22:03Z","level_cm":19.2},{"observed_at":"2026-10-16T08:22:03Z","level_cm":19},{"observed_at":"2026-10-16T09:22:03Z","level_cm":18.9}]}},"flood_made_up":{"forecast":{"station_id":"kupferdreh","model":"ridge:change:v2","issued_at":"2026-11-19T15:30:00Z","newest_observation_at":"2026-11-19T15:22:02Z","situation":"strong","points":[{"valid_at":"2026-11-19T16:22:00Z","level_cm":133.7,"bands":[{"coverage_percent":80,"lower_cm":127.5,"upper_cm":139.9},{"coverage_percent":90,"lower_cm":125.6,"upper_cm":141.8}]},{"valid_at":"2026-11-19T17:22:00Z","level_cm":138.7,"bands":[{"coverage_percent":80,"lower_cm":130.3,"upper_cm":147.1},{"coverage_percent":90,"lower_cm":127.8,"upper_cm":149.6}]},{"valid_at":"2026-11-19T18:22:00Z","level_cm":145.8,"bands":[{"coverage_percent":80,"lower_cm":135.2,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":132,"upper_cm":159.6}]},{"valid_at":"2026-11-19T19:22:00Z","level_cm":154.4,"bands":[{"coverage_percent":80,"lower_cm":141.6,"upper_cm":167.2},{"coverage_percent":90,"lower_cm":137.8,"upper_cm":171}]},{"valid_at":"2026-11-19T20:22:00Z","level_cm":163.1,"bands":[{"coverage_percent":80,"lower_cm":148.1,"upper_cm":178.1},{"coverage_percent":90,"lower_cm":143.6,"upper_cm":182.6}]},{"valid_at":"2026-11-19T21:22:00Z","level_cm":169.6,"bands":[{"coverage_percent":80,"lower_cm":152.4,"upper_cm":186.8},{"coverage_percent":90,"lower_cm":147.2,"upper_cm":192}]},{"valid_at":"2026-11-19T22:22:00Z","level_cm":172,"bands":[{"coverage_percent":80,"lower_cm":152.6,"upper_cm":191.4},{"coverage_percent":90,"lower_cm":146.8,"upper_cm":197.2}]},{"valid_at":"2026-11-19T23:22:00Z","level_cm":168,"bands":[{"coverage_percent":80,"lower_cm":146.4,"upper_cm":189.6},{"coverage_percent":90,"lower_cm":139.9,"upper_cm":196.1}]},{"valid_at":"2026-11-20T00:22:00Z","level_cm":159.9,"bands":[{"coverage_percent":80,"lower_cm":136.1,"upper_cm":183.7},{"coverage_percent":90,"lower_cm":129,"upper_cm":190.8}]},{"valid_at":"2026-11-20T01:22:00Z","level_cm":149.6,"bands":[{"coverage_percent":80,"lower_cm":123.6,"upper_cm":175.6},{"coverage_percent":90,"lower_cm":115.8,"upper_cm":183.4}]},{"valid_at":"2026-11-20T02:22:00Z","level_cm":139.4,"bands":[{"coverage_percent":80,"lower_cm":111.2,"upper_cm":167.6},{"coverage_percent":90,"lower_cm":102.7,"upper_cm":176.1}]},{"valid_at":"2026-11-20T03:22:00Z","level_cm":130.7,"bands":[{"coverage_percent":80,"lower_cm":100.3,"upper_cm":161.1},{"coverage_percent":90,"lower_cm":91.2,"upper_cm":170.2}]},{"valid_at":"2026-11-20T04:22:00Z","level_cm":124.1,"bands":[{"coverage_percent":80,"lower_cm":91.5,"upper_cm":156.7},{"coverage_percent":90,"lower_cm":81.7,"upper_cm":166.5}]},{"valid_at":"2026-11-20T05:22:00Z","level_cm":119.5,"bands":[{"coverage_percent":80,"lower_cm":84.7,"upper_cm":154.3},{"coverage_percent":90,"lower_cm":74.3,"upper_cm":164.7}]},{"valid_at":"2026-11-20T06:22:00Z","level_cm":116.4,"bands":[{"coverage_percent":80,"lower_cm":79.4,"upper_cm":153.4},{"coverage_percent":90,"lower_cm":68.3,"upper_cm":164.5}]},{"valid_at":"2026-11-20T07:22:00Z","level_cm":114,"bands":[{"coverage_percent":80,"lower_cm":74.8,"upper_cm":153.2},{"coverage_percent":90,"lower_cm":63,"upper_cm":165}]},{"valid_at":"2026-11-20T08:22:00Z","level_cm":112.2,"bands":[{"coverage_percent":80,"lower_cm":70.8,"upper_cm":153.6},{"coverage_percent":90,"lower_cm":58.4,"upper_cm":166}]},{"valid_at":"2026-11-20T09:22:00Z","level_cm":110.4,"bands":[{"coverage_percent":80,"lower_cm":66.8,"upper_cm":154},{"coverage_percent":90,"lower_cm":53.7,"upper_cm":167.1}]},{"valid_at":"2026-11-20T10:22:00Z","level_cm":108.8,"bands":[{"coverage_percent":80,"lower_cm":63,"upper_cm":154.6},{"coverage_percent":90,"lower_cm":49.3,"upper_cm":168.3}]},{"valid_at":"2026-11-20T11:22:00Z","level_cm":107.2,"bands":[{"coverage_percent":80,"lower_cm":59.2,"upper_cm":155.2},{"coverage_percent":90,"lower_cm":44.8,"upper_cm":169.6}]},{"valid_at":"2026-11-20T12:22:00Z","level_cm":105.6,"bands":[{"coverage_percent":80,"lower_cm":55.4,"upper_cm":155.8},{"coverage_percent":90,"lower_cm":40.3,"upper_cm":170.9}]},{"valid_at":"2026-11-20T13:22:00Z","level_cm":104,"bands":[{"coverage_percent":80,"lower_cm":51.6,"upper_cm":156.4},{"coverage_percent":90,"lower_cm":35.9,"upper_cm":172.1}]},{"valid_at":"2026-11-20T14:22:00Z","level_cm":102.4,"bands":[{"coverage_percent":80,"lower_cm":47.8,"upper_cm":157},{"coverage_percent":90,"lower_cm":31.4,"upper_cm":173.4}]},{"valid_at":"2026-11-20T15:22:00Z","level_cm":100.8,"bands":[{"coverage_percent":80,"lower_cm":44,"upper_cm":157.6},{"coverage_percent":90,"lower_cm":27,"upper_cm":174.6}]}]},"history":{"station_id":"kupferdreh","observations":[{"observed_at":"2026-11-17T16:22:02Z","level_cm":35},{"observed_at":"2026-11-17T17:22:02Z","level_cm":35},{"observed_at":"2026-11-17T18:22:02Z","level_cm":35},{"observed_at":"2026-11-17T19:22:02Z","level_cm":35},{"observed_at":"2026-11-17T20:22:02Z","level_cm":35},{"observed_at":"2026-11-17T21:22:02Z","level_cm":35},{"observed_at":"2026-11-17T22:22:02Z","level_cm":35},{"observed_at":"2026-11-17T23:22:02Z","level_cm":35},{"observed_at":"2026-11-18T00:22:02Z","level_cm":35},{"observed_at":"2026-11-18T01:22:02Z","level_cm":35},{"observed_at":"2026-11-18T02:22:02Z","level_cm":35},{"observed_at":"2026-11-18T03:22:02Z","level_cm":35},{"observed_at":"2026-11-18T04:22:02Z","level_cm":35},{"observed_at":"2026-11-18T05:22:02Z","level_cm":35},{"observed_at":"2026-11-18T06:22:02Z","level_cm":35},{"observed_at":"2026-11-18T07:22:02Z","level_cm":35},{"observed_at":"2026-11-18T08:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T09:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T10:22:02Z","level_cm":35.1},{"observed_at":"2026-11-18T11:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T12:22:02Z","level_cm":35.2},{"observed_at":"2026-11-18T13:22:02Z","level_cm":35.3},{"observed_at":"2026-11-18T14:22:02Z","level_cm":35.4},{"observed_at":"2026-11-18T15:22:02Z","level_cm":35.6},{"observed_at":"2026-11-18T16:22:02Z","level_cm":35.9},{"observed_at":"2026-11-18T17:22:02Z","level_cm":36.2},{"observed_at":"2026-11-18T18:22:02Z","level_cm":36.7},{"observed_at":"2026-11-18T19:22:02Z","level_cm":37.3},{"observed_at":"2026-11-18T20:22:02Z","level_cm":38.2},{"observed_at":"2026-11-18T21:22:02Z","level_cm":39.4},{"observed_at":"2026-11-18T22:22:02Z","level_cm":41},{"observed_at":"2026-11-18T23:22:02Z","level_cm":43.2},{"observed_at":"2026-11-19T00:22:02Z","level_cm":46.1},{"observed_at":"2026-11-19T01:22:02Z","level_cm":49.8},{"observed_at":"2026-11-19T02:22:02Z","level_cm":54.4},{"observed_at":"2026-11-19T03:22:02Z","level_cm":60},{"observed_at":"2026-11-19T04:22:02Z","level_cm":66.5},{"observed_at":"2026-11-19T05:22:02Z","level_cm":73.8},{"observed_at":"2026-11-19T06:22:02Z","level_cm":81.5},{"observed_at":"2026-11-19T07:22:02Z","level_cm":89.2},{"observed_at":"2026-11-19T08:22:02Z","level_cm":96.5},{"observed_at":"2026-11-19T09:22:02Z","level_cm":103},{"observed_at":"2026-11-19T10:22:02Z","level_cm":108.6},{"observed_at":"2026-11-19T11:22:02Z","level_cm":113.2},{"observed_at":"2026-11-19T12:22:02Z","level_cm":116.9},{"observed_at":"2026-11-19T13:22:02Z","level_cm":119.8},{"observed_at":"2026-11-19T14:22:02Z","level_cm":122},{"observed_at":"2026-11-19T15:22:02Z","level_cm":128}]}}}</script>
@@ -336,20 +352,10 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
 // shortcut: categories and actions copied from config/pegel.json; the real page gets them from the API.
 const CATEGORIES = [
   { n: 1, name: "unkritisch", from: -Infinity, color: "var(--c1)", text: "Keine Maßnahmen nötig." },
-  { n: 2, name: "kritisch", from: 145, color: "var(--c2)", text: "Der Deilbach tritt am Parkplatz Kupferdreh über das Ufer." },
-  { n: 3, name: "sehr kritisch", from: 165, color: "var(--c3)", dark: true, text: "Wasser geht über die Mauer. Rückstauventil schließen, Pumpe anschließen, mobile Hochwasserbarrieren aufbauen." },
+  { n: 2, name: "kritisch", from: 145, color: "var(--c2)", text: "Der Deilbach tritt am Parkplatz Kupferdreh über das Ufer. Mobile Hochwasserbarrieren aufbauen." },
+  { n: 3, name: "sehr kritisch", from: 165, color: "var(--c3)", dark: true, text: "Wasser geht über die Mauer. Rückstauventil schließen, Pumpe anschließen." },
   { n: 4, name: "extrem kritisch", from: 185, color: "var(--c4)", dark: true, text: "Barrieren und erhöhte Mauer halten den Hof trocken. Sandsäcke im Hof auslegen." },
   { n: 5, name: "Chaos", from: 225, color: "var(--c5)", dark: true, text: "Wasser fließt in den Hof. EG-Wohnung räumen, Strom abschalten." },
-];
-// One line per action with its real trigger level; info lines describe what happens.
-const ACTIONS = [
-  { at: 145, info: true, text: "Der Deilbach tritt am Parkplatz Kupferdreh über das Ufer." },
-  { at: 165, info: true, text: "Wasser geht über die Mauer." },
-  { at: 165, text: "Rückstauventil schließen und Pumpe anschließen." },
-  { at: 165, text: "Mobile Hochwasserbarrieren aufbauen." },
-  { at: 185, info: true, text: "Barrieren und erhöhte Mauer halten den Hof trocken." },
-  { at: 185, text: "Sandsäcke im Hof auslegen." },
-  { at: 225, text: "EG-Wohnung räumen, Strom abschalten." },
 ];
 const MODEL = "ridge:change:v2", STALE_MINUTES = 90, CRITICAL_CM = 145, SCALE_TOP_CM = 250, HOUR = 3600e3;
 
@@ -382,7 +388,6 @@ function planRows(forecast, currentCm, v) {
     now: currentCm > c.from,
     expectedAt: crossingTime(forecast, c.from, (p) => p.level_cm),
     possibleAt: crossingTime(forecast, c.from, upper90),
-    actions: ACTIONS.filter((a) => a.at === c.from),
   }));
 }
 
@@ -457,7 +462,7 @@ if (typeof module !== "undefined") module.exports = { summarize, scaleTop, verdi
 // The scene: water, wall, barriers, sandbags and house at a given level.
 const Scene = (() => {
   // One place for every height (cm above the gauge zero) and the layout (u across the valley, v along the river).
-  const LEVELS = { park: 145, wall: 165, barriersUp: 165, sandbags: 185, barrierTop: 225, floor: 225 };
+  const LEVELS = { park: 145, wall: 165, barriersUp: 145, sandbags: 185, barrierTop: 225, floor: 225 };
   const CATS = [[-Infinity, "unkritisch"], [145, "kritisch"], [165, "sehr kritisch"], [185, "extrem kritisch"], [225, "Chaos"]];
   const LV = 250, BOTTOM = -40, UMAX = 800;
   const PARK_U = 240, BED_U = 262, WALL_U0 = 470, WALL_U1 = 486, BAR_U = 488;
@@ -469,9 +474,10 @@ const Scene = (() => {
   const CA = Math.cos(A), SA = Math.sin(A), CB = Math.cos(B), SB = Math.sin(B);
   const pt = (u, v, z) => [u * CA - v * KV * CB, -u * SA - v * KV * SB - z * Z];
 
-  let svg, world, clip = -Infinity;
+  let svg, clip = -Infinity;
   let shown = 0, anim = null, label = "", range = null, stale = false, current = { cm: 0, label: "" };
-  let barT = 0, bagT = 0, raf = 0, lastTs = 0, narrow = null, k = 1, ripplePaths = [];
+  let barT = 0, bagT = 0, raf = 0, lastTs = 0, narrow = null, k = 1, staticLayer, dynLayer, skip = null, skipT0 = null;
+  const LEVEL_MS = 170;  // level changes from the chart follow the pointer quickly
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   const guides = /guides/.test(location.hash);
 
@@ -490,7 +496,7 @@ const Scene = (() => {
 
   const uLeft = (L) => (L >= LEVELS.park ? 0 : PARK_U + (BED_U - PARK_U) * (LEVELS.park - L) / LEVELS.park);
   const barriersUp = (L) => L > LEVELS.barriersUp;
-  // Right edge of the water: the wall, then the barriers (up whenever the wall is overtopped), then the house.
+  // Right edge of the water: the wall, then the barriers (up from category 2, above 145 cm), then the house.
   const uRight = (L) => (L <= LEVELS.wall ? WALL_U0 : L <= LEVELS.barrierTop ? BAR_U : HOUSE.u0);
   const catOf = (L) => CATS.reduce((n, c, i) => (L > c[0] ? i : n), 0);
 
@@ -664,10 +670,18 @@ const Scene = (() => {
   function water(L) {
     if (L <= 0.5) return "";
     const uL = uLeft(L), uR = uRight(L);
-    let o = "";
-    o += path([[uL, 0, L], [uR, 0, L], [uR, LV, L], [uL, LV, L]], "sc-water-t");
-    if (L > LEVELS.floor) o += path([[uR, 0, L], [UMAX, 0, L], [UMAX, HOUSE.v0, L], [uR, HOUSE.v0, L]], "sc-water-t");
-    if (uL === 0) o += qU(0, 0, LV, LEVELS.park, L, "sc-water-l");
+    const mud = stale ? 0 : muddiness(L);
+    const top = [[uL, 0, L], [uR, 0, L], [uR, LV, L], [uL, LV, L]];
+    const yard = L > LEVELS.floor ? [[uR, 0, L], [UMAX, 0, L], [UMAX, HOUSE.v0, L], [uR, HOUSE.v0, L]] : null;
+    // The surface stays translucent: clear blue cross-fades into muddy brown, so what is under it shows through.
+    const op = (x) => f1(x * 100) / 100;
+    let o = `<g opacity="${op(1 - mud)}">${path(top, "sc-water-t")}${yard ? path(yard, "sc-water-t") : ""}</g>`;
+    if (mud > 0) o += `<g opacity="${op(mud)}">${path(top, "sc-mud-t")}${yard ? path(yard, "sc-mud-t") : ""}</g>`;
+    // A light rim where the surface meets walls: the wall or barriers, and the house when it is reached.
+    const rim = (a, b) => { const p = pt(...a), q = pt(...b); return `M${f1(p[0])},${f1(p[1])}L${f1(q[0])},${f1(q[1])}`; };
+    const rims = yard ? rim([HOUSE.u0, LV, L], [HOUSE.u0, HOUSE.v0, L]) + rim([HOUSE.u0, HOUSE.v0, L], [UMAX, HOUSE.v0, L]) : rim([uR, 0, L], [uR, LV, L]);
+    o += `<path class="sc-rim" d="${rims}"/>`;
+    if (uL === 0) o += qU(0, 0, LV, LEVELS.park, L, "sc-water-l") + (mud > 0 ? `<g opacity="${f1(mud * 100) / 100}">${qU(0, 0, LV, LEVELS.park, L, "sc-mud-f")}</g>` : "");
     // front cut: the region between the terrain profile and the surface
     const uR0 = L > LEVELS.floor ? UMAX : uR;
     const prof = [[0, LEVELS.park], [PARK_U, LEVELS.park], [BED_U, 0], [WALL_U0, 0], [WALL_U0, LEVELS.wall], [UMAX, LEVELS.wall]];
@@ -677,17 +691,97 @@ const Scene = (() => {
     else pts.push([uR0, 0, LEVELS.wall]);
     pts.push([uR0, 0, L]);
     o += path(pts, "sc-water-f");
+    if (mud > 0) o += `<g opacity="${f1(mud * 100) / 100}">${path(pts, "sc-mud-f")}</g>`;
     const [a, b] = [pt(uL, 0, L), pt(uR0, 0, L)];
     o += `<path class="sc-water-hi" d="M${f1(a[0])},${f1(a[1])}L${f1(b[0])},${f1(b[1])}"/>`;
-    // ripples: dashed highlight lines along the flow, moved by the animation loop
-    o += `<g class="sc-ripples">`;
-    const span = uR - uL, count = Math.max(1, Math.floor(span / 34));
-    for (let i = 0; i < count; i++) {
-      const u = uL + span * (i + 0.5) / count + (i % 2 ? 4 : -4);
-      const p0 = pt(u, LV - 8, L), p1 = pt(u, 6, L);
-      o += `<path class="sc-ripple" stroke-dasharray="${10 + (i % 3) * 6} ${26 + (i % 2) * 14}" d="M${f1(p0[0])},${f1(p0[1])}L${f1(p1[0])},${f1(p1[1])}"/>`;
-    }
+    // Ripples: dashed lines along the river, clipped to the surface. A CSS animation slides each layer one dash
+    // period downstream (towards the front, left to right on screen) and loops, so no frame rebuilds a path.
+    o += `<clipPath id="sc-wclip"><path d="${path(top, "").match(/d="([^"]*)"/)[1]}"/></clipPath><g clip-path="url(#sc-wclip)">`;
+    const span = uR - uL, count = Math.max(1, Math.floor(span / 26));
+    const layer = (cls, P, dash, offset, opacity = 1) => {
+      let g = `<g class="sc-flow ${cls}" style="--fx:${f1(P * KV * CB * 100) / 100}px;--fy:${f1(P * KV * SB * 100) / 100}px"${opacity < 1 ? ` opacity="${f1(opacity * 100) / 100}"` : ""}>`;
+      for (let i = 0; i < count; i++) {
+        const u = uL + span * (i + offset) / count, p0 = pt(u, LV + 2 * P + (i * 37) % P, L), p1 = pt(u, -P, L);
+        g += `<path d="M${f1(p0[0])},${f1(p0[1])}L${f1(p1[0])},${f1(p1[1])}" stroke-dasharray="${dash} ${f1(P * KV - dash)}"/>`;
+      }
+      return g + "</g>";
+    };
+    o += layer("sc-flow-a sc-ripple", 44, 11, 0.3, 1 - mud * 0.6) + layer("sc-flow-b sc-ripple", 70, 22, 0.75, 1 - mud * 0.6);
+    if (mud > 0) o += layer("sc-flow-c sc-foam", 80, 30, 0.5, mud) + layer("sc-flow-a sc-foam sc-foam-thin", 52, 14, 0.15, mud * 0.5);
     return o + "</g>";
+  }
+  // Flood water turns muddy brown across 225 cm (category 5).
+  const muddiness = (L) => { const x = Math.min(1, Math.max(0, (L - 219) / 12)); return x * x * (3 - 2 * x); };
+
+  // ---- the drifting skip container (Absetzmulde), only in category 5 ----
+  function clipPoly(pts, zmin) {  // keep the part of a planar polygon at or above zmin
+    const out = [];
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i], q = pts[(i + 1) % pts.length], pin = p[2] >= zmin, qin = q[2] >= zmin;
+      if (pin) out.push(p);
+      if (pin !== qin) { const t = (zmin - p[2]) / (q[2] - p[2]); out.push([p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t, zmin]); }
+    }
+    return out;
+  }
+  const SKIP_U = 372;
+  function container(L) {
+    // Local box: tapered sides and sloped ends, tilted nose-down towards the front, the bottom 20 cm under water.
+    // It also rolls away from the viewer (top shifted towards +u), so its river-side wall faces up into view.
+    // Nose-down (tilt along v) and rolled (along u), so its front river-side corner dips under the surface.
+    const zb = L - 28, zt = L + 30, tilt = 0.4, roll = 0.12;
+    const P = (u, v, z) => [SKIP_U + u, v, z + v * tilt + u * roll];
+    const T = [[-23, -66], [50, -66], [50, 66], [-23, 66]], Bm = [[-30, -44], [30, -44], [30, 44], [-30, 44]];
+    const tp = (i) => P(T[i][0], T[i][1], zt), bp = (i) => P(Bm[i][0], Bm[i][1], zb);
+    const face = (pts, cls) => { const c = clipPoly(pts, L); return c.length > 2 ? path(c, cls) : ""; };
+    const lerp = (p, q, t) => p.map((x, i) => x + (q[i] - x) * t);
+    let o = `<g class="sc-skip">`;
+    // foam collar at the waterline
+    const flat = (u, v) => [SKIP_U + u, v, L];  // a point on the water surface
+    const poly = (ps) => ps.map((p) => pt(...flat(...p)).map(f1).join(",")).join("L");
+    // turbulence: a churned patch around the hull and two wake streaks trailing upstream
+    o += `<path class="sc-skip-churn" d="M${poly([[-46, -80], [52, -78], [66, 10], [50, 86], [-44, 84], [-58, 0]])}Z"/>`;
+    o += `<path class="sc-skip-wake" d="M${poly([[-36, 50], [-58, 190], [-48, 190], [-28, 56]])}ZM${poly([[40, 50], [68, 190], [58, 190], [34, 56]])}Z"/>`;
+    o += path([[-36, -62], [42, -62], [42, 62], [-36, 62]].map(([u, v]) => flat(u, v)), "sc-skip-foam");
+    // inside: the floor, the far side wall and the back end wall (lit), seen over the near rim
+    const ti = (i) => P(T[i][0] + (i === 0 || i === 3 ? 7 : -7), T[i][1] * 0.9, zt), bi = (i) => P(Bm[i][0] * 0.82, Bm[i][1] * 0.88, zb + 6);
+    o += face([bi(0), bi(1), bi(2), bi(3)], "sc-skip-floor");
+    o += face([ti(1), ti(2), bi(2), bi(1)], "sc-skip-in");
+    o += face([ti(3), ti(2), bi(2), bi(3)], "sc-skip-in2");
+    // outside: the river-side wall and the front end, cut at the waterline with a foam line, then rim, rust, stripes
+    const cut = (pts) => { const c = clipPoly(pts, L).filter((p) => Math.abs(p[2] - L) < 1e-6); return c.length === 2 ? `M${pt(...c[0]).map(f1).join(",")}L${pt(...c[1]).map(f1).join(",")}` : ""; };
+    const side = [tp(0), tp(3), bp(3), bp(0)], front = [tp(0), tp(1), bp(1), bp(0)];
+    o += face(side, "sc-skip-l") + face(front, "sc-skip-f");
+    o += `<path class="sc-skip-line" d="${cut(side)}${cut(front)}"/>`;
+    o += path([tp(0), tp(1), tp(2), tp(3), ti(3), ti(2), ti(1), ti(0)], "sc-skip-t");
+    o += face([tp(0), tp(3), lerp(tp(3), bp(3), 0.12), lerp(tp(0), bp(0), 0.12)], "sc-skip-rust");
+    for (let s = 0; s < 3; s++) {
+      const a = 0.18 + s * 0.09, f0 = lerp(tp(0), tp(1), a), f1p = lerp(tp(0), tp(1), a + 0.05);
+      o += face([lerp(f0, bp(0), 0.18), lerp(f1p, bp(1), 0.18), lerp(f1p, bp(1), 0.5), lerp(f0, bp(0), 0.5)], s % 2 ? "sc-skip-white" : "sc-skip-red");
+    }
+    o += face([lerp(lerp(tp(0), tp(3), 0.55), lerp(bp(0), bp(3), 0.55), 0.22), lerp(lerp(tp(0), tp(3), 0.7), lerp(bp(0), bp(3), 0.7), 0.22),
+      lerp(lerp(tp(0), tp(3), 0.7), lerp(bp(0), bp(3), 0.7), 0.42), lerp(lerp(tp(0), tp(3), 0.55), lerp(bp(0), bp(3), 0.55), 0.42)], "sc-skip-patch");
+    return o + "</g>";
+  }
+  // Drift: from upstream (back) to downstream (front) in 7 s, hidden for 3 s, then again; bobbing on the way.
+  const SKIP_PERIOD = 10000, SKIP_TRAVEL = 7000;
+  function placeSkip(ts) {
+    if (!skip) return;
+    const moving = rippling();
+    if (skipT0 == null) skipT0 = ts;  // each appearance starts upstream
+    const ph = moving ? ((ts - skipT0) % SKIP_PERIOD) / SKIP_TRAVEL : 0.5;
+    const v = LV + 70 - ph * (LV + 140), t = ts / 1000;
+    const fade = ph > 1 ? 0 : Math.min(1, (LV + 50 - v) / 40, (v + 50) / 40);
+    const [dx, dy] = pt(0, v, 0), [cx, cy] = pt(SKIP_U, 0, shown);
+    const bob = moving ? Math.sin(t * 2.3) * 2.2 : 0, rot = moving ? Math.sin(t * 1.4) * 3.5 - 2 : -2;
+    skip.setAttribute("transform", `translate(${f1(dx)} ${f1(dy + bob)}) rotate(${f1(rot)} ${f1(cx)} ${f1(cy)})`);
+    skip.setAttribute("opacity", f1(Math.max(0, fade) * 100) / 100);
+    // The tag steps back while the skip passes underneath it.
+    const tag = dynLayer.querySelector(".sc-tag");
+    if (tag) {
+      const a = skip.getBoundingClientRect(), b = tag.getBoundingClientRect();
+      const hit = fade > 0.2 && a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+      tag.classList.toggle("sc-behind", hit);
+    }
   }
 
   function rangeAndTag(L) {
@@ -718,14 +812,18 @@ const Scene = (() => {
   }
 
   // ---- compose in painter's order: far (large u) to near, water between what it covers and what covers it ----
+  // Everything that never changes with the level is built once per layout; build() redraws only the rest.
+  function buildStatic() {
+    clip = -Infinity;
+    const s0 = pt(0, 0, BOTTOM), s1 = pt(UMAX, 0, BOTTOM), s2 = pt(UMAX, LV, BOTTOM), s3 = pt(0, LV, BOTTOM);
+    let o = `<path class="sc-block-shadow" filter="url(#sc-blur)" d="M${[s0, s1, s2, s3].map((p) => f1(p[0] + 6) + "," + f1(p[1] + 14)).join("L")}Z"/>`;
+    o += terrainBack() + frontSection() + house() + tree(560, 236, LEVELS.wall, 70, 30);
+    staticLayer.innerHTML = o;
+  }
   function build() {
     const L = shown;
     clip = -Infinity;
-    let o = "";
-    const s0 = pt(0, 0, BOTTOM), s1 = pt(UMAX, 0, BOTTOM), s2 = pt(UMAX, LV, BOTTOM), s3 = pt(0, LV, BOTTOM);
-    o += `<path class="sc-block-shadow" filter="url(#sc-blur)" d="M${[s0, s1, s2, s3].map((p) => f1(p[0] + 6) + "," + f1(p[1] + 14)).join("L")}Z"/>`;
-    o += terrainBack() + frontSection();
-    o += house() + tree(560, 236, LEVELS.wall, 70, 30) + sandbags() + barriers();
+    let o = sandbags() + barriers();
     const parkUnder = L >= LEVELS.park;
     const parked = () => car(60, 176, 230, "sc-car2") + car(60, 22, 76, "sc-car3") + parkSign();
     if (parkUnder) o += carPark() + parked();
@@ -733,27 +831,27 @@ const Scene = (() => {
     if (!parkUnder) o += carPark();
     clip = L;
     o += staff();  // the part above the surface sits in front of the water behind it
+    o += L > LEVELS.floor ? container(L) : "";
     clip = L > LEVELS.park ? L : -Infinity;
     o += tree(150, 244, LEVELS.park, 96, 36) + tree(30, 236, LEVELS.park, 74, 32) + tree(90, 246, LEVELS.park, 120, 28);
     o += parked();
     clip = -Infinity;
     o += rangeAndTag(L);
     if (guides) o += guideLines();
-    world.innerHTML = o;
-    ripplePaths = [...world.querySelectorAll(".sc-ripple")];
-    const t = world.querySelector(".sc-tag-text"), box = world.querySelector(".sc-tag-box");
+    dynLayer.innerHTML = o;
+    skip = dynLayer.querySelector(".sc-skip");
+    if (!skip) skipT0 = null;
+    const t = dynLayer.querySelector(".sc-tag-text"), box = dynLayer.querySelector(".sc-tag-box");
     t.textContent = label;
     const w = (t.getComputedTextLength() || label.length * 7 * k) + 24 * k, right = +t.dataset.right;
     box.setAttribute("x", f1(right - w)); box.setAttribute("width", f1(w)); t.setAttribute("x", f1(right - w / 2));
+    placeSkip(lastTs || performance.now());
     const n = catOf(L);
-    const what = ["Das Wasser bleibt im Bachbett.", "Der Parkplatz ist überschwemmt.", "Das Wasser geht über die Mauer, die mobilen Barrieren stehen.", "Die Barrieren halten das Wasser, Sandsäcke liegen vor der Tür.", "Das Wasser steht im Hof und am Haus."][n];
+    const what = ["Das Wasser bleibt im Bachbett.", "Der Parkplatz ist überschwemmt, die mobilen Barrieren stehen.", "Das Wasser geht über die Mauer, die Barrieren halten es.", "Die Barrieren halten das Wasser, Sandsäcke liegen vor der Tür.", "Das Wasser steht im Hof und am Haus."][n];
     svg.setAttribute("aria-label", `Schaubild Pegel Kupferdreh: ${label || Math.round(L) + " cm"}, Kategorie ${n + 1} (${CATS[n][1]}). ${what}${stale ? " Die Daten sind veraltet." : ""}`);
   }
 
   function rippling() { return !stale && !reduce.matches && !document.hidden && shown > 0.5; }
-  function updateRipples(ts) {
-    ripplePaths.forEach((p, i) => { p.style.strokeDashoffset = f1(-(ts / 1000) * (9 + (i % 3) * 4)); });
-  }
   const easeInOut = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
   function approach(value, goal, dt, ms) {
     if (reduce.matches) return goal;
@@ -762,13 +860,12 @@ const Scene = (() => {
   }
   function frame(ts) {
     raf = 0;
-    if (lastTs && ts - lastTs < 32) { raf = requestAnimationFrame(frame); return; }  // cap at ~30 fps
     const dt = lastTs ? Math.min(1000, ts - lastTs) : 16;
     lastTs = ts;
     let dirty = false;
     if (anim) {
       if (anim.t0 == null) anim.t0 = ts;
-      const p = reduce.matches ? 1 : Math.min(1, (ts - anim.t0) / 400);
+      const p = reduce.matches ? 1 : Math.min(1, (ts - anim.t0) / LEVEL_MS);
       shown = anim.from + (anim.to - anim.from) * easeInOut(p);
       if (p >= 1) anim = null;
       dirty = true;
@@ -777,8 +874,9 @@ const Scene = (() => {
     if (barT !== bGoal) { barT = approach(barT, bGoal, dt, 700); dirty = true; }
     if (bagT !== sGoal) { bagT = approach(bagT, sGoal, dt, 450); dirty = true; }
     if (dirty) build();
-    if (rippling()) updateRipples(ts);
-    if (anim || barT !== bGoal || bagT !== sGoal || rippling()) raf = requestAnimationFrame(frame);
+    else placeSkip(ts);
+    // Ripples run as a CSS animation; this loop only runs for level, barrier and sandbag changes and the skip.
+    if (anim || barT !== bGoal || bagT !== sGoal || (skip && rippling())) raf = requestAnimationFrame(frame);
     else lastTs = 0;
   }
   function kick() { if (!raf) raf = requestAnimationFrame(frame); }
@@ -805,6 +903,7 @@ const Scene = (() => {
     if (isNarrow === narrow && Math.abs(nk - k) < 0.02) return;
     narrow = isNarrow; k = nk;
     svg.setAttribute("viewBox", vb.join(" "));
+    buildStatic();
     build();
   }
 
@@ -816,8 +915,10 @@ const Scene = (() => {
       svg.setAttribute("role", "img");
       svg.innerHTML = `<defs><linearGradient id="sc-wgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sc-wgrad-top"/><stop offset="1" class="sc-wgrad-bot"/></linearGradient>
         <filter id="sc-blur" x="-10%" y="-10%" width="120%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>
-        <filter id="sc-glow" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g class="sc-world"></g>`;
-      world = svg.querySelector(".sc-world");
+        <filter id="sc-glow" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="sc-mgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sc-mgrad-top"/><stop offset="1" class="sc-mgrad-bot"/></linearGradient></defs><g class="sc-static"></g><g class="sc-dyn"></g>`;
+      staticLayer = svg.querySelector(".sc-static");
+      dynLayer = svg.querySelector(".sc-dyn");
       new ResizeObserver(layout).observe(svg);
       document.addEventListener("visibilitychange", kick);
       reduce.addEventListener("change", kick);
@@ -840,6 +941,13 @@ const Scene = (() => {
 </script>
 <script>
 const SAMPLES = JSON.parse(document.getElementById("data").textContent);
+// Mockup only: a sample with every level, reading and band d cm higher.
+function raised(sample, d) {
+  const f = sample.forecast, h = sample.history;
+  return {
+    history: { ...h, observations: h.observations.map((o) => ({ ...o, level_cm: o.level_cm + d })) },
+    forecast: { ...f, points: f.points.map((p) => ({ ...p, level_cm: p.level_cm + d, bands: p.bands.map((b) => ({ ...b, lower_cm: b.lower_cm + d, upper_cm: b.upper_cm + d })) })) } };
+}
 // Mockup only: a persistence forecast (flat at the last level, no bands) on the flood history.
 const fallbackSample = {
   history: SAMPLES.flood_made_up.history,
@@ -852,6 +960,8 @@ const STATES = {
   flood: { sample: SAMPLES.flood_made_up, now: "2026-11-19T15:41:00Z" },
   stale: { sample: SAMPLES.flood_made_up, now: "2026-11-19T17:40:00Z" },
   fallback: { sample: fallbackSample, now: "2026-11-19T15:41:00Z" },
+  // The flood 60 cm higher: 188 cm now (Kat. 4), peak about 232 cm (Kat. 5).
+  chaos: { sample: raised(SAMPLES.flood_made_up, 60), now: "2026-11-19T15:41:00Z" },
 };
 // Hash: "#flood" or, for screenshots, "#flood&hover=2026-11-19T22:22Z".
 const hashParts = () => location.hash.slice(1).split("&");
@@ -860,11 +970,7 @@ const debugHover = () => (hashParts().find((p) => p.startsWith("hover=")) || "")
 // Mockup only: "&raise=100" lifts every level by 100 cm to show the scale growing above 250 cm.
 function withRaise(state) {
   const d = Number((hashParts().find((p) => p.startsWith("raise=")) || "").slice(6)) || 0;
-  if (!d) return state;
-  const f = state.sample.forecast, h = state.sample.history;
-  return { ...state, sample: {
-    history: { ...h, observations: h.observations.map((o) => ({ ...o, level_cm: o.level_cm + d })) },
-    forecast: { ...f, points: f.points.map((p) => ({ ...p, level_cm: p.level_cm + d, bands: p.bands.map((b) => ({ ...b, lower_cm: b.lower_cm + d, upper_cm: b.upper_cm + d })) })) } } };
+  return d ? { ...state, sample: raised(state.sample, d) } : state;
 }
 const $ = (id) => document.getElementById(id);
 const PORTAL = `<a href="https://www.hochwasserportal.nrw.de">Hochwasserportal NRW</a>`;
@@ -893,9 +999,7 @@ function render() {
   $("dist").innerHTML = gap > 0 ? `Bis kritisch (145 cm): noch <b>${num(Math.floor(gap))} cm</b>`
     : `Kritische Marke (145 cm) um <b>${num(Math.ceil(-gap))} cm</b> überschritten`;
 
-  $("plansec").hidden = !S.plan.length;
-  $("plan").innerHTML = planHtml(S.plan);
-  $("levels").innerHTML = levelsHtml(S.mode === "stale" ? null : categoryOf(cur.level_cm), ok ? v : null);
+  $("levels").innerHTML = levelsHtml(S.mode === "stale" ? null : categoryOf(cur.level_cm), S.plan);
 
   renderChart(state.sample);
   anim.homeIdx = S.series.length - 1 - (ok ? state.sample.forecast.points.length : 0);
@@ -916,27 +1020,19 @@ function verdictHtml(v) {
   return `<span class="line">${first}</span>` + (second ? `<span class="line">${second}</span>` : "");
 }
 
-// One card per category; the current one outlined, the forecast's expected and possible ones tagged.
-function levelsHtml(current, v) {
+// One card per category with what happens and what to do; the current one outlined. The forecast tags each
+// card with when the line crosses its threshold, or when the 90 % top does (dashed bar: only possible).
+// `rows` is empty when stale or in fallback, so no tags then.
+function levelsHtml(current, rows) {
   return CATEGORIES.map((c, i) => {
-    const next = CATEGORIES[i + 1];
+    const next = CATEGORIES[i + 1], r = rows.find((row) => row.category.n === c.n);
     const range = i === 0 ? `bis ${next.from} cm` : next ? `${c.from}–${next.from} cm` : `über ${c.from} cm`;
-    const tags = !v ? "" : (v.expected.n === c.n ? `<span class="tag">erwartet</span>` : "") +
-      (v.possible.some((p) => p.category.n === c.n) ? `<span class="tag maybe">möglich</span>` : "");
+    const maybe = r && !r.now && !r.expectedAt;
+    const tag = !r || r.now ? "" : r.expectedAt ? `<span class="tag">erwartet ${hourAt(r.expectedAt, now)}</span>`
+      : `<span class="tag maybe">möglich ${hourAt(r.possibleAt, now, "ab")}</span>`;
     const isNow = current && c.n === current.n;
-    return `<li class="${isNow ? "now" : ""}" style="--tone:${c.color}"${isNow ? ' aria-current="true"' : ""}>` +
-      `<div class="head">${chip(c)}<span class="range">${range}</span>${tags}</div><p>${c.text}</p></li>`;
-  }).join("");
-}
-
-function planHtml(rows) {
-  return rows.map((r) => {
-    const maybe = !r.now && !r.expectedAt;
-    const times = r.now ? "jetzt überschritten" : r.expectedAt ? `erwartet ${hourAt(r.expectedAt, now)}` : `nicht erwartet · möglich ${hourAt(r.possibleAt, now, "ab")}`;
-    const c = r.category;
-    return `<div class="row${maybe ? " maybe" : ""}" style="--tone:${c.color}"><h3>Über ${c.from} cm · ${c.n} · ${c.name}</h3>
-      <div class="times">${times}</div>
-      <ul>${r.actions.map((a) => `<li>${a.info ? a.text : (maybe ? "Vorbereiten: " : "") + a.text}</li>`).join("")}</ul></div>`;
+    return `<li class="${isNow ? "now" : ""}${maybe ? " maybe" : ""}" style="--tone:${c.color}"${isNow ? ' aria-current="true"' : ""}>` +
+      `<div class="head">${chip(c)}<span class="range">${range}</span></div>${tag}<p>${c.text}</p></li>`;
   }).join("");
 }
 
@@ -985,6 +1081,7 @@ function renderChart(sample) {
   }
   out.push(`<circle cx="${x(obsT)}" cy="${y(S.current.level_cm)}" r="3.5" fill="${lineColor}"/>`);
   // Drag cue above the newest reading; gone while the cursor is away from it.
+  if (S.mode !== "stale") out.push(`<text class="strong halo" x="${x(obsT) + 9}" y="${y(S.current.level_cm) + 20}">Jetzt</text>`);
   if (S.series.length > 1) out.push(`<text id="cue" class="cue halo" x="${x(obsT)}" y="${y(S.current.level_cm) - 13}" text-anchor="middle" aria-hidden="true">↔</text>`);
   // Cursor: the dot always marks the shown hour (the newest reading at rest); the line appears while pointing.
   out.push(`<g pointer-events="none"><line id="curLine" y1="${m.t}" y2="${H - m.b}" stroke="var(--foreground)" stroke-width="1.5" stroke-opacity=".7" opacity="0"/>` +
