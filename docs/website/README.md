@@ -45,9 +45,9 @@ C's gauge staff is the friendliest picture, but it repeats what the tiles alread
 
 ## Open before building
 
-- **Action thresholds.** The category texts in `config/pegel.json` and the README pair one threshold with an action at another one ("Kat. 2: Ab 165 cm Rückstauventil schließen"). The mockups list one action per trigger level. The client should confirm whether the barriers go up at 165 or 185 cm.
+- **Action thresholds.** The category table in the repo's `README.md` pairs one threshold with an action at another one ("Kat. 2: Ab 165 cm Rückstauventil schließen"). The mockups list one action per trigger level. The client should confirm whether the barriers go up at 165 or 185 cm.
 - **12 h.** `forecast.summary_horizons_hours` is `[3, 24]`; add 12, or let the page compute it from the points.
 - **"Möglich ab".** B takes the hour before the 90 % top crosses a threshold (21 Uhr), A and C the hour after it (22 Uhr). For a warning page the earlier hour is the safer choice.
 - **The `situation` tag** says `strong` for a rise from 19 to 31 cm. The mockups show the computed rise instead; the tag may need a rethink before it appears on the page. Its description in `api/schemas.py` ("picked the bands") is outdated.
 - **False alarms.** Before the 90 % top goes into the headline for good, count how often it would have warned for nothing on the evaluation data (`false_alarms.csv`).
-- **Categories and actions in config.** The mockups hard-code them; the real page reads them from `config/pegel.json` at build time.
+- **Categories and actions in config.** The mockups hard-code both. Categories already come from `config/pegel.json`; the actions with their trigger levels have to be added there first, so the page reads both at build time. The history `observations` description in `api/schemas.py` ("Raw readings") is outdated too: the endpoint serves the cleaned series.
