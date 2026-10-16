@@ -4,7 +4,6 @@
   the house and gauge staff of round-2 Pegellatte with the waves of round-2 Wasser,
   and the Zeitplan of round-1 A. Pointing at the chart (mouse, finger or arrow keys)
   moves the water at the house to the level at that hour.
-  Open question for the client: barriers at 165 cm (start of Kat. 3) or 185 cm.
 -->
 <html lang="de">
 <head>
@@ -61,8 +60,10 @@ header nav a { text-decoration: none; }
 .burger { margin-left: auto; width: 24px; height: 24px; }
 @media (min-width: 900px) { header nav { display: flex; } .pill.cta { display: inline-block; } .burger { display: none; } }
 
-main { text-align: center; }
 h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text-transform: uppercase; letter-spacing: .08em; margin: 28px 0 12px; }
+/* Verdict left, level now right on desktop; stacked on the phone. */
+.hero { display: grid; gap: 14px 32px; }
+@media (min-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr) auto; align-items: start; } .hero .level { text-align: right; } .hero .nowrow { justify-content: flex-end; } }
 /* Verdict (round-1 C) */
 .verdict { font-weight: 600; font-size: clamp(17px, 4.6vw, 22px); line-height: 1.5; margin: 0; }
 .verdict .line { display: block; }
@@ -72,8 +73,8 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .chip.ghost { background: transparent !important; color: var(--foreground); border: 2px dashed var(--chip); padding: 0 8px; }
 .chip.off { background: var(--grey) !important; color: var(--foreground); }
 .badge { display: inline-block; padding: 2px 12px; border-radius: 99px; border: 2px solid var(--foreground); font-weight: 700; font-size: 16px; }
-.verdict a { font-size: 16px; margin-left: 8px; }
-.nowrow { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px 10px; margin: 14px 0 0; }
+.verdict a { font-size: 16px; }
+.nowrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; }
 .nowrow .big { font: 700 34px/1.1 "Space Grotesk", sans-serif; }
 .nowrow .chip { font-size: 14px; }
 .nowrow .sub { font-size: 14px; color: var(--muted-foreground); }
@@ -81,7 +82,7 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .dist b { font-size: 18px; }
 .is-old .nowrow .big, .is-old .dist b { color: var(--muted-foreground); }
 
-.stage { max-width: 640px; margin: 24px auto 0; text-align: left; }
+.stage { margin: 24px 0 0; }
 .card { background: var(--card); border-radius: 1rem; box-shadow: 0 1px 3px oklch(20% .025 215 / .08), 0 8px 24px oklch(20% .025 215 / .06); }
 /* Chart (round-1 B) */
 .chartcard { padding: 12px 10px; }
@@ -92,25 +93,45 @@ h1 { font: 500 clamp(1.6rem, 6vw, 2.8rem)/1.15 "Space Grotesk", sans-serif; text
 .chart text { font-family: Manrope, sans-serif; fill: var(--muted-foreground); font-size: 12px; }
 .chart .strong { fill: var(--foreground); font-weight: 700; }
 .chart .halo { paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-opacity: .85; }
-.legend { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 12px; color: var(--muted-foreground); margin-top: 8px; white-space: nowrap; justify-content: center; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 12px; color: var(--muted-foreground); margin-top: 8px; white-space: nowrap; }
 .sw { display: inline-block; width: 10px; height: 10px; vertical-align: middle; margin-right: 3px; border-radius: 2px; }
 /* House (round-2 Pegellatte) */
 .scene { margin-top: 12px; overflow: hidden; }
-.scene svg { display: block; width: 100%; height: auto; }
-.scene text { font-family: Manrope, sans-serif; fill: var(--foreground); font-size: 13px; font-weight: 600; }
+.scene svg { display: block; width: 100%; height: auto; max-height: 520px; }
 #curLine, #cue { transition: opacity .25s ease; }
 @media (prefers-reduced-motion: reduce) { #curLine, #cue { transition: none; } }
 .chart .cue { font-size: 16px; font-weight: 700; fill: var(--foreground); }
 /* Zeitplan (round-1 A) */
-.plansec { max-width: 640px; margin: 32px auto 0; text-align: left; }
-.label { text-transform: uppercase; letter-spacing: .12em; font: 500 13px "Space Grotesk", sans-serif; color: var(--muted-foreground); margin: 0 0 8px; text-align: center; }
-.plan { display: grid; gap: 10px; }
+.plansec { margin: 32px 0 0; }
+.label { text-transform: uppercase; letter-spacing: .12em; font: 500 13px "Space Grotesk", sans-serif; color: var(--muted-foreground); margin: 0 0 8px; }
+.plan { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); align-items: start; }
 .plan .row { border-left: 6px solid var(--tone); padding: 8px 12px; background: var(--card); border-radius: 0 .5rem .5rem 0; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .plan .row.maybe { border-left-style: dashed; }
 .plan h3 { font-size: 16px; margin: 0; }
 .plan .times { font-size: 14px; margin: 2px 0 4px; }
 .plan ul { margin: 0; padding-left: 18px; font-size: 15px; }
 
+/* Was bedeuten die Stufen? */
+.levels { margin: 32px 0 0; }
+.levels ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); }
+.levels li { background: var(--card); border: 1px solid var(--border); border-top: 4px solid var(--tone); border-radius: .5rem; padding: 10px 12px; }
+.levels li.now { outline: 2px solid var(--foreground); outline-offset: -1px; }
+.levels .head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.levels .chip { font-size: 13px; }
+.levels .range { font-size: 14px; font-weight: 600; }
+.levels p { font-size: 14px; line-height: 1.45; margin: 4px 0 0; }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 0 6px; border-radius: 4px; border: 1.5px solid var(--foreground); }
+.tag.maybe { border-style: dashed; }
+/* So entsteht die Vorhersage */
+.how { margin: 48px 0 0; }
+.how ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); counter-reset: step; }
+.how li { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 16px; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 2px 12px; align-items: start; }
+.how svg { grid-row: span 2; width: 40px; height: 40px; color: var(--brand); }
+:root[data-theme="dark"] .how svg { color: var(--brand-foreground); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .how svg { color: var(--brand-foreground); } }
+.how h3 { font: 600 16px/1.3 "Space Grotesk", sans-serif; margin: 0; }
+.how li p { font-size: 14px; line-height: 1.45; color: var(--muted-foreground); margin: 0; }
+.how .note { font-size: 13px; color: var(--muted-foreground); margin: 12px 0 0; }
 .legal { margin: 32px 0 0; font-size: 14px; color: var(--muted-foreground); }
 .legal a { color: oklch(55% .16 50); font-weight: 600; }
 footer { margin-top: 40px; background: var(--brand-deep); color: var(--brand-foreground); font-size: 14px; }
@@ -118,6 +139,138 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
 .mock { display: flex; gap: 2px; opacity: .6; }
 .mock button { font: 12px Manrope, sans-serif; border: 0; background: none; color: var(--brand-foreground); padding: 2px 6px; border-radius: 4px; cursor: pointer; }
 .mock button[aria-pressed="true"] { text-decoration: underline; }
+/* Scene (axonometric site of the gauge, by the illustrator) */
+/* ---- Scene ---- */
+.sc-scene {
+  display: block; width: 100%; height: auto; overflow: visible;
+  --sc-park-t: oklch(52% .012 235); --sc-park-l: oklch(44% .012 235); --sc-park-f: oklch(37% .012 235);
+  --sc-line: oklch(97% .005 90 / .75);
+  --sc-soil-l: oklch(50% .035 215); --sc-soil-f: oklch(41% .035 215); --sc-soil-d: oklch(34% .033 215);
+  --sc-bed-t: oklch(66% .028 78); --sc-bed-f: oklch(48% .03 70);
+  --sc-con-t: oklch(92% .006 215); --sc-con-l: oklch(81% .009 215); --sc-con-f: oklch(70% .011 215);
+  --sc-stain: oklch(45% .03 180 / .16);
+  --sc-grass-t: oklch(81% .075 138); --sc-grass-f: oklch(63% .075 140); --sc-bank: oklch(70% .06 142);
+  --sc-pave-t: oklch(89% .012 80); --sc-pave-l: oklch(80% .012 80); --sc-pave-f: oklch(72% .012 80);
+  --sc-plinth-t: oklch(70% .01 215); --sc-plinth-l: oklch(62% .012 215); --sc-plinth-f: oklch(54% .012 215);
+  --sc-house-l: oklch(48% .045 215); --sc-house-f: oklch(39% .042 215);
+  --sc-roof-l: oklch(30% .035 215); --sc-roof-f: oklch(22% .03 215); --sc-ridge: oklch(42% .035 215);
+  --sc-win: oklch(93% .025 85); --sc-frame: oklch(26% .035 215); --sc-door: oklch(72% .18 50);
+  --sc-bar-t: oklch(71% .19 33); --sc-bar-l: oklch(60% .21 29); --sc-bar-f: oklch(50% .19 27); --sc-rib: oklch(45% .17 27); --sc-rib-hi: oklch(74% .17 35);
+  --sc-bag-t: oklch(86% .045 85); --sc-bag-l: oklch(75% .05 80); --sc-bag-f: oklch(65% .05 76);
+  --sc-water-t: oklch(75% .1 228 / .8); --sc-water-l: oklch(62% .11 233 / .9);
+  --sc-water-hi: oklch(97% .03 220); --sc-water-top: oklch(65% .11 235); --sc-water-bot: oklch(46% .1 245);
+  --sc-tree-m: oklch(63% .085 152); --sc-tree-l: oklch(74% .085 145); --sc-tree-d: oklch(53% .075 160); --sc-trunk: oklch(42% .03 60);
+  --sc-car1-t: oklch(46% .04 215); --sc-car1-l: oklch(38% .04 215); --sc-car1-f: oklch(31% .035 215);
+  --sc-car2-t: oklch(94% .005 90); --sc-car2-l: oklch(84% .006 90); --sc-car2-f: oklch(74% .008 90);
+  --sc-car3-t: oklch(78% .16 55); --sc-car3-l: oklch(70% .17 50); --sc-car3-f: oklch(60% .16 45);
+  --sc-glass: oklch(34% .03 230); --sc-tyre: oklch(22% .01 230); --sc-tail: oklch(60% .2 28);
+  --sc-sign: oklch(50% .15 255); --sc-sign-edge: oklch(40% .13 255); --sc-pole: oklch(62% .01 230);
+  --sc-shadow: oklch(20% .03 215 / .2); --sc-block-shadow: oklch(20% .03 215 / .28);
+  --sc-c1: oklch(66% .13 155); --sc-c2: oklch(85% .15 92); --sc-c3: oklch(55% .19 30); --sc-c4: oklch(50% .2 25); --sc-c5: oklch(34% .12 15);
+  --sc-tick: oklch(18% .025 215 / .7); --sc-card: #fff; --sc-ink: oklch(20% .025 215); --sc-ink-muted: oklch(48% .02 215);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sc-scene {
+  --sc-park-t: oklch(33% .015 235); --sc-park-l: oklch(28% .015 235); --sc-park-f: oklch(24% .015 235); --sc-line: oklch(90% .01 90 / .45);
+  --sc-soil-l: oklch(33% .03 215); --sc-soil-f: oklch(27% .028 215); --sc-soil-d: oklch(23% .025 215);
+  --sc-bed-t: oklch(40% .025 78); --sc-bed-f: oklch(30% .025 70);
+  --sc-con-t: oklch(58% .01 215); --sc-con-l: oklch(49% .012 215); --sc-con-f: oklch(41% .012 215);
+  --sc-grass-t: oklch(44% .055 145); --sc-grass-f: oklch(35% .05 145); --sc-bank: oklch(38% .045 145);
+  --sc-pave-t: oklch(52% .012 80); --sc-pave-l: oklch(45% .012 80); --sc-pave-f: oklch(39% .012 80);
+  --sc-plinth-t: oklch(46% .012 215); --sc-plinth-l: oklch(40% .012 215); --sc-plinth-f: oklch(34% .012 215);
+  --sc-house-l: oklch(40% .04 215); --sc-house-f: oklch(33% .038 215); --sc-roof-l: oklch(25% .03 215); --sc-roof-f: oklch(19% .025 215); --sc-ridge: oklch(34% .03 215);
+  --sc-win: oklch(85% .12 85); --sc-frame: oklch(20% .03 215);
+  --sc-bar-t: oklch(60% .17 33); --sc-bar-l: oklch(51% .18 29); --sc-bar-f: oklch(43% .16 27); --sc-rib: oklch(38% .14 27); --sc-rib-hi: oklch(63% .15 35);
+  --sc-bag-t: oklch(64% .04 85); --sc-bag-l: oklch(55% .04 80); --sc-bag-f: oklch(47% .04 76);
+  --sc-water-t: oklch(62% .1 226 / .8); --sc-water-l: oklch(52% .1 230 / .9);
+  --sc-water-top: oklch(56% .12 228); --sc-water-bot: oklch(34% .09 240);
+  --sc-tree-m: oklch(40% .06 155); --sc-tree-l: oklch(48% .065 150); --sc-tree-d: oklch(33% .05 160); --sc-trunk: oklch(30% .02 60);
+  --sc-car1-t: oklch(40% .035 215); --sc-car1-l: oklch(33% .035 215); --sc-car1-f: oklch(27% .03 215);
+  --sc-car2-t: oklch(66% .006 90); --sc-car2-l: oklch(57% .006 90); --sc-car2-f: oklch(49% .008 90);
+  --sc-car3-t: oklch(64% .14 55); --sc-car3-l: oklch(57% .15 50); --sc-car3-f: oklch(49% .14 45);
+  --sc-glass: oklch(24% .03 230); --sc-pole: oklch(48% .01 230);
+  --sc-shadow: oklch(5% .02 215 / .3); --sc-block-shadow: oklch(5% .02 215 / .5);
+  --sc-card: oklch(22% .025 215); --sc-ink: oklch(97% .005 90); --sc-ink-muted: oklch(76% .02 215);
+}}
+:root[data-theme="dark"] .sc-scene {
+  --sc-park-t: oklch(33% .015 235); --sc-park-l: oklch(28% .015 235); --sc-park-f: oklch(24% .015 235); --sc-line: oklch(90% .01 90 / .45);
+  --sc-soil-l: oklch(33% .03 215); --sc-soil-f: oklch(27% .028 215); --sc-soil-d: oklch(23% .025 215);
+  --sc-bed-t: oklch(40% .025 78); --sc-bed-f: oklch(30% .025 70);
+  --sc-con-t: oklch(58% .01 215); --sc-con-l: oklch(49% .012 215); --sc-con-f: oklch(41% .012 215);
+  --sc-grass-t: oklch(44% .055 145); --sc-grass-f: oklch(35% .05 145); --sc-bank: oklch(38% .045 145);
+  --sc-pave-t: oklch(52% .012 80); --sc-pave-l: oklch(45% .012 80); --sc-pave-f: oklch(39% .012 80);
+  --sc-plinth-t: oklch(46% .012 215); --sc-plinth-l: oklch(40% .012 215); --sc-plinth-f: oklch(34% .012 215);
+  --sc-house-l: oklch(40% .04 215); --sc-house-f: oklch(33% .038 215); --sc-roof-l: oklch(25% .03 215); --sc-roof-f: oklch(19% .025 215); --sc-ridge: oklch(34% .03 215);
+  --sc-win: oklch(85% .12 85); --sc-frame: oklch(20% .03 215);
+  --sc-bar-t: oklch(60% .17 33); --sc-bar-l: oklch(51% .18 29); --sc-bar-f: oklch(43% .16 27); --sc-rib: oklch(38% .14 27); --sc-rib-hi: oklch(63% .15 35);
+  --sc-bag-t: oklch(64% .04 85); --sc-bag-l: oklch(55% .04 80); --sc-bag-f: oklch(47% .04 76);
+  --sc-water-t: oklch(62% .1 226 / .8); --sc-water-l: oklch(52% .1 230 / .9);
+  --sc-water-top: oklch(56% .12 228); --sc-water-bot: oklch(34% .09 240);
+  --sc-tree-m: oklch(40% .06 155); --sc-tree-l: oklch(48% .065 150); --sc-tree-d: oklch(33% .05 160); --sc-trunk: oklch(30% .02 60);
+  --sc-car1-t: oklch(40% .035 215); --sc-car1-l: oklch(33% .035 215); --sc-car1-f: oklch(27% .03 215);
+  --sc-car2-t: oklch(66% .006 90); --sc-car2-l: oklch(57% .006 90); --sc-car2-f: oklch(49% .008 90);
+  --sc-car3-t: oklch(64% .14 55); --sc-car3-l: oklch(57% .15 50); --sc-car3-f: oklch(49% .14 45);
+  --sc-glass: oklch(24% .03 230); --sc-pole: oklch(48% .01 230);
+  --sc-shadow: oklch(5% .02 215 / .3); --sc-block-shadow: oklch(5% .02 215 / .5);
+  --sc-card: oklch(22% .025 215); --sc-ink: oklch(97% .005 90); --sc-ink-muted: oklch(76% .02 215);
+}
+.sc-scene.sc-stale {
+  --sc-water-t: oklch(60% .01 215 / .85); --sc-water-l: oklch(52% .01 215 / .88);
+  --sc-water-top: oklch(56% .01 215); --sc-water-bot: oklch(44% .01 215); --sc-water-hi: oklch(85% .005 215);
+}
+:root[data-theme="dark"] .sc-scene.sc-stale { --sc-water-t: oklch(50% .008 215 / .85); --sc-water-l: oklch(42% .008 215 / .9); --sc-water-top: oklch(44% .008 215); --sc-water-bot: oklch(32% .008 215); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sc-scene.sc-stale { --sc-water-t: oklch(50% .008 215 / .85); --sc-water-l: oklch(42% .008 215 / .9); --sc-water-top: oklch(44% .008 215); --sc-water-bot: oklch(32% .008 215); } }
+.sc-scene path { stroke-linejoin: round; }
+.sc-park-t { fill: var(--sc-park-t); } .sc-park-l { fill: var(--sc-park-l); } .sc-park-f { fill: var(--sc-park-f); }
+.sc-line { fill: var(--sc-line); }
+.sc-soil-l { fill: var(--sc-soil-l); } .sc-soil-f { fill: var(--sc-soil-f); } .sc-soil-d { fill: var(--sc-soil-d); }
+.sc-bed-t { fill: var(--sc-bed-t); } .sc-bank { fill: var(--sc-bank); } .sc-strata { fill: oklch(100% 0 0 / .06); } .sc-bed-f { fill: var(--sc-bed-f); }
+.sc-con-t { fill: var(--sc-con-t); } .sc-con-l { fill: var(--sc-con-l); } .sc-con-f { fill: var(--sc-con-f); }
+.sc-joint { fill: var(--sc-con-f); opacity: .35; } .sc-stain { fill: var(--sc-stain); }
+.sc-grass-t { fill: var(--sc-grass-t); } .sc-grass-f { fill: var(--sc-grass-f); }
+.sc-pave-t { fill: var(--sc-pave-t); } .sc-pave-l { fill: var(--sc-pave-l); } .sc-pave-f { fill: var(--sc-pave-f); }
+.sc-plinth-t { fill: var(--sc-plinth-t); } .sc-plinth-l { fill: var(--sc-plinth-l); } .sc-plinth-f { fill: var(--sc-plinth-f); }
+.sc-house-l { fill: var(--sc-house-l); } .sc-house-f { fill: var(--sc-house-f); } .sc-house-t { fill: var(--sc-house-l); }
+.sc-roof-l { fill: var(--sc-roof-l); } .sc-roof-f { fill: var(--sc-roof-f); } .sc-roof-t { fill: var(--sc-ridge); } .sc-ridge { fill: var(--sc-ridge); }
+.sc-win { fill: var(--sc-win); } .sc-frame { fill: var(--sc-frame); } .sc-door { fill: var(--sc-door); }
+.sc-bar-t { fill: var(--sc-bar-t); } .sc-bar-l { fill: var(--sc-bar-l); } .sc-bar-f { fill: var(--sc-bar-f); }
+.sc-rib { fill: var(--sc-rib); } .sc-rib-hi { fill: var(--sc-rib-hi); }
+.sc-bag-t, .sc-bag-l, .sc-bag-f { stroke-width: 2.4px; }
+.sc-bag-t { fill: var(--sc-bag-t); stroke: var(--sc-bag-t); } .sc-bag-l { fill: var(--sc-bag-l); stroke: var(--sc-bag-l); } .sc-bag-f { fill: var(--sc-bag-f); stroke: var(--sc-bag-f); }
+.sc-water-t { fill: var(--sc-water-t); } .sc-water-l { fill: var(--sc-water-l); }
+.sc-water-hi { fill: none; stroke: var(--sc-water-hi); stroke-width: 1px; stroke-linecap: round; }
+.sc-ripple { fill: none; stroke: var(--sc-water-hi); stroke-width: 1px; stroke-linecap: round; opacity: .55; }
+.sc-tree-m { fill: var(--sc-tree-m); } .sc-tree-l { fill: var(--sc-tree-l); } .sc-tree-d { fill: var(--sc-tree-d); }
+.sc-trunk-t, .sc-trunk-l, .sc-trunk-f { fill: var(--sc-trunk); } .sc-trunk-f { filter: brightness(.8); }
+.sc-car1-t { fill: var(--sc-car1-t); } .sc-car1-l { fill: var(--sc-car1-l); } .sc-car1-f { fill: var(--sc-car1-f); }
+.sc-car2-t { fill: var(--sc-car2-t); } .sc-car2-l { fill: var(--sc-car2-l); } .sc-car2-f { fill: var(--sc-car2-f); }
+.sc-car3-t { fill: var(--sc-car3-t); } .sc-car3-l { fill: var(--sc-car3-l); } .sc-car3-f { fill: var(--sc-car3-f); }
+.sc-glass { fill: var(--sc-glass); } .sc-tyre { fill: var(--sc-tyre); } .sc-tail { fill: var(--sc-tail); }
+.sc-sign { fill: var(--sc-sign); } .sc-sign-edge { fill: var(--sc-sign-edge); }
+.sc-pole-t, .sc-pole-l { fill: var(--sc-pole); } .sc-pole-f { fill: var(--sc-pole); filter: brightness(.85); }
+.sc-post-t, .sc-post-l, .sc-post-f { fill: oklch(40% .01 230); }
+.sc-shadow { fill: var(--sc-shadow); }
+.sc-block-shadow { fill: var(--sc-block-shadow); }
+.sc-c1 { fill: var(--sc-c1); } .sc-c2 { fill: var(--sc-c2); } .sc-c3 { fill: var(--sc-c3); } .sc-c4 { fill: var(--sc-c4); } .sc-c5 { fill: var(--sc-c5); }
+.sc-board-edge { fill: oklch(30% .02 215); }
+.sc-tick { fill: var(--sc-tick); }
+.sc-stale .sc-c1, .sc-stale .sc-c2, .sc-stale .sc-c3, .sc-stale .sc-c4, .sc-stale .sc-c5 { filter: saturate(.25); }
+.sc-num { font-family: Manrope, system-ui, sans-serif; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
+.sc-num-dark { fill: oklch(18% .025 215); } .sc-num-light { fill: #fff; }
+.sc-p { font-family: Manrope, system-ui, sans-serif; font-weight: 800; fill: #fff; text-anchor: middle; }
+.sc-range { fill: var(--sc-ink); fill-opacity: .08; stroke: var(--sc-ink); stroke-opacity: .8; stroke-width: 1.2px; stroke-dasharray: 4 2.5; }
+.sc-tag-box { fill: var(--sc-card); stroke: var(--sc-ink); stroke-opacity: .2; stroke-width: 1px; }
+.sc-tag-text { font-family: Manrope, system-ui, sans-serif; font-weight: 600; fill: var(--sc-ink); dominant-baseline: central; text-anchor: middle; }
+.sc-tag-lead { stroke: var(--sc-ink); stroke-opacity: .6; stroke-width: 1px; fill: none; }
+.sc-tag-dot { fill: var(--sc-ink); }
+.sc-stale .sc-tag-text { fill: var(--sc-ink-muted); }
+.sc-stale .sc-tag-box { stroke-dasharray: 3 2; }
+.sc-stale .sc-ripple { opacity: .2; }
+.sc-guide { stroke: oklch(55% .2 300); stroke-width: 1px; stroke-dasharray: 5 3; fill: none; }
+.sc-guide-text { font: 600 11px Manrope, sans-serif; fill: oklch(45% .2 300); }
+.sc-wgrad-top { stop-color: var(--sc-water-top); } .sc-wgrad-bot { stop-color: var(--sc-water-bot); }
+.sc-water-f { fill: url(#sc-wgrad); opacity: .93; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sc-scene:not(.sc-stale) .sc-water-t { filter: url(#sc-glow); } }
+:root[data-theme="dark"] .sc-scene:not(.sc-stale) .sc-water-t { filter: url(#sc-glow); }
 </style>
 </head>
 <body>
@@ -130,22 +283,42 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
 
 <main class="wrap">
   <h1>Deilbach Pegel Vorhersage</h1>
-  <p class="verdict" id="verdict" role="status"></p>
-  <div class="nowrow" id="now"></div>
-  <p class="dist" id="dist"></p>
+  <div class="hero">
+    <p class="verdict" id="verdict" role="status"></p>
+    <div class="level"><div class="nowrow" id="now"></div><p class="dist" id="dist"></p></div>
+  </div>
 
   <div class="stage">
     <div class="card chartcard">
       <div class="chart" id="chart" tabindex="0" role="slider" aria-label="Pegelverlauf: Stunde wählen, das Wasser am Haus folgt"></div>
       <div class="legend" id="legend"></div>
     </div>
-    <div class="card scene" id="scene"></div>
+    <div class="card scene"><svg id="scene" class="sc-scene" role="img" aria-label="Schaubild Pegel Kupferdreh"></svg></div>
   </div>
 
-  <!-- Open question for the client: do the mobile barriers go up at 165 cm (start of Kat. 3) or only shortly before 185 cm? -->
   <section class="plansec" id="plansec">
     <p class="label">Zeitplan · laut Maßnahmenplan</p>
     <div class="plan" id="plan"></div>
+  </section>
+
+  <section class="levels" aria-labelledby="levels-title">
+    <p class="label" id="levels-title">Was bedeuten die Stufen?</p>
+    <ol id="levels"></ol>
+  </section>
+
+  <section class="how" aria-labelledby="how-title">
+    <h2 class="label" id="how-title">So entsteht die Vorhersage</h2>
+    <ol>
+      <li><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4v32M14 8h6M14 14h4M14 20h6M14 26h4M14 32h6"/><path d="M4 28c4 0 4-3 8-3s4 3 8 3 4-3 8-3 4 3 8 3"/></svg>
+        <h3>Pegel messen</h3><p>Kupferdreh und drei Pegel flussaufwärts, stündlich</p></li>
+      <li><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 24a7 7 0 0 1-.6-14A9 9 0 0 1 28.6 9 6.5 6.5 0 0 1 28 24Z"/><path d="M14 29l-2 5M21 29l-2 5M28 29l-2 5"/></svg>
+        <h3>Regen einbeziehen</h3><p>Radar und Vorhersage des Deutschen Wetterdienstes</p></li>
+      <li><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5v30h30"/><path d="M10 28l7-8 6 4 10-13"/><path d="M28 11h5v5"/></svg>
+        <h3>Modell rechnet</h3><p>Lernt aus den Daten seit 2024</p></li>
+      <li><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22c8 0 12-8 18-8s9 4 14 4" stroke-dasharray="3 3"/><path d="M4 22c8-4 12-14 18-14s9 2 14 2M4 22c8 4 12 2 18 2s9 4 14 6" opacity=".55"/></svg>
+        <h3>Bereiche aus Erfahrung</h3><p>Aus den Fehlern früherer Vorhersagen</p></li>
+    </ol>
+    <p class="note">Neue Vorhersage jede Stunde zur halben Stunde. Höchster gemessener Stand bisher: 168 cm (19.11.2024); darüber ist die Vorhersage unsicherer.</p>
   </section>
 
   <p class="legal">Keine amtliche Warnung<span id="legalLink"> · <a href="https://www.hochwasserportal.nrw.de">Hochwasserportal NRW</a></span></p>
@@ -162,18 +335,19 @@ footer .wrap { padding-top: 28px; padding-bottom: 28px; display: flex; flex-wrap
 // Pure logic, mirrors what the React component would do. No DOM in here.
 // shortcut: categories and actions copied from config/pegel.json; the real page gets them from the API.
 const CATEGORIES = [
-  { n: 1, name: "unkritisch", from: -Infinity, color: "var(--c1)" },
-  { n: 2, name: "kritisch", from: 145, color: "var(--c2)" },
-  { n: 3, name: "sehr kritisch", from: 165, color: "var(--c3)", dark: true },
-  { n: 4, name: "extrem kritisch", from: 185, color: "var(--c4)", dark: true },
-  { n: 5, name: "Chaos", from: 225, color: "var(--c5)", dark: true },
+  { n: 1, name: "unkritisch", from: -Infinity, color: "var(--c1)", text: "Keine Maßnahmen nötig." },
+  { n: 2, name: "kritisch", from: 145, color: "var(--c2)", text: "Der Deilbach tritt am Parkplatz Kupferdreh über das Ufer." },
+  { n: 3, name: "sehr kritisch", from: 165, color: "var(--c3)", dark: true, text: "Wasser geht über die Mauer. Rückstauventil schließen, Pumpe anschließen, mobile Hochwasserbarrieren aufbauen." },
+  { n: 4, name: "extrem kritisch", from: 185, color: "var(--c4)", dark: true, text: "Barrieren und erhöhte Mauer halten den Hof trocken. Sandsäcke im Hof auslegen." },
+  { n: 5, name: "Chaos", from: 225, color: "var(--c5)", dark: true, text: "Wasser fließt in den Hof. EG-Wohnung räumen, Strom abschalten." },
 ];
 // One line per action with its real trigger level; info lines describe what happens.
 const ACTIONS = [
   { at: 145, info: true, text: "Der Deilbach tritt am Parkplatz Kupferdreh über das Ufer." },
+  { at: 165, info: true, text: "Wasser geht über die Mauer." },
   { at: 165, text: "Rückstauventil schließen und Pumpe anschließen." },
-  { at: 165, text: "Mobile Hochwasserbarrieren aufbauen (vor 185 cm)." },
-  { at: 185, info: true, text: "Ohne Barrieren ginge das Wasser über die Mauer." },
+  { at: 165, text: "Mobile Hochwasserbarrieren aufbauen." },
+  { at: 185, info: true, text: "Barrieren und erhöhte Mauer halten den Hof trocken." },
   { at: 185, text: "Sandsäcke im Hof auslegen." },
   { at: 225, text: "EG-Wohnung räumen, Strom abschalten." },
 ];
@@ -280,6 +454,391 @@ const clock = (iso) => `${parts(iso).hour}:${parts(iso).minute} Uhr`;
 if (typeof module !== "undefined") module.exports = { summarize, scaleTop, verdict, planRows, hoverSeries, nearestIndex, levelAt, categoryOf, isFallback, crossingTime, hourAt, dayWord, clock, num };
 </script>
 <script>
+// The scene: water, wall, barriers, sandbags and house at a given level.
+const Scene = (() => {
+  // One place for every height (cm above the gauge zero) and the layout (u across the valley, v along the river).
+  const LEVELS = { park: 145, wall: 165, barriersUp: 165, sandbags: 185, barrierTop: 225, floor: 225 };
+  const CATS = [[-Infinity, "unkritisch"], [145, "kritisch"], [165, "sehr kritisch"], [185, "extrem kritisch"], [225, "Chaos"]];
+  const LV = 250, BOTTOM = -40, UMAX = 800;
+  const PARK_U = 240, BED_U = 262, WALL_U0 = 470, WALL_U1 = 486, BAR_U = 488;
+  const HOUSE = { u0: 640, v0: 70, eave: 415, ridge: 487, ridgeU: 720 };
+  const STAFF = { u: 466, v0: 8, v1: 56, top: 255 };
+  const DOOR = { v0: 170, v1: 196 };
+  // Axonometric projection: u rises 12° to the right, v recedes 30° up-left (foreshortened), z is cm × 0.8.
+  const A = 12 * Math.PI / 180, B = 30 * Math.PI / 180, KV = 0.72, Z = 0.8;
+  const CA = Math.cos(A), SA = Math.sin(A), CB = Math.cos(B), SB = Math.sin(B);
+  const pt = (u, v, z) => [u * CA - v * KV * CB, -u * SA - v * KV * SB - z * Z];
+
+  let svg, world, clip = -Infinity;
+  let shown = 0, anim = null, label = "", range = null, stale = false, current = { cm: 0, label: "" };
+  let barT = 0, bagT = 0, raf = 0, lastTs = 0, narrow = null, k = 1, ripplePaths = [];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  const guides = /guides/.test(location.hash);
+
+  // ---- drawing helpers (every face is a filled polygon, no outlines) ----
+  const f1 = (n) => Math.round(n * 10) / 10;
+  const path = (pts, cls, extra = "") => `<path class="${cls}" d="M${pts.map((p) => { const q = pt(...p); return f1(q[0]) + "," + f1(q[1]); }).join("L")}Z"${extra}/>`;
+  function qU(u, v0, v1, z0, z1, cls) { z0 = Math.max(z0, clip); return z1 <= z0 ? "" : path([[u, v0, z0], [u, v1, z0], [u, v1, z1], [u, v0, z1]], cls); }
+  function qV(v, u0, u1, z0, z1, cls) { z0 = Math.max(z0, clip); return z1 <= z0 ? "" : path([[u0, v, z0], [u1, v, z0], [u1, v, z1], [u0, v, z1]], cls); }
+  function qT(z, u0, u1, v0, v1, cls) { return z < clip ? "" : path([[u0, v0, z], [u1, v0, z], [u1, v1, z], [u0, v1, z]], cls); }
+  function box(u0, u1, v0, v1, z0, z1, m) { return qU(u0, v0, v1, z0, z1, m + "-l") + qV(v0, u0, u1, z0, z1, m + "-f") + qT(z1, u0, u1, v0, v1, m + "-t"); }
+  function ringV(v, cu, cz, ru, rz, cls) {  // ellipse in a -v plane, flattened at the clip height
+    const pts = [];
+    for (let i = 0; i < 16; i++) { const a = i / 16 * 2 * Math.PI; pts.push([cu + ru * Math.cos(a), v, Math.max(clip, cz + rz * Math.sin(a))]); }
+    return cz + rz <= clip ? "" : path(pts, cls);
+  }
+
+  const uLeft = (L) => (L >= LEVELS.park ? 0 : PARK_U + (BED_U - PARK_U) * (LEVELS.park - L) / LEVELS.park);
+  const barriersUp = (L) => L > LEVELS.barriersUp;
+  // Right edge of the water: the wall, then the barriers (up whenever the wall is overtopped), then the house.
+  const uRight = (L) => (L <= LEVELS.wall ? WALL_U0 : L <= LEVELS.barrierTop ? BAR_U : HOUSE.u0);
+  const catOf = (L) => CATS.reduce((n, c, i) => (L > c[0] ? i : n), 0);
+
+  // ---- terrain ----
+  function terrainBack() {
+    let o = "";
+    o += qT(LEVELS.wall, WALL_U1, UMAX, 0, LV, "sc-grass-t");
+    o += qT(LEVELS.wall, 596, HOUSE.u0, HOUSE.v0 - 8, LV, "sc-pave-t");
+    o += qT(LEVELS.wall, 596, UMAX, 30, HOUSE.v0 - 8, "sc-pave-t");
+    o += qT(0, BED_U, WALL_U0, 0, LV, "sc-bed-t");
+    o += path([[PARK_U, 0, LEVELS.park], [BED_U, 0, 0], [BED_U, LV, 0], [PARK_U, LV, LEVELS.park]], "sc-bank");
+    o += qU(WALL_U0, 0, LV, 0, LEVELS.wall, "sc-con-l");
+    for (let v = 40; v < LV; v += 52) o += qU(WALL_U0 - 0.2, v, v + 0.9, 0, LEVELS.wall, "sc-joint");
+    o += qU(WALL_U0 - 0.2, 0, LV, 0, 58, "sc-stain");
+    o += qT(LEVELS.wall, WALL_U0, WALL_U1, 0, LV, "sc-con-t");
+    return o + staff();
+  }
+  function frontSection() {
+    let o = "";
+    o += path([[0, 0, BOTTOM], [0, 0, LEVELS.park], [PARK_U, 0, LEVELS.park], [BED_U, 0, 0], [WALL_U0, 0, 0], [WALL_U0, 0, 20], [UMAX, 0, 20], [UMAX, 0, BOTTOM]], "sc-soil-f");
+    o += qV(0, WALL_U1, UMAX, 20, LEVELS.wall, "sc-soil-f");
+    o += qV(0, 0, UMAX, BOTTOM, BOTTOM + 18, "sc-soil-d");
+    for (const z of [30, 80]) o += qV(0, 0, PARK_U - 2 - (z < 60 ? 0 : 0), z, z + 1.5, "sc-strata") + qV(0, WALL_U1, UMAX, z + 10, z + 11.5, "sc-strata");
+    o += qV(0, WALL_U1, UMAX, 125, 126.5, "sc-strata");
+    o += qV(0, BED_U - 4, WALL_U0, -7, 0, "sc-bed-f");
+    o += qV(0, 0, PARK_U - 2, LEVELS.park - 8, LEVELS.park, "sc-park-f");
+    o += qV(0, WALL_U1, UMAX, LEVELS.wall - 6, LEVELS.wall, "sc-grass-f");
+    o += qV(0, WALL_U0, WALL_U1, -25, LEVELS.wall, "sc-con-f");
+    o += qV(0, 596, UMAX, LEVELS.wall - 6, LEVELS.wall, "sc-pave-f");
+    return o;
+  }
+  function carPark() {
+    let o = "";
+    o += qU(0, 0, LV, BOTTOM, BOTTOM + 18, "sc-soil-d") + qU(0, 0, LV, BOTTOM + 18, LEVELS.park - 8, "sc-soil-l") + qU(0, 0, LV, LEVELS.park - 8, LEVELS.park, "sc-park-l");
+    o += qT(LEVELS.park, 0, PARK_U, 0, LV, "sc-park-t");
+    for (const v of [12, 86, 164, 238]) o += qT(LEVELS.park, 40, 214, v - 1, v + 1, "sc-line");
+    o += qT(LEVELS.park, 214, 216, 12, 238, "sc-line");
+    o += box(PARK_U - 10, PARK_U, 0, LV, LEVELS.park, LEVELS.park + 5, "sc-con");
+    return o;
+  }
+
+  // ---- gauge staff on the wall's river face ----
+  function staff(numbers = true) {
+    const { u, v0, v1, top } = STAFF;
+    let o = box(u + 8, u + 14, v0 + 8, v1 - 8, LEVELS.wall, top - 4, "sc-post");
+    o += qV(v0, u - 2.5, u, 0, top, "sc-board-edge");
+    o += qT(top, u - 2.5, u, v0, v1, "sc-board-edge");
+    const bounds = [0, 145, 165, 185, 225, top];
+    for (let i = 0; i < 5; i++) o += qU(u - 2.5, v0, v1, bounds[i], bounds[i + 1], "sc-c" + (i + 1));
+    for (let cm = 10; cm < top; cm += 10) {
+      const len = cm % 50 ? 4 : 8;
+      o += qU(u - 2.6, v0, v0 + len, cm - 0.7, cm + 0.7, "sc-tick");
+    }
+    const fs = Math.max(12 * k, 12);
+    for (let i = 0; i < 5 && numbers; i++) {
+      const zc = i === 0 ? 72 : (bounds[i] + bounds[i + 1]) / 2;
+      if (zc - 5 < clip) continue;
+      const [x, y] = pt(u - 2.6, (v0 + v1) / 2 + 2, zc);
+      o += `<text class="sc-num ${i < 2 ? "sc-num-dark" : "sc-num-light"}" font-size="${f1(fs)}" transform="matrix(${f1(CB * 1000) / 1000} ${f1(SB * 1000) / 1000} 0 1 ${f1(x)} ${f1(y)})">${i + 1}</text>`;
+    }
+    return o;
+  }
+
+  // ---- house ----
+  function house() {
+    const { u0, v0, eave, ridge, ridgeU } = HOUSE, F = LEVELS.floor, Y = LEVELS.wall;
+    const slope = (ridge - eave) / (ridgeU - u0);
+    let o = qT(Y, u0 - 6, UMAX, v0 - 6, LV, "sc-shadow");
+    o += box(u0, UMAX, v0, LV, Y, F, "sc-plinth");
+    o += qU(u0, v0, LV, F, eave, "sc-house-l");
+    o += path([[u0, v0, F], [UMAX, v0, F], [UMAX, v0, eave], [ridgeU, v0, ridge], [u0, v0, eave]], "sc-house-f");
+    // windows on the facade (two storeys) and on the gable end
+    const win = (v, z0, z1, w = 30) => qU(u0 - 0.3, v - 2, v + w + 2, z0 - 3, z1 + 3, "sc-frame") + qU(u0 - 0.5, v, v + w, z0, z1, "sc-win") + qU(u0 - 0.7, v + w / 2 - 0.8, v + w / 2 + 0.8, z0, z1, "sc-frame") + box(u0 - 5, u0, v - 3, v + w + 3, z0 - 5, z0 - 2, "sc-con");
+    for (const v of [116, 214]) o += win(v, F + 24, F + 76);
+    for (const v of [92, 132, 172, 214]) o += win(v, F + 120, F + 172, 28);
+    const gwin = (u, z0, z1) => qV(v0 - 0.3, u - 2, u + 28, z0 - 3, z1 + 3, "sc-frame") + qV(v0 - 0.5, u, u + 26, z0, z1, "sc-win") + qV(v0 - 0.7, u + 12.2, u + 13.8, z0, z1, "sc-frame");
+    o += gwin(668, F + 24, F + 76) + gwin(740, F + 24, F + 76) + gwin(668, F + 120, F + 172) + gwin(740, F + 120, F + 172) + gwin(708, eave + 12, eave + 36);
+    // door with steps up from the yard to the floor
+    o += qU(u0 - 0.3, DOOR.v0 - 3, DOOR.v1 + 3, F, F + 88, "sc-frame") + qU(u0 - 0.5, DOOR.v0, DOOR.v1, F, F + 85, "sc-door");
+    o += qU(u0 - 0.7, DOOR.v0 + 4, DOOR.v0 + 7, F + 44, F + 52, "sc-frame");
+    for (let i = 0; i < 3; i++) o += box(u0 - 9 * (3 - i), u0, DOOR.v0 - 6, DOOR.v1 + 6, Y, Y + (F - Y) * (i + 1) / 3, "sc-con");
+    // roof: the river-facing plane, the gable fascia and a chimney
+    const eu = u0 - 10, ez = eave - 10 * slope, ru = 2 * ridgeU - eu;
+    o += path([[ru, v0 - 8, ez], [ru, LV, ez], [ridgeU, LV, ridge], [ridgeU, v0 - 8, ridge]], "sc-roof-t");
+    o += path([[eu, v0 - 8, ez], [eu, LV, ez], [ridgeU, LV, ridge], [ridgeU, v0 - 8, ridge]], "sc-roof-l");
+    o += qU(eu, v0 - 8, LV, ez - 6, ez, "sc-roof-f");
+    o += path([[eu, v0 - 8, ez - 6], [eu, v0 - 8, ez], [ridgeU, v0 - 8, ridge], [ru, v0 - 8, ez], [ru, v0 - 8, ez - 6], [ridgeU, v0 - 8, ridge - 6]], "sc-roof-f");
+    o += path([[ridgeU - 2, v0 - 8, ridge + 1], [ridgeU - 2, LV, ridge + 1], [ridgeU + 1, LV, ridge], [ridgeU + 1, v0 - 8, ridge]], "sc-ridge");
+    const cz = eave + (690 - u0) * slope;
+    o += box(684, 700, 196, 212, cz - 4, ridge + 30, "sc-plinth");
+    return o;
+  }
+
+  // ---- mobile barriers: red ribbed modules, rising from the yard when up, else a stack at the house ----
+  function barriers() {
+    let o = "";
+    const W = LV / 5, n = 5, Y = LEVELS.wall, H = LEVELS.barrierTop - Y;
+    if (barT < 1) {
+      const a = 1 - barT;
+      o += `<g opacity="${f1(a * 100) / 100}">`;
+      for (let i = 0; i < 4; i++) {
+        const u1 = HOUSE.u0 - 1 - i * 7;
+        o += box(u1 - 6, u1, 76, 108, Y, Y + 46 - i * 2, "sc-bar");
+      }
+      o += "</g>";
+    }
+    if (barT <= 0) return o;
+    o += qT(Y, BAR_U - 3, BAR_U + 22, 0, LV, "sc-shadow");
+    for (let i = n - 1; i >= 0; i--) {
+      const t = Math.min(1, Math.max(0, barT * 1.6 - 0.6 * i / n));
+      if (t <= 0) continue;
+      const h = H * (1 - Math.pow(1 - t, 3)), z1 = Y + h;
+      // stepped profile like the real modules: a deep foot, a slimmer upper part, ribs on the dry side
+      const u0 = BAR_U, v0 = i * W + 1.5, v1 = (i + 1) * W - 1.5, zm = Y + h * 0.3;
+      o += box(u0, u0 + 18, v0, v1, Y, zm, "sc-bar");
+      o += box(u0 + 5, u0 + 13, v0, v1, zm, z1, "sc-bar");
+      o += qU(u0 + 4.8, v0, v1, Y + h * 0.62, Y + h * 0.66, "sc-rib");
+    }
+    return o;
+  }
+
+  function sandbags() {
+    if (bagT <= 0) return "";
+    const drop = (1 - bagT) * 18, Y = LEVELS.wall, hgt = 11;
+    let o = `<g opacity="${f1(bagT * 100) / 100}">`;
+    o += qT(Y, 590, 616, 150, 218, "sc-shadow");
+    const rows = [[0, [152, 169, 186, 203]], [1, [160.5, 177.5, 194.5]], [2, [169, 186]]];
+    for (const [r, vs] of rows) for (let j = vs.length - 1; j >= 0; j--) {
+      const z0 = Y + r * hgt + drop;
+      o += box(594 + r * 2, 610 - r * 2, vs[j] + 1, vs[j] + 16, z0, z0 + hgt - 1, "sc-bag");
+    }
+    return o + "</g>";
+  }
+
+  function tree(u, v, z0, h, r) {
+    const [x, y] = pt(u, v, z0 + h + r * 0.85);
+    let o = qT(z0, u - 2, u + 26, v - 6, v + 24, "sc-shadow");
+    o += box(u - 3, u + 3, v - 3, v + 3, z0, z0 + h + 4, "sc-trunk");
+    if (z0 + h + r * 1.8 < clip) return o;
+    o += `<circle class="sc-tree-m" cx="${f1(x)}" cy="${f1(y)}" r="${r}"/>`;
+    o += `<path class="sc-tree-d" d="M${f1(x - r)},${f1(y)}A${r},${r} 0 0 0 ${f1(x + r)},${f1(y)}A${r * 1.15},${r * 0.75} 0 0 1 ${f1(x - r)},${f1(y)}Z"/>`;
+    o += `<circle class="sc-tree-l" cx="${f1(x - r * 0.3)}" cy="${f1(y - r * 0.32)}" r="${f1(r * 0.5)}"/>`;
+    return o;
+  }
+
+  // ---- car park objects, cut off at the water surface when flooded ----
+  function car(u0, v0, v1, m) {
+    const Pz = LEVELS.park, u1 = u0 + 128;
+    let o = clip <= Pz ? qT(Pz, u0 - 3, u1 + 12, v0 - 2, v1 + 8, "sc-shadow") : "";
+    o += box(u0, u1, v0, v1, Pz + 12, Pz + 56, m);
+    o += box(u0 + 24, u1 - 30, v0 + 4, v1 - 4, Pz + 56, Pz + 96, m);
+    o += qV(v0 + 3.7, u0 + 30, u1 - 36, Pz + 61, Pz + 90, "sc-glass") + qV(v0 + 3.5, u0 + 60, u0 + 64, Pz + 61, Pz + 90, m + "-f");
+    o += qU(u0 + 23.7, v0 + 8, v1 - 8, Pz + 61, Pz + 90, "sc-glass");
+    o += qU(u0 - 0.3, v0 + 3, v0 + 12, Pz + 42, Pz + 50, "sc-tail") + qU(u0 - 0.3, v1 - 12, v1 - 3, Pz + 42, Pz + 50, "sc-tail");
+    o += ringV(v0 - 0.4, u0 + 26, Pz + 16, 13, 16, "sc-tyre") + ringV(v0 - 0.4, u1 - 24, Pz + 16, 13, 16, "sc-tyre");
+    return o;
+  }
+  function parkSign() {
+    const u = 226, v = 14, Pz = LEVELS.park;
+    let o = box(u - 2, u + 2, v - 2, v + 2, Pz + 5, Pz + 128, "sc-pole");
+    o += qU(u - 19, v - 5, v - 3, Pz + 88, Pz + 128, "sc-sign-edge") + qT(Pz + 128, u - 19, u + 19, v - 5, v - 3, "sc-sign-edge");
+    o += qV(v - 5, u - 19, u + 19, Pz + 88, Pz + 128, "sc-sign");
+    if (clip < Pz + 120) {
+      const [x, y] = pt(u, v - 5.5, Pz + 97);
+      o += `<text class="sc-p" font-size="30" transform="matrix(${f1(CA * 1000) / 1000} ${-f1(SA * 1000) / 1000} 0 1 ${f1(x)} ${f1(y)})">P</text>`;
+    }
+    return o;
+  }
+
+  // ---- water: one flat surface at the level, filling everything lower up to the next higher obstacle ----
+  function water(L) {
+    if (L <= 0.5) return "";
+    const uL = uLeft(L), uR = uRight(L);
+    let o = "";
+    o += path([[uL, 0, L], [uR, 0, L], [uR, LV, L], [uL, LV, L]], "sc-water-t");
+    if (L > LEVELS.floor) o += path([[uR, 0, L], [UMAX, 0, L], [UMAX, HOUSE.v0, L], [uR, HOUSE.v0, L]], "sc-water-t");
+    if (uL === 0) o += qU(0, 0, LV, LEVELS.park, L, "sc-water-l");
+    // front cut: the region between the terrain profile and the surface
+    const uR0 = L > LEVELS.floor ? UMAX : uR;
+    const prof = [[0, LEVELS.park], [PARK_U, LEVELS.park], [BED_U, 0], [WALL_U0, 0], [WALL_U0, LEVELS.wall], [UMAX, LEVELS.wall]];
+    const pts = [[uL, 0, L]];
+    for (const [u, z] of prof) if (u >= uL && u < uR0) pts.push([u, 0, Math.min(z, L)]);
+    if (uR0 === WALL_U0) pts.push([WALL_U0, 0, 0]);
+    else pts.push([uR0, 0, LEVELS.wall]);
+    pts.push([uR0, 0, L]);
+    o += path(pts, "sc-water-f");
+    const [a, b] = [pt(uL, 0, L), pt(uR0, 0, L)];
+    o += `<path class="sc-water-hi" d="M${f1(a[0])},${f1(a[1])}L${f1(b[0])},${f1(b[1])}"/>`;
+    // ripples: dashed highlight lines along the flow, moved by the animation loop
+    o += `<g class="sc-ripples">`;
+    const span = uR - uL, count = Math.max(1, Math.floor(span / 34));
+    for (let i = 0; i < count; i++) {
+      const u = uL + span * (i + 0.5) / count + (i % 2 ? 4 : -4);
+      const p0 = pt(u, LV - 8, L), p1 = pt(u, 6, L);
+      o += `<path class="sc-ripple" stroke-dasharray="${10 + (i % 3) * 6} ${26 + (i % 2) * 14}" d="M${f1(p0[0])},${f1(p0[1])}L${f1(p1[0])},${f1(p1[1])}"/>`;
+    }
+    return o + "</g>";
+  }
+
+  function rangeAndTag(L) {
+    let o = "";
+    if (range) {
+      const lo = Math.max(0, Math.min(range[0], range[1])), hi = Math.min(STAFF.top, Math.max(range[0], range[1]));
+      const p = [[STAFF.u - 3, STAFF.v0 - 5, lo], [STAFF.u - 3, STAFF.v1 + 5, lo], [STAFF.u - 3, STAFF.v1 + 5, hi], [STAFF.u - 3, STAFF.v0 - 5, hi]];
+      o += path(p, "sc-range");
+    }
+    const fs = 13 * k, hgt = fs * 1.9;
+    const [ax, ay] = pt(STAFF.u - 3, STAFF.v1, Math.max(L, 0));
+    // Wide: beside the staff over the river. Narrow: above the staff top, with a leader down to the waterline.
+    const staffTop = pt(STAFF.u, STAFF.v1, STAFF.top)[1];
+    const cy = Math.max(staffTop + hgt, ay - hgt * 0.9), lx = ax - 14 * k;
+    const lead = `M${f1(lx)},${f1(cy)}L${f1(ax)},${f1(ay)}`;
+    o += `<g class="sc-tag"><path class="sc-tag-lead" d="${lead}"/><circle class="sc-tag-dot" cx="${f1(ax)}" cy="${f1(ay)}" r="${f1(2.2 * k)}"/>`;
+    o += `<rect class="sc-tag-box" y="${f1(cy - hgt / 2)}" height="${f1(hgt)}" rx="${f1(hgt / 2)}"/><text class="sc-tag-text" y="${f1(cy)}" font-size="${f1(fs)}" data-right="${f1(lx)}"></text></g>`;
+    return o;
+  }
+
+  function guideLines() {
+    let o = "";
+    for (const z of [LEVELS.park, LEVELS.wall, LEVELS.sandbags, LEVELS.floor]) {
+      const a = pt(0, STAFF.v0, z), b = pt(UMAX, STAFF.v0, z), c = pt(HOUSE.u0, HOUSE.v0, z), d = pt(HOUSE.u0, LV, z);
+      o += `<path class="sc-guide" d="M${f1(a[0])},${f1(a[1])}L${f1(b[0])},${f1(b[1])}M${f1(c[0])},${f1(c[1])}L${f1(d[0])},${f1(d[1])}"/><text class="sc-guide-text" x="${f1(a[0] - 4)}" y="${f1(a[1] + 4)}" text-anchor="end">${z}</text>`;
+    }
+    return o;
+  }
+
+  // ---- compose in painter's order: far (large u) to near, water between what it covers and what covers it ----
+  function build() {
+    const L = shown;
+    clip = -Infinity;
+    let o = "";
+    const s0 = pt(0, 0, BOTTOM), s1 = pt(UMAX, 0, BOTTOM), s2 = pt(UMAX, LV, BOTTOM), s3 = pt(0, LV, BOTTOM);
+    o += `<path class="sc-block-shadow" filter="url(#sc-blur)" d="M${[s0, s1, s2, s3].map((p) => f1(p[0] + 6) + "," + f1(p[1] + 14)).join("L")}Z"/>`;
+    o += terrainBack() + frontSection();
+    o += house() + tree(560, 236, LEVELS.wall, 70, 30) + sandbags() + barriers();
+    const parkUnder = L >= LEVELS.park;
+    const parked = () => car(60, 176, 230, "sc-car2") + car(60, 22, 76, "sc-car3") + parkSign();
+    if (parkUnder) o += carPark() + parked();
+    o += water(L);
+    if (!parkUnder) o += carPark();
+    clip = L;
+    o += staff();  // the part above the surface sits in front of the water behind it
+    clip = L > LEVELS.park ? L : -Infinity;
+    o += tree(150, 244, LEVELS.park, 96, 36) + tree(30, 236, LEVELS.park, 74, 32) + tree(90, 246, LEVELS.park, 120, 28);
+    o += parked();
+    clip = -Infinity;
+    o += rangeAndTag(L);
+    if (guides) o += guideLines();
+    world.innerHTML = o;
+    ripplePaths = [...world.querySelectorAll(".sc-ripple")];
+    const t = world.querySelector(".sc-tag-text"), box = world.querySelector(".sc-tag-box");
+    t.textContent = label;
+    const w = (t.getComputedTextLength() || label.length * 7 * k) + 24 * k, right = +t.dataset.right;
+    box.setAttribute("x", f1(right - w)); box.setAttribute("width", f1(w)); t.setAttribute("x", f1(right - w / 2));
+    const n = catOf(L);
+    const what = ["Das Wasser bleibt im Bachbett.", "Der Parkplatz ist überschwemmt.", "Das Wasser geht über die Mauer, die mobilen Barrieren stehen.", "Die Barrieren halten das Wasser, Sandsäcke liegen vor der Tür.", "Das Wasser steht im Hof und am Haus."][n];
+    svg.setAttribute("aria-label", `Schaubild Pegel Kupferdreh: ${label || Math.round(L) + " cm"}, Kategorie ${n + 1} (${CATS[n][1]}). ${what}${stale ? " Die Daten sind veraltet." : ""}`);
+  }
+
+  function rippling() { return !stale && !reduce.matches && !document.hidden && shown > 0.5; }
+  function updateRipples(ts) {
+    ripplePaths.forEach((p, i) => { p.style.strokeDashoffset = f1(-(ts / 1000) * (9 + (i % 3) * 4)); });
+  }
+  const easeInOut = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+  function approach(value, goal, dt, ms) {
+    if (reduce.matches) return goal;
+    const step = dt / ms;
+    return goal > value ? Math.min(goal, value + step) : Math.max(goal, value - step);
+  }
+  function frame(ts) {
+    raf = 0;
+    if (lastTs && ts - lastTs < 32) { raf = requestAnimationFrame(frame); return; }  // cap at ~30 fps
+    const dt = lastTs ? Math.min(1000, ts - lastTs) : 16;
+    lastTs = ts;
+    let dirty = false;
+    if (anim) {
+      if (anim.t0 == null) anim.t0 = ts;
+      const p = reduce.matches ? 1 : Math.min(1, (ts - anim.t0) / 400);
+      shown = anim.from + (anim.to - anim.from) * easeInOut(p);
+      if (p >= 1) anim = null;
+      dirty = true;
+    }
+    const bGoal = barriersUp(shown) ? 1 : 0, sGoal = shown > LEVELS.sandbags ? 1 : 0;
+    if (barT !== bGoal) { barT = approach(barT, bGoal, dt, 700); dirty = true; }
+    if (bagT !== sGoal) { bagT = approach(bagT, sGoal, dt, 450); dirty = true; }
+    if (dirty) build();
+    if (rippling()) updateRipples(ts);
+    if (anim || barT !== bGoal || bagT !== sGoal || rippling()) raf = requestAnimationFrame(frame);
+    else lastTs = 0;
+  }
+  function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+
+  // ---- view boxes: the whole site, or on narrow containers the wall, staff, barriers and house front ----
+  function bbox(points, pad) {
+    const xs = points.map((p) => pt(...p)[0]), ys = points.map((p) => pt(...p)[1]);
+    const x0 = Math.min(...xs) - pad, y0 = Math.min(...ys) - pad;
+    return [x0, y0, Math.max(...xs) + pad - x0, Math.max(...ys) + pad - y0].map(f1);
+  }
+  const corners = (u0, u1, v0, v1, z0, z1) => [u0, u1].flatMap((u) => [v0, v1].flatMap((v) => [[u, v, z0], [u, v, z1]]));
+  const VB_WIDE = bbox([...corners(0, UMAX, 0, LV, BOTTOM - 14, LEVELS.wall), ...corners(HOUSE.u0 - 10, UMAX, HOUSE.v0 - 8, LV, 0, HOUSE.ridge + 30), [36, 232, 260]], 14);
+  const VB_NARROW = (() => {
+    const x0 = pt(180, 0, 0)[0], x1 = pt(740, HOUSE.v0, 0)[0];
+    const y0 = Math.min(pt(684, 196, HOUSE.ridge + 30)[1], pt(HOUSE.ridgeU, HOUSE.v0, HOUSE.ridge)[1]) - 18;
+    const y1 = Math.max(pt(180, 0, BOTTOM - 10)[1], pt(740, 0, BOTTOM - 10)[1]);
+    return [x0, y0, x1 - x0, y1 - y0].map(f1);
+  })();
+  function layout() {
+    const w = svg.clientWidth || 800, isNarrow = w < 500;
+    const vb = isNarrow ? VB_NARROW : VB_WIDE;
+    // The CSS caps the height at 520 px; then the height sets the scale (text sizes follow k).
+    const nk = Math.max(vb[2] / w, vb[3] / Math.min(520, w * vb[3] / vb[2]));
+    if (isNarrow === narrow && Math.abs(nk - k) < 0.02) return;
+    narrow = isNarrow; k = nk;
+    svg.setAttribute("viewBox", vb.join(" "));
+    build();
+  }
+
+  return {
+    LEVELS,
+    mount(el) {
+      svg = el;
+      svg.classList.add("sc-scene");
+      svg.setAttribute("role", "img");
+      svg.innerHTML = `<defs><linearGradient id="sc-wgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sc-wgrad-top"/><stop offset="1" class="sc-wgrad-bot"/></linearGradient>
+        <filter id="sc-blur" x="-10%" y="-10%" width="120%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>
+        <filter id="sc-glow" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g class="sc-world"></g>`;
+      world = svg.querySelector(".sc-world");
+      new ResizeObserver(layout).observe(svg);
+      document.addEventListener("visibilitychange", kick);
+      reduce.addEventListener("change", kick);
+      barT = barriersUp(shown) ? 1 : 0; bagT = shown > LEVELS.sandbags ? 1 : 0;
+      layout();
+      kick();
+    },
+    setLevel(cm, opts = {}) {
+      label = opts.label ?? `${Math.round(cm)} cm`;
+      range = opts.range ?? null;
+      anim = { from: opts.instant ? Math.max(0, cm) : shown, to: Math.max(0, cm), t0: null };
+      if (opts.instant) { barT = barriersUp(anim.to) ? 1 : 0; bagT = anim.to > LEVELS.sandbags ? 1 : 0; }
+      kick();
+    },
+    setStale(on) { stale = !!on; svg.classList.toggle("sc-stale", stale); build(); kick(); },
+    reset() { this.setLevel(current.cm, { label: current.label, range: null }); },
+    setCurrent(cm, lbl) { current = { cm, label: lbl }; this.setLevel(cm, { label: lbl, range: null }); },
+  };
+})();
+</script>
+<script>
 const SAMPLES = JSON.parse(document.getElementById("data").textContent);
 // Mockup only: a persistence forecast (flat at the last level, no bands) on the flood history.
 const fallbackSample = {
@@ -312,11 +871,11 @@ const PORTAL = `<a href="https://www.hochwasserportal.nrw.de">Hochwasserportal N
 const chip = (c, mode = "") => `<span class="chip${c.dark ? " dark" : ""} ${mode}" style="background:${c.color};--chip:${c.color}">${c.n} · ${c.name}</span>`;
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
-let S, now, geo = null, scene = null;   // summary, mock "now", chart and house geometry
-const anim = { shownMs: 0, targetIdx: 0, homeIdx: 0, active: false, bandOpacity: 0, raf: 0, last: 0 };
+let S, now, geo = null;   // summary, mock "now", chart geometry
+const anim = { shownMs: 0, targetIdx: 0, homeIdx: 0, active: false, raf: 0, last: 0 };
 
 function render() {
-  const name = stateFromHash(), state = STATES[name];
+  const name = stateFromHash(), state = withRaise(STATES[name]);
   now = state.now;
   S = summarize(state.sample, now);
   const ok = S.mode === "ok", cur = S.current;
@@ -330,19 +889,22 @@ function render() {
   $("legalLink").hidden = !ok;   // stale and fallback show the portal link next to the badge instead
   $("now").innerHTML = `<span class="big">${num(cur.level_cm)} cm</span>${chip(categoryOf(cur.level_cm), S.mode === "stale" ? "off" : "")}<span class="sub">gemessen ${reading}</span>`;
   const gap = CRITICAL_CM - cur.level_cm;
+  $("dist").hidden = S.mode === "stale";
   $("dist").innerHTML = gap > 0 ? `Bis kritisch (145 cm): noch <b>${num(Math.floor(gap))} cm</b>`
     : `Kritische Marke (145 cm) um <b>${num(Math.ceil(-gap))} cm</b> überschritten`;
 
   $("plansec").hidden = !S.plan.length;
   $("plan").innerHTML = planHtml(S.plan);
+  $("levels").innerHTML = levelsHtml(S.mode === "stale" ? null : categoryOf(cur.level_cm), ok ? v : null);
 
-  scene = sceneGeometry();
   renderChart(state.sample);
-  $("scene").innerHTML = sceneSvg();
   anim.homeIdx = S.series.length - 1 - (ok ? state.sample.forecast.points.length : 0);
+  const home = S.series[anim.homeIdx];
+  Scene.setStale(S.mode === "stale");
+  Scene.setCurrent(home.level, tagText(home));
   const hover = debugHover();
   if (hover) point(nearestIndex(S.series, Date.parse(hover)), true);
-  else { anim.active = false; anim.targetIdx = anim.homeIdx; anim.shownMs = S.series[anim.homeIdx].ms; anim.bandOpacity = 0; }
+  else { anim.active = false; anim.targetIdx = anim.homeIdx; anim.shownMs = home.ms; }
   updateLabels();
   kick();
 }
@@ -352,6 +914,19 @@ function verdictHtml(v) {
     : v.expected.n === 1 ? `Voraussichtlich ${chip(v.expected)} in den nächsten 24 Stunden` : `Voraussichtlich weiter ${chip(v.expected)}`;
   const second = v.possible.map((p, i) => `${i ? "" : "Möglich: "}${chip(p.category, "ghost")} <span class="when">${hourAt(p.at, now, "ab")}</span>`).join(", ");
   return `<span class="line">${first}</span>` + (second ? `<span class="line">${second}</span>` : "");
+}
+
+// One card per category; the current one outlined, the forecast's expected and possible ones tagged.
+function levelsHtml(current, v) {
+  return CATEGORIES.map((c, i) => {
+    const next = CATEGORIES[i + 1];
+    const range = i === 0 ? `bis ${next.from} cm` : next ? `${c.from}–${next.from} cm` : `über ${c.from} cm`;
+    const tags = !v ? "" : (v.expected.n === c.n ? `<span class="tag">erwartet</span>` : "") +
+      (v.possible.some((p) => p.category.n === c.n) ? `<span class="tag maybe">möglich</span>` : "");
+    const isNow = current && c.n === current.n;
+    return `<li class="${isNow ? "now" : ""}" style="--tone:${c.color}"${isNow ? ' aria-current="true"' : ""}>` +
+      `<div class="head">${chip(c)}<span class="range">${range}</span>${tags}</div><p>${c.text}</p></li>`;
+  }).join("");
 }
 
 function planHtml(rows) {
@@ -365,21 +940,10 @@ function planHtml(rows) {
   }).join("");
 }
 
-// House geometry, 1 SVG unit = 1 cm: the scale top sits 20 units below the picture's top edge, the bed (-15) 15 above its bottom.
-// On wide screens the picture extends to the left (more river), so it stays low; `pxPerCm` is shared with the chart.
-function sceneGeometry() {
-  const top = S.scaleTop, height = top + 50, w = $("scene").clientWidth || 360;
-  const pxPerCm = Math.min(w / 360, 340 / 300);
-  return { top, height, pxPerCm, sx: Math.max(0, Math.round(w / pxPerCm - 360)) };
-}
-const sy = (cm) => scene.top + 20 - Math.max(-20, Math.min(cm, scene.top + 5));
-const STAFF_X = 232, WALL_X = 248;
-const bankX = (cm) => (cm >= 145 ? -scene.sx : 30 + (145 - cm) / 160 * 55);  // left bank: 145 cm at x 30, bed at x 85
-
-// Verlauf chart (round-1 B). Fixed scale from 0 to the shared top, with the house's px per cm.
+// Verlauf chart (round-1 B). Fixed scale from 0 to 250 cm (higher only when the data goes higher).
 function renderChart(sample) {
   const box = $("chart"), ok = S.mode === "ok", colored = S.mode !== "stale", W = Math.max(300, box.clientWidth || 300), phone = W < 500;
-  const m = { l: 8, r: 8, t: 10, b: 26 }, yMax = S.scaleTop, H = m.t + m.b + yMax * scene.pxPerCm;
+  const m = { l: 8, r: 50, t: 10, b: 26 }, yMax = S.scaleTop, H = phone ? 260 : 320;
   const obsT = Date.parse(S.current.observed_at), pts = ok ? sample.forecast.points : [];
   const t0 = obsT - 24 * HOUR, t1 = obsT + 24 * HOUR + 10 * 60e3;
   const hist = S.series.filter((p) => !p.forecast);
@@ -391,7 +955,7 @@ function renderChart(sample) {
     out.push(`<rect x="${m.l}" y="${y(hi)}" width="${W - m.l - m.r}" height="${y(lo) - y(hi)}" fill="${colored ? c.color : "var(--grey)"}" opacity="${colored ? (c.n === 1 ? 0.12 : 0.22) : 0.2}"/>`);
     if (c.n > 1) {
       out.push(`<line x1="${m.l}" x2="${W - m.r}" y1="${y(c.from)}" y2="${y(c.from)}" stroke="${colored ? c.color : "var(--grey)"}" stroke-width="1.5"/>`);
-      out.push(`<text class="strong halo" x="${W - m.r - 4}" y="${y(c.from) - 4}" text-anchor="end">${c.from} · ${c.n}</text>`);
+      out.push(`<text class="strong" x="${W - m.r + 6}" y="${y(c.from) + 4}">${c.from} · ${c.n}</text>`);
     }
   });
   for (let t = Math.ceil(t0 / HOUR) * HOUR; t <= t1; t += HOUR) {
@@ -434,81 +998,20 @@ function renderChart(sample) {
   geo = { x, y, t0, t1, m, W };
 }
 
-// House and gauge staff (round-2 Pegellatte) on the chart's scale.
-function sceneSvg() {
-  const colored = S.mode !== "stale", water = colored ? "var(--water)" : "var(--grey)";
-  const { sx, height, top } = scene;
-  let out = `<svg viewBox="${-sx} 0 ${360 + sx} ${height}" role="img" aria-label="Haus, Mauer und Pegellatte mit dem Wasserstand">`;
-  out += `<rect x="${-sx}" width="${360 + sx}" height="${height}" fill="var(--sky)"/>`;
-  out += `<path d="M282 ${sy(180)}V${sy(222)}L314 ${sy(248)}L346 ${sy(222)}V${sy(180)}Z" fill="var(--house)"/>`;
-  out += `<rect x="294" y="${sy(212)}" width="12" height="14" rx="1" fill="var(--window)"/><rect x="322" y="${sy(212)}" width="12" height="14" rx="1" fill="var(--window)"/><rect x="309" y="${sy(200)}" width="11" height="20" fill="var(--window)"/>`;
-  // Water under the terrain: the terrain hides it below the bank.
-  out += `<path id="wBack" fill="${colored ? "var(--water-back)" : "var(--grey)"}" opacity=".55"/><path id="wFront" fill="${water}" opacity=".6"/>`;
-  out += `<path d="M${-sx} ${sy(145)}H30L85 ${sy(-15)}H${WALL_X}V${height}H${-sx}Z" fill="var(--ground)"/>`;
-  out += `<rect x="${WALL_X + 12}" y="${sy(180)}" width="${360 - WALL_X - 12}" height="${height - sy(180)}" fill="var(--ground)"/>`;
-  out += `<rect x="${WALL_X}" y="${sy(185)}" width="12" height="${height - sy(185)}" fill="var(--wall)"/>`;
-  CATEGORIES.forEach((c, i) => {
-    const lo = i ? c.from : -15, hi = i < 4 ? CATEGORIES[i + 1].from : top;
-    out += `<rect x="${STAFF_X}" y="${sy(hi)}" width="16" height="${sy(lo) - sy(hi)}" fill="${colored ? c.color : "var(--grey)"}"/>`;
-    out += `<text x="${STAFF_X + 8}" y="${(sy(hi) + sy(lo)) / 2 + 4.5}" text-anchor="middle" style="fill:${!colored ? "var(--foreground)" : c.dark ? "#fff" : "oklch(18% .025 215)"}">${c.n}</text>`;
-  });
-  for (let cm = 0; cm < top; cm += 10) out += `<rect x="${STAFF_X}" y="${sy(cm) - .5}" width="${cm % 50 ? 4 : 7}" height="1" fill="oklch(18% .025 215)" opacity=".6"/>`;
-  out += `<rect id="wStaff" x="${STAFF_X}" width="16" fill="${water}" opacity=".45"/>`;
-  out += `<path id="wEdge" fill="none" stroke="${colored ? "var(--water-line)" : "var(--muted-foreground)"}" stroke-width="2" stroke-linejoin="round"/>`;
-  // 90 % range on the staff, only for forecast hours.
-  out += `<rect id="band" x="${STAFF_X - 5}" width="26" rx="3" fill="var(--sky)" fill-opacity=".2" stroke="var(--foreground)" stroke-opacity=".85" stroke-width="1.5" stroke-dasharray="4 2" opacity="0"/>`;
-  out += `<g id="tag"><rect id="tagBox" height="24" rx="12" fill="var(--card)" stroke="var(--foreground)" stroke-opacity=".25"/><text id="tagText" text-anchor="end"></text></g>`;
-  return out + `</svg>`;
+// The chart cursor glides along the line to the picked hour; the scene eases its water on its own.
+function drawCursor() {
+  const cx = geo.x(anim.shownMs);
+  $("curLine").setAttribute("x1", cx); $("curLine").setAttribute("x2", cx);
+  $("curDot").setAttribute("cx", cx); $("curDot").setAttribute("cy", geo.y(levelAt(S.series, anim.shownMs)));
 }
-
-// Two sine layers (round-2 Wasser): front small and faster, back larger and slower, the other way.
-function wave(x, t, layer) {
-  return layer ? 2.4 * Math.sin(x / 19 + t * 0.7 + 1.3) : 1.6 * Math.sin(x / 11 - t * 1.4) + 0.6 * Math.sin(x / 5.3 - t * 2.1);
-}
-const waving = () => S.mode !== "stale" && !reduceMotion.matches && !document.hidden;
-
-function draw(t) {
-  const level = levelAt(S.series, anim.shownMs), moving = waving(), { sx, height } = scene;
-  const right = level > 185 ? 360 : WALL_X, base = sy(level);
-  const surface = (layer) => {
-    const pts = [];
-    for (let xv = -sx; xv <= right + 0.1; xv += 6) pts.push([Math.min(xv, right), base + (moving ? wave(xv, t, layer) : 0) - (layer ? 2.5 : 0)]);
-    return pts;
-  };
-  const fill = (pts) => `M${pts.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join("L")}L${right},${height}L${-sx},${height}Z`;
-  const front = surface(0);
-  $("wBack").setAttribute("d", fill(surface(1)));
-  $("wFront").setAttribute("d", fill(front));
-  const edge = front.filter((p) => p[0] >= bankX(level) - 6);
-  $("wEdge").setAttribute("d", `M${edge.map((p) => `${Math.max(p[0], bankX(level)).toFixed(1)},${p[1].toFixed(1)}`).join("L")}`);
-  const staffTop = base + (moving ? wave(STAFF_X + 8, t, 0) : 0);
-  $("wStaff").setAttribute("y", staffTop);
-  $("wStaff").setAttribute("height", Math.max(0, sy(-15) - staffTop));
-  // Band on the staff and the tag follow the shown level.
-  const lo = valueAt(S.series, anim.shownMs, (p) => p.band && p.band.lower), hi = valueAt(S.series, anim.shownMs, (p) => p.band && p.band.upper);
-  const band = $("band");
-  if (lo != null && hi != null) { band.setAttribute("y", sy(hi) - 2); band.setAttribute("height", Math.max(4, sy(lo) - sy(hi) + 4)); }
-  band.setAttribute("opacity", anim.bandOpacity.toFixed(3));
-  $("tag").setAttribute("transform", `translate(${STAFF_X - 10},${Math.max(16, Math.min(base - 18, sy(-8)))})`);
-  if (geo) {
-    const cx = geo.x(anim.shownMs);
-    $("curLine").setAttribute("x1", cx); $("curLine").setAttribute("x2", cx);
-    $("curDot").setAttribute("cx", cx); $("curDot").setAttribute("cy", geo.y(level));
-  }
-}
-
 function step(ts) {
   const dt = anim.last ? Math.min(250, ts - anim.last) : 16;
   anim.last = ts;
   const target = S.series[anim.targetIdx], k = reduceMotion.matches ? 1 : 1 - Math.exp(-dt / 140);
   anim.shownMs += (target.ms - anim.shownMs) * k;
   if (Math.abs(target.ms - anim.shownMs) < 20e3) anim.shownMs = target.ms;
-  const bandGoal = anim.active && target.forecast && target.band ? 1 : 0;
-  anim.bandOpacity += (bandGoal - anim.bandOpacity) * k;
-  if (Math.abs(bandGoal - anim.bandOpacity) < .01) anim.bandOpacity = bandGoal;
-  draw(ts / 1000);
-  const settled = anim.shownMs === target.ms && anim.bandOpacity === bandGoal;
-  anim.raf = waving() || !settled ? requestAnimationFrame(step) : 0;
+  drawCursor();
+  anim.raf = anim.shownMs !== target.ms ? requestAnimationFrame(step) : 0;
 }
 function kick() {
   cancelAnimationFrame(anim.raf);
@@ -523,8 +1026,10 @@ function point(idx, instant = false) {
   anim.targetIdx = Math.max(0, Math.min(S.series.length - 1, idx));
   if (instant) {
     $("curLine").style.transition = $("cue").style.transition = "none";
-    anim.shownMs = S.series[anim.targetIdx].ms; anim.bandOpacity = S.series[anim.targetIdx].forecast ? 1 : 0;
+    anim.shownMs = S.series[anim.targetIdx].ms;
   }
+  const p = S.series[anim.targetIdx];
+  Scene.setLevel(p.level, { label: tagText(p), range: p.forecast && p.band ? [p.band.lower, p.band.upper] : null, instant });
   updateLabels();
   if (!anim.raf) kick();
 }
@@ -533,17 +1038,17 @@ function release() {
   if (!anim.active) return;
   anim.active = false;
   anim.targetIdx = anim.homeIdx;
+  Scene.reset();
   updateLabels();
   if (!anim.raf) kick();
 }
-// The tag always names the shown hour; "heute" is left out, other days keep their word.
+// The scene's tag names the shown hour; "heute" is left out, other days keep their word.
+function tagText(p) {
+  const day = dayWord(p.iso, now);
+  return `${day === "heute" ? "" : day + " "}${Number(parts(p.iso).hour)} Uhr · ${num(p.level)} cm`;
+}
 function updateLabels() {
-  const p = S.series[anim.targetIdx], day = dayWord(p.iso, now);
-  const text = `${day === "heute" ? "" : day + " "}${Number(parts(p.iso).hour)} Uhr · ${num(p.level)} cm`;
-  $("tagText").textContent = text;
-  const w = $("tagText").getComputedTextLength();
-  $("tagText").setAttribute("x", -10); $("tagText").setAttribute("y", 4.5);
-  $("tagBox").setAttribute("x", -w - 20); $("tagBox").setAttribute("y", -12); $("tagBox").setAttribute("width", w + 20);
+  const text = tagText(S.series[anim.targetIdx]);
   const away = anim.targetIdx !== anim.homeIdx;
   $("curLine").style.opacity = away ? 1 : 0;
   if ($("cue")) $("cue").style.opacity = away ? 0 : 1;
@@ -592,6 +1097,7 @@ chartEl.addEventListener("keydown", (e) => {
 });
 chartEl.addEventListener("blur", release);
 
+Scene.mount($("scene"));
 document.querySelectorAll(".mock button").forEach((b) => b.addEventListener("click", () => { location.hash = b.dataset.state; }));
 addEventListener("hashchange", render);
 addEventListener("resize", () => { clearTimeout(render.t); render.t = setTimeout(render, 150); });
