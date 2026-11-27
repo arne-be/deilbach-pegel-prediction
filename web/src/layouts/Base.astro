@@ -14,7 +14,7 @@ const site = "https://energiekonzepte-ruhr.de";
 const nav = [
   { href: `${site}/energieberatung`, label: "Energieberatung" },
   { href: `${site}/mieterstrom`, label: "Mieterstrom" },
-  { href: "/", label: "Deilbach Pegel", current: Astro.url.pathname === "/" },
+  { href: "/", label: "Deilbach Pegel", current: ["/", "/index.html"].includes(Astro.url.pathname) },
   { href: `${site}/about`, label: "Team" },
   { href: `${site}/wissen`, label: "Wissen" },
   { href: `${site}/kontakt`, label: "Kontakt" },

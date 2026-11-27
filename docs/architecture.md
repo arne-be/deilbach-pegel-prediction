@@ -165,7 +165,7 @@ Two things run from a laptop on purpose:
 
 ## Operations
 
-- **Logs:** JSON lines to stdout via Python's `logging`, with job, time window and station on every line. CloudWatch keeps them for 30 days. No secrets, request headers or full URLs in logs. No CloudFront access logs.
+- **Logs:** JSON lines to stdout via Python's `logging`, with job, time window and station on every line. CloudWatch keeps them for 30 days. No secrets, request headers or full URLs in logs. No CloudFront access logs, and the API runs without uvicorn's access log, so no visitor IP addresses are stored.
 - **Costs:** an AWS Budget at €10/month sends an email at 80 % of actual or 100 % of forecast spend. That's the only alert. No WAF.
 - **Freshness:** the page and the API's `stale` flag show late data. There is no server-side alerting.
 
