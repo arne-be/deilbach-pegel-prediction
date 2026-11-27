@@ -3,6 +3,8 @@ import { defineConfig } from "astro/config";
 
 export default defineConfig({
   output: "static",
+  // CloudFront only maps "/" to index.html, so subpages are built as foo.html, not foo/index.html.
+  build: { format: "file" },
   integrations: [react()],
   vite: {
     // `pnpm dev` talks to the local API (`uv run uvicorn pegel.api.app:app`).

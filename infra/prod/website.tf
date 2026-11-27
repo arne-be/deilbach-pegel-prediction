@@ -51,8 +51,8 @@ data "aws_cloudfront_cache_policy" "caching_optimized" {
   name = "Managed-CachingOptimized"
 }
 
-# shortcut: Astro writes subpages as foo/index.html and CloudFront only maps "/" to
-# index.html; add a CloudFront function for directory indexes once there is a subpage.
+# CloudFront only maps "/" to index.html, so Astro builds subpages as foo.html
+# (build.format in web/astro.config.mjs) and links carry the extension.
 resource "aws_cloudfront_distribution" "site" {
   enabled             = true
   comment             = "deilbach-pegel website"

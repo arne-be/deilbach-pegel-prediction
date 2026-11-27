@@ -2,7 +2,7 @@
 // Page shell: header and footer mirror energiekonzepte-ruhr.de, links absolute to the main site.
 import "../styles/tokens.css";
 import "../styles/global.css";
-import { supportReady } from "../lib/config";
+import { analytics, supportReady } from "../lib/config";
 
 interface Props {
   title: string;
@@ -14,7 +14,7 @@ const site = "https://energiekonzepte-ruhr.de";
 const nav = [
   { href: `${site}/energieberatung`, label: "Energieberatung" },
   { href: `${site}/mieterstrom`, label: "Mieterstrom" },
-  { href: "/", label: "Deilbach Pegel", current: true },
+  { href: "/", label: "Deilbach Pegel", current: Astro.url.pathname === "/" },
   { href: `${site}/about`, label: "Team" },
   { href: `${site}/wissen`, label: "Wissen" },
   { href: `${site}/kontakt`, label: "Kontakt" },
@@ -33,6 +33,7 @@ const footerNav = [
   { href: `${site}/about`, label: "Team" },
   { href: `${site}/kontakt`, label: "Kontakt" },
   { href: `${site}/impressum`, label: "Impressum" },
+  { href: "/datenschutz.html", label: "Datenschutz" },
   ...(supportReady
     ? [{ href: "/#unterstuetzen", label: "Vorhersage unterstützen" }]
     : []),
@@ -50,6 +51,19 @@ const footerNav = [
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    {
+      analytics.website_id && (
+        <script
+          is:inline
+          defer
+          src={analytics.script_url}
+          data-website-id={analytics.website_id}
+          data-domains={analytics.domain}
+          data-do-not-track="true"
+          data-exclude-search="true"
+        />
+      )
+    }
   </head>
   <body>
     <header class="site">
