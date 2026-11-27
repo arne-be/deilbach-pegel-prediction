@@ -40,6 +40,13 @@ def test_the_manage_link_must_be_a_stripe_customer_portal_link(tmp_path: Path) -
         load_config(_config_with(tmp_path / "pegel.json", site=site))
 
 
+def test_the_analytics_script_must_come_from_umami(tmp_path: Path) -> None:
+    site = json.loads(DEFAULT_CONFIG_PATH.read_text(encoding="utf-8"))["site"]
+    site["analytics"]["script_url"] = "https://example.com/script.js"
+    with pytest.raises(ValidationError, match="script_url"):
+        load_config(_config_with(tmp_path / "pegel.json", site=site))
+
+
 def test_support_tier_ids_must_be_unique(tmp_path: Path) -> None:
     site = json.loads(DEFAULT_CONFIG_PATH.read_text(encoding="utf-8"))["site"]
     site["support"]["tiers"][1]["id"] = site["support"]["tiers"][0]["id"]

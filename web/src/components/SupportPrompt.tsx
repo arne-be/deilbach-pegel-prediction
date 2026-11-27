@@ -203,6 +203,8 @@ export default function SupportPrompt({
                 key={tier.id}
                 className={index === featured ? "tier featured" : "tier"}
                 href={tier.url ?? undefined}
+                data-umami-event="support-prompt-click"
+                data-umami-event-option={tier.id}
                 onClick={() => remember({ supported: true })}
               >
                 <b>{tier.name}</b>

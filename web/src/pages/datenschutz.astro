@@ -1,0 +1,122 @@
+---
+// Privacy notice. It describes what the page really does: change it together with
+// the analytics script (Base.astro), the support memory and the hosting.
+import Base from "../layouts/Base.astro";
+import { analytics, supportReady } from "../lib/config";
+---
+
+<Base title="Datenschutz – Deilbach Pegel Vorhersage" description="Datenschutzerklärung der Deilbach Pegel Vorhersage.">
+  <article class="prose">
+    <h1>Datenschutz</h1>
+    <p>
+      Diese Seite kommt ohne Cookies, ohne Werbung und ohne Konto aus. Hier steht, welche Daten trotzdem anfallen und wofür.
+    </p>
+
+    <h2>Verantwortlich</h2>
+    <p>
+      Jörg Berresheim, Energiekonzepte Ruhr<br />Langmannskamp 11, 45276 Essen<br />
+      E-Mail: <a href="mailto:info@energiekonzepte-ruhr.de">info@energiekonzepte-ruhr.de</a><br />
+      Tel.: <a href="tel:+4915738993484">+49 157 38993484</a>
+    </p>
+
+    <h2>Aufruf der Seite</h2>
+    <p>
+      Die Seite liegt bei Amazon Web Services (Amazon Web Services EMEA SARL, Luxemburg) und wird über deren Netzwerk CloudFront
+      ausgeliefert. Dabei verarbeitet AWS technisch notwendige Daten, vor allem Ihre IP-Adresse, um die Seite an Ihr Gerät zu
+      senden. Wir selbst speichern keine Zugriffsprotokolle. Rechtsgrundlage ist unser berechtigtes Interesse an einer sicheren
+      und schnellen Auslieferung (Art. 6 Abs. 1 lit. f DSGVO). AWS kann Daten auch außerhalb der EU verarbeiten; dafür gelten
+      das EU-US Data Privacy Framework und Standardvertragsklauseln.
+    </p>
+
+    <h2>Cookies und Speicher im Browser</h2>
+    <p>Die Seite setzt keine Cookies. Die Schriften kommen von unserem eigenen Server.</p>
+    {
+      supportReady && (
+        <p>
+          Im Speicher Ihres Browsers (Local Storage) merkt sich die Seite, an wie vielen Tagen Sie sie besucht haben, ob Sie den
+          Hinweis auf die Unterstützung geschlossen haben und ob Sie eine Unterstützung gewählt haben. So erscheint der Hinweis
+          erst bei regelmäßigen Besuchen und nicht immer wieder. Diese Angaben bleiben auf Ihrem Gerät und werden nicht an uns
+          übertragen. Sie können sie jederzeit in den Einstellungen Ihres Browsers löschen.
+        </p>
+      )
+    }
+
+    {
+      analytics.website_id && (
+        <>
+          <h2>Besucherstatistik</h2>
+          <p>
+            Wir zählen die Besuche mit Umami (Umami Software, Inc., USA), um zu sehen, wie oft die Vorhersage genutzt wird. Umami
+            setzt keine Cookies und speichert nichts auf Ihrem Gerät. Erfasst werden Adresse und Titel der aufgerufenen Seite, die Seite, von der
+            Sie kommen, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Sprache, der ungefähre Standort (Land, Region,
+            Stadt) und Klicks auf die Schaltflächen zur Unterstützung.
+          </p>
+          <p>
+            Ihre IP-Adresse wird nicht gespeichert. Aus ihr, der Browserkennung und einem monatlich wechselnden Zufallswert
+            entsteht eine Kennung, mit der sich mehrere Aufrufe einem Besuch zuordnen lassen, aber keiner Person. Die Daten
+            liegen in der EU-Region von Umami; mit Umami besteht ein Vertrag zur Auftragsverarbeitung. Rechtsgrundlage ist unser
+            berechtigtes Interesse an einer einfachen Reichweitenmessung (Art. 6 Abs. 1 lit. f DSGVO).
+          </p>
+          <p>
+            Sie können der Zählung widersprechen: Wenn Ihr Browser „Do Not Track“ sendet, wird Ihr Besuch nicht gezählt. Auch ein Inhaltsblocker verhindert die Zählung.
+          </p>
+        </>
+      )
+    }
+
+    {
+      supportReady && (
+        <>
+          <h2>Unterstützung über Stripe</h2>
+          <p>
+            Wenn Sie die Vorhersage unterstützen, führt der Link zu Stripe (Stripe Payments Europe, Ltd., Dublin, Irland).
+            Stripe wickelt die Zahlung ab und verarbeitet dafür Ihre Zahlungsdaten in eigener Verantwortung. Wir erhalten von
+            Stripe Namen, E-Mail-Adresse, Betrag und Status der Zahlung, aber keine Karten- oder Kontonummern. Rechtsgrundlage
+            ist die Abwicklung Ihrer Zahlung (Art. 6 Abs. 1 lit. b DSGVO). Wir bewahren diese Angaben so lange auf, wie es die
+            gesetzlichen Aufbewahrungsfristen verlangen.
+          </p>
+        </>
+      )
+    }
+
+    <h2>Kontakt</h2>
+    <p>
+      Wenn Sie uns schreiben oder anrufen, verwenden wir Ihre Angaben nur, um Ihr Anliegen zu bearbeiten (Art. 6 Abs. 1 lit. f
+      DSGVO), und löschen sie, wenn sie dafür nicht mehr gebraucht werden.
+    </p>
+
+    <h2>Ihre Rechte</h2>
+    <p>
+      Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Datenübertragbarkeit. Einer
+      Verarbeitung auf Grundlage unseres berechtigten Interesses können Sie widersprechen. Schreiben Sie dafür an die Adresse
+      oben. Sie können sich außerdem bei einer Aufsichtsbehörde beschweren, zum Beispiel bei der Landesbeauftragten für
+      Datenschutz und Informationsfreiheit Nordrhein-Westfalen.
+    </p>
+
+    <p class="stand">Stand: November 2026</p>
+  </article>
+</Base>
+
+<style>
+  .prose {
+    max-width: 68ch;
+  }
+  h2 {
+    margin: 40px 0 8px;
+    font:
+      600 22px / 1.2 "Space Grotesk",
+      system-ui,
+      sans-serif;
+  }
+  p {
+    margin: 0 0 12px;
+  }
+  .prose a {
+    text-decoration: underline;
+  }
+  .stand {
+    margin-top: 40px;
+    font-size: 14px;
+    opacity: 0.7;
+  }
+</style>

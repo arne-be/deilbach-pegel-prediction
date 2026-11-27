@@ -41,6 +41,14 @@ export interface Support {
   prompt_after_visits: number | null;
 }
 
+export interface Analytics {
+  script_url: string;
+  /** Umami counts only visits to this host. */
+  domain: string;
+  /** Umami website id; null until the account exists, and the page then loads no script. */
+  website_id: string | null;
+}
+
 export interface Freshness {
   observation_max_age_minutes: number;
   forecast_max_age_minutes: number;
@@ -57,6 +65,8 @@ export const historyHours: number = site.history_hours;
 export const scaleTopCm: number = site.scale_top_cm;
 /** Monthly tiers and one-off amounts, each a Stripe Payment Link (validated in src/pegel/config.py). */
 export const support: Support = site.support;
+/** Umami page statistics (validated in src/pegel/config.py). */
+export const analytics: Analytics = site.analytics;
 /** The page offers support only when every link is set, so no button ever leads nowhere. */
 export const supportReady: boolean =
   support.custom_url !== null &&

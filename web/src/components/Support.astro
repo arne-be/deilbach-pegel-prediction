@@ -31,7 +31,7 @@ const featured = Math.floor(support.tiers.length / 2);
   <div class="tiers">
     {
       support.tiers.map((tier, index) => (
-        <a class:list={["tier", { featured: index === featured }]} href={tier.url}>
+        <a class:list={["tier", { featured: index === featured }]} href={tier.url} data-umami-event="support-click" data-umami-event-option={tier.id}>
           <svg class="staff" viewBox="0 0 28 150" preserveAspectRatio="none" aria-hidden="true">
             <rect class="empty" x="1" y="1" width="26" height="148" rx="4" />
             <rect class="water" x="1" y={149 - fillHeight(index)} width="26" height={fillHeight(index)} rx="4" />
@@ -49,8 +49,8 @@ const featured = Math.floor(support.tiers.length / 2);
   </div>
 
   <div class="once">
-    {support.one_off.map((amount) => <a class="amount" href={amount.url}>{amount.eur}&nbsp;€</a>)}
-    <a class="amount other" href={support.custom_url}>Anderer Betrag</a>
+    {support.one_off.map((amount) => <a class="amount" href={amount.url} data-umami-event="support-click" data-umami-event-option={`einmalig-${amount.eur}`}>{amount.eur}&nbsp;€</a>)}
+    <a class="amount other" href={support.custom_url} data-umami-event="support-click" data-umami-event-option="einmalig-frei">Anderer Betrag</a>
   </div>
 
   <p class="fine">

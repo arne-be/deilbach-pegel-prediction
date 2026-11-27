@@ -3,6 +3,7 @@
 from datetime import date
 from pathlib import Path
 from typing import Annotated, Literal
+from uuid import UUID
 
 from pydantic import (
     BaseModel,
@@ -136,6 +137,16 @@ class SupportSettings(_Frozen):
         return self
 
 
+class AnalyticsSettings(_Frozen):
+    """Umami page statistics. The page loads no script until the website id is set."""
+
+    # The page runs this script, so only Umami's own hosts get through.
+    script_url: str = Field(pattern=r"^https://([a-z0-9-]+\.)*umami\.is/")
+    # Umami counts only visits to this host, so local builds and previews stay out.
+    domain: str = Field(min_length=1)
+    website_id: UUID | None = None
+
+
 class SiteSettings(_Frozen):
     """Settings the website reads at build time (web/src/lib/config.ts)."""
 
@@ -144,6 +155,7 @@ class SiteSettings(_Frozen):
     # Top of the fixed chart and scene scale; it grows only if a value goes higher.
     scale_top_cm: float = Field(gt=0)
     support: SupportSettings
+    analytics: AnalyticsSettings
 
 
 class CleaningSettings(_Frozen):

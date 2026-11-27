@@ -94,6 +94,11 @@
       "custom_url": "https://buy.stripe.com/14A28sc0h7KYdji9ys4sE07",
       "manage_url": "https://billing.stripe.com/p/login/7sYbJ25BT1mA6UU4e84sE00",
       "prompt_after_visits": 5
+    },
+    "analytics": {
+      "script_url": "https://cloud.umami.is/script.js",
+      "domain": "deilbach-pegel.energiekonzepte-ruhr.de",
+      "website_id": "12cca3d9-fc74-43de-b81c-04cc0cfe1e1b"
     }
   },
   "cleaning": {

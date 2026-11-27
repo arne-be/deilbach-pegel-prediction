@@ -24,4 +24,5 @@ COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:1.1.0@sha256:17cfd08eff1df
 # The Lambda runtime adds the task root to the path for handlers; uvicorn needs it set.
 ENV PYTHONPATH=${LAMBDA_TASK_ROOT}:${LAMBDA_TASK_ROOT}/src
 # Replaces the base image's entry point and resets the inherited CMD.
-ENTRYPOINT ["/var/lang/bin/python", "-m", "uvicorn", "pegel.api.app:app", "--host", "0.0.0.0", "--port", "8080"]
+# No access log: its lines carry the visitor's IP address, and the privacy page says we keep none.
+ENTRYPOINT ["/var/lang/bin/python", "-m", "uvicorn", "pegel.api.app:app", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]
